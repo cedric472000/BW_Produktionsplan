@@ -1,0 +1,1242 @@
+<title>Produktionsplan Berliner Wirtschaft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+:root{
+  --paper:#e9eef3; --surface:#ffffff; --surface-2:#f4f7fa; --surface-3:#eaeff5;
+  --ink:#101a24; --ink-2:#47586a; --ink-3:#76889a;
+  --line:#d4dde6; --line-2:#bfcbd8;
+  --accent:#0a4d8c; --accent-2:#0d68bd; --accent-soft:#e0ecf8;
+  --milestone:#9d1250; --milestone-soft:#fae4ee;
+  --ok:#166b47; --ok-soft:#dcf0e7;
+  --warn:#8a5300; --warn-soft:#fbedd5;
+  --crit:#9d2b20; --crit-soft:#fae1de;
+  --ph-1:#5c7590; --ph-2:#0a4d8c; --ph-3:#0e6a6a; --ph-4:#9d1250;
+  --shadow:0 1px 2px rgba(16,26,36,.06), 0 8px 24px -16px rgba(16,26,36,.35);
+  --r:6px;
+  --sans:"IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0d141b; --surface:#151f28; --surface-2:#1b2732; --surface-3:#22303c;
+    --ink:#e4ecf3; --ink-2:#a3b3c1; --ink-3:#7b8b99;
+    --line:#293743; --line-2:#3a4b59;
+    --accent:#61a9ec; --accent-2:#86c1f7; --accent-soft:#16293b;
+    --milestone:#ef85b3; --milestone-soft:#38182a;
+    --ok:#63c79b; --ok-soft:#13291f;
+    --warn:#e0a24a; --warn-soft:#302410;
+    --crit:#f08c81; --crit-soft:#331917;
+    --ph-1:#8ea6bd; --ph-2:#61a9ec; --ph-3:#4fb3ad; --ph-4:#ef85b3;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0d141b; --surface:#151f28; --surface-2:#1b2732; --surface-3:#22303c;
+  --ink:#e4ecf3; --ink-2:#a3b3c1; --ink-3:#7b8b99;
+  --line:#293743; --line-2:#3a4b59;
+  --accent:#61a9ec; --accent-2:#86c1f7; --accent-soft:#16293b;
+  --milestone:#ef85b3; --milestone-soft:#38182a;
+  --ok:#63c79b; --ok-soft:#13291f;
+  --warn:#e0a24a; --warn-soft:#302410;
+  --crit:#f08c81; --crit-soft:#331917;
+  --ph-1:#8ea6bd; --ph-2:#61a9ec; --ph-3:#4fb3ad; --ph-4:#ef85b3;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0;text-wrap:balance;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:3px}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:20px;padding:10px 20px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;gap:1px;padding-right:18px;border-right:1px solid var(--line);min-width:0}
+.brand .eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.brand h1{font-size:19px;line-height:1.15}
+.yearbox{display:flex;align-items:center;gap:6px}
+.yearbox label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.stepper{display:flex;align-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.stepper button{background:none;border:0;padding:5px 9px;cursor:pointer;color:var(--ink-2);font-size:15px;line-height:1}
+.stepper button:hover{background:var(--surface-3);color:var(--accent)}
+.stepper input{width:58px;border:0;background:none;text-align:center;font-family:var(--mono);font-size:15px;font-weight:600;padding:5px 0;letter-spacing:.02em}
+.stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+nav.tabs{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+nav.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:7px 11px;cursor:pointer;
+  color:var(--ink-2);font-weight:500;font-size:13px;border-radius:3px 3px 0 0}
+nav.tabs button:hover{color:var(--ink);background:var(--surface-2)}
+nav.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+nav.tabs .cnt{display:inline-block;margin-left:5px;font-size:10px;font-family:var(--mono);background:var(--warn-soft);color:var(--warn);
+  border-radius:8px;padding:1px 5px;vertical-align:1px}
+nav.tabs .cnt.zero{background:var(--surface-3);color:var(--ink-3)}
+
+/* ---------- buttons ---------- */
+.btn{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);padding:5px 11px;cursor:pointer;
+  font-size:13px;font-weight:500;color:var(--ink-2);white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.btn.sm{padding:3px 8px;font-size:12px}
+.btn.ghost{border-color:transparent;background:none}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+
+/* ---------- layout ---------- */
+.layout{display:grid;grid-template-columns:326px minmax(0,1fr);gap:18px;padding:18px 20px 60px;align-items:start}
+@media (max-width:1080px){.layout{grid-template-columns:minmax(0,1fr)}}
+.rail{display:flex;flex-direction:column;gap:14px;position:sticky;top:60px}
+@media (max-width:1080px){.rail{position:static}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);overflow:hidden}
+.card>header{display:flex;align-items:center;gap:8px;padding:10px 13px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.card>header h2{font-size:14px;flex:1}
+.card>header .hint{font-size:11px;color:var(--ink-3);font-family:var(--mono)}
+.card .body{padding:12px 13px}
+.stage{min-width:0;display:flex;flex-direction:column;gap:14px}
+
+/* ---------- meta strip ---------- */
+.metabar{display:flex;flex-wrap:wrap;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  box-shadow:var(--shadow);overflow:hidden}
+.metabar .m{padding:9px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:1px;min-width:118px}
+.metabar .m:last-child{border-right:0}
+.metabar .k{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.metabar .v{font-family:var(--mono);font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
+.metabar .v.warnv{color:var(--warn)}
+.metabar .v.okv{color:var(--ok)}
+
+/* ---------- issue input list ---------- */
+.issues{display:flex;flex-direction:column;gap:5px}
+.issue{display:grid;grid-template-columns:18px minmax(0,1fr) 122px 20px;gap:6px;align-items:center}
+.issue .n{font-family:var(--mono);font-size:11px;color:var(--ink-3);text-align:right}
+.issue input[type=text],.issue input[type=date]{width:100%;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:4px;padding:4px 7px;font-size:12.5px;min-width:0}
+.issue input[type=date]{font-family:var(--mono);font-size:12px;padding:4px 5px}
+.issue input:focus{background:var(--surface);border-color:var(--accent)}
+.issue .x{background:none;border:0;color:var(--ink-3);cursor:pointer;padding:2px;line-height:1;font-size:15px;border-radius:3px}
+.issue .x:hover{color:var(--crit);background:var(--crit-soft)}
+.rowbtns{display:flex;gap:6px;margin-top:11px;flex-wrap:wrap}
+.note{font-size:11.5px;color:var(--ink-2);background:var(--accent-soft);border-left:2px solid var(--accent);
+  padding:6px 9px;border-radius:0 4px 4px 0;margin-top:10px;display:flex;gap:8px;align-items:baseline}
+.note button{background:none;border:0;color:var(--accent);cursor:pointer;font-size:11.5px;text-decoration:underline;padding:0;white-space:nowrap}
+
+/* ---------- holidays ---------- */
+.holidays{display:flex;flex-direction:column;gap:1px;max-height:326px;overflow-y:auto;margin:-2px -4px}
+.hol{display:grid;grid-template-columns:15px minmax(0,1fr) auto;gap:7px;align-items:center;padding:3px 4px;border-radius:4px}
+.hol:hover{background:var(--surface-2)}
+.hol input{margin:0;accent-color:var(--accent);cursor:pointer}
+.hol .nm{font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hol.off .nm{color:var(--ink-3);text-decoration:line-through}
+.hol .dt{font-family:var(--mono);font-size:11px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hol .x{background:none;border:0;color:var(--ink-3);cursor:pointer;padding:0 2px;font-size:13px}
+.hol .x:hover{color:var(--crit)}
+.tag{display:inline-block;font-size:9px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+  padding:1px 5px;border-radius:3px;background:var(--surface-3);color:var(--ink-3);margin-left:5px;vertical-align:1px}
+.tag.info{background:var(--accent-soft);color:var(--accent)}
+.tag.opt{background:var(--warn-soft);color:var(--warn)}
+.yeargroup{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600;
+  padding:8px 4px 3px;border-bottom:1px solid var(--line);margin-bottom:3px}
+.addhol{display:grid;grid-template-columns:1fr 108px auto;gap:5px;margin-top:10px}
+.addhol input{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:4px 7px;font-size:12px;min-width:0}
+
+/* ---------- plan matrix ---------- */
+.tablewrap{overflow:auto;max-height:calc(100vh - 190px);border-radius:8px}
+table.plan{border-collapse:separate;border-spacing:0;width:100%;background:var(--surface);font-variant-numeric:tabular-nums}
+table.plan th,table.plan td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;text-align:left}
+table.plan thead th{position:sticky;top:0;z-index:3;background:var(--surface-2);vertical-align:bottom;
+  font-weight:600;font-size:11.5px;padding:8px 10px;border-bottom:2px solid var(--line-2)}
+table.plan thead th .sub{display:block;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);font-weight:400;margin-top:2px}
+table.plan th.rowhead{position:sticky;left:0;z-index:2;background:var(--surface);min-width:250px;max-width:330px;
+  font-weight:500;font-size:12.5px;padding:7px 10px 7px 14px;vertical-align:middle;border-right:2px solid var(--line-2)}
+table.plan thead th.corner{left:0;z-index:5;min-width:250px}
+table.plan tbody tr:hover td{background:var(--surface-2)}
+table.plan tbody tr:hover th.rowhead{background:var(--surface-2)}
+.stepname{display:block;line-height:1.3}
+.steprow{display:flex;align-items:baseline;gap:7px}
+.stepnr{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);min-width:16px}
+.wdbadge{font-size:9.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);
+  border:1px solid var(--line-2);border-radius:3px;padding:0 4px;white-space:nowrap}
+.wdbadge.fix{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+td.cell{padding:6px 10px;font-family:var(--mono);font-size:12.5px;white-space:nowrap;position:relative}
+td.cell .wd{color:var(--ink-3);margin-right:5px}
+td.cell.shifted{background:var(--warn-soft)}
+td.cell.shifted::after{content:"";position:absolute;top:4px;right:4px;width:4px;height:4px;border-radius:50%;background:var(--warn)}
+tr.milestone th.rowhead,tr.milestone td.cell{background:var(--milestone-soft) !important;font-weight:600;color:var(--milestone)}
+tr.milestone td.cell .wd{color:var(--milestone);opacity:.7}
+tr.phasestart th.rowhead,tr.phasestart td{border-top:2px solid var(--line-2)}
+th.rowhead{border-left:3px solid var(--ph)}
+.phaselabel{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--ph);
+  padding:9px 10px 3px 14px;display:block}
+table.plan td.cell.newmonth{border-left:1px solid var(--line-2)}
+table.plan.wide th.stepcol{min-width:112px;max-width:126px;white-space:normal;font-size:10.5px;line-height:1.3;
+  border-top:3px solid var(--ph);vertical-align:bottom}
+table.plan.wide th.stepcol .stepnr{color:var(--ph);font-weight:600}
+table.plan.wide th.rowhead{min-width:132px;font-weight:600}
+tr.phaserow th.rowhead,tr.phaserow td{background:var(--surface-3);border-bottom:1px solid var(--line-2)}
+tr.phaserow th.rowhead{padding:0}
+
+
+/* ---------- issue detail ---------- */
+.detailhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.detailhead select{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);padding:5px 9px;font-size:13.5px;font-weight:600}
+.detailhead .etag{font-family:var(--mono);font-size:13px;color:var(--milestone);font-weight:600;
+  background:var(--milestone-soft);padding:4px 10px;border-radius:var(--r)}
+.detailhead .spacer{flex:1}
+.timeline{padding:4px 0 10px}
+.tl{display:grid;grid-template-columns:96px 46px minmax(0,1fr) auto;gap:12px;align-items:baseline;
+  padding:7px 16px;border-left:3px solid var(--ph);margin-left:14px;position:relative}
+.tl:hover{background:var(--surface-2)}
+.tl .d{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tl .d .wd{color:var(--ink-3);margin-right:4px}
+.tl .kw{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+.tl .nm{font-size:13px;line-height:1.35}
+.tl .nm .nr{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-right:6px}
+.tl .rel{font-family:var(--mono);font-size:11px;color:var(--ink-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.tl.ms{background:var(--milestone-soft)}
+.tl.ms .d,.tl.ms .nm{color:var(--milestone);font-weight:600}
+.tl .shift{display:block;font-size:11px;color:var(--warn);margin-top:2px}
+.phasebar{display:flex;align-items:center;gap:9px;padding:14px 16px 4px 17px;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;font-weight:700;color:var(--ph)}
+.phasebar .ln{flex:1;height:1px;background:var(--line)}
+
+/* ---------- calendar ---------- */
+.calgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:12px;padding:14px}
+.month{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.month h3{font-size:12.5px;padding:6px 9px;background:var(--surface-2);border-bottom:1px solid var(--line);font-family:var(--sans);font-weight:600}
+.month h3 span{color:var(--ink-3);font-weight:400;font-family:var(--mono);font-size:11px}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;padding:5px;background:var(--surface)}
+.days .wdh{font-size:9px;text-align:center;color:var(--ink-3);font-weight:600;padding-bottom:2px}
+.day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  font-family:var(--mono);font-size:10.5px;border-radius:3px;color:var(--ink-2);position:relative}
+.day.we{color:var(--ink-3);background:var(--surface-2)}
+.day.hol{background:var(--crit-soft);color:var(--crit)}
+.day.has{cursor:pointer;font-weight:600;color:var(--ink)}
+.day.has:hover{outline:1px solid var(--accent)}
+.day.etag{background:var(--milestone);color:#fff}
+.dots{display:flex;gap:1.5px;height:4px;align-items:center}
+.dots i{width:3.5px;height:3.5px;border-radius:50%;background:var(--ph)}
+.day.etag .dots i{background:#fff}
+.callegend{display:flex;flex-wrap:wrap;gap:14px;padding:10px 16px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-2)}
+.callegend span{display:flex;align-items:center;gap:5px}
+.callegend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+
+/* ---------- findings ---------- */
+.findings{display:flex;flex-direction:column}
+.finding{display:grid;grid-template-columns:auto minmax(0,1fr);gap:11px;padding:11px 15px;border-bottom:1px solid var(--line);align-items:start}
+.finding:last-child{border-bottom:0}
+.sev{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;white-space:nowrap;margin-top:1px}
+.sev.warn{background:var(--warn-soft);color:var(--warn)}
+.sev.crit{background:var(--crit-soft);color:var(--crit)}
+.sev.info{background:var(--accent-soft);color:var(--accent)}
+.finding .t{font-size:13px;font-weight:500}
+.finding .m{font-size:12.5px;color:var(--ink-2);margin-top:2px}
+.finding .m b{font-family:var(--mono);font-weight:500;font-size:12px}
+.empty{padding:34px 20px;text-align:center;color:var(--ink-3);font-size:13px}
+.empty strong{display:block;font-family:var(--serif);font-size:16px;color:var(--ok);margin-bottom:4px}
+
+/* ---------- rules table ---------- */
+.rules{width:100%;border-collapse:collapse;font-size:12.5px}
+.rules th{text-align:left;font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:600;padding:8px 8px;border-bottom:1px solid var(--line-2);background:var(--surface-2);position:sticky;top:0;z-index:2}
+.rules td{padding:3px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.rules tr:hover td{background:var(--surface-2)}
+.rules td.nr{font-family:var(--mono);font-size:11px;color:var(--ink-3);width:28px;border-left:3px solid var(--ph)}
+.rules input[type=text]{width:100%;background:none;border:1px solid transparent;border-radius:4px;padding:3px 5px;font-size:12.5px}
+.rules input[type=number]{width:58px;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;
+  padding:3px 5px;font-family:var(--mono);font-size:12px;text-align:right}
+.rules select{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:3px 4px;font-size:12px}
+.rules input[type=text]:hover{border-color:var(--line)}
+.rules input:focus,.rules select:focus{background:var(--surface);border-color:var(--accent)}
+.rules .res{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);white-space:nowrap}
+.ruleshead{padding:12px 15px;border-bottom:1px solid var(--line);background:var(--surface-2);font-size:12.5px;color:var(--ink-2)}
+.ruleshead b{color:var(--ink)}
+
+/* ---------- export ---------- */
+.exportbar{display:flex;gap:8px;padding:12px 15px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center;background:var(--surface-2)}
+.exportbar .spacer{flex:1}
+#exportText{width:100%;min-height:340px;border:0;border-radius:0 0 8px 8px;padding:13px 15px;background:var(--surface);
+  font-family:var(--mono);font-size:11.5px;line-height:1.55;resize:vertical;white-space:pre}
+#exportText:focus{outline:none}
+.exphint{padding:9px 15px;font-size:11.5px;color:var(--ink-3);border-top:1px solid var(--line);background:var(--surface-2)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);
+  padding:9px 18px;border-radius:20px;font-size:13px;z-index:99;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .18s}
+.toast.show{opacity:1}
+
+/* ---------- print ---------- */
+@media print{
+  @page{size:A4 landscape;margin:9mm}
+  body{background:#fff;font-size:8.5pt}
+  .topbar,.rail,nav.tabs,.exportbar,.metabar,.rowbtns,.detailhead .spacer,.btn,.callegend{display:none !important}
+  .layout{display:block;padding:0}
+  .card{border:0;box-shadow:none;border-radius:0}
+  .tablewrap{overflow:visible;max-height:none}
+  table.plan th.rowhead,table.plan thead th{position:static}
+  table.plan{font-size:7.5pt}
+  td.cell{padding:3px 5px;font-size:7.5pt}
+  .printhead{display:block !important}
+  tr{break-inside:avoid}
+}
+.printhead{display:none;padding:0 0 8px;border-bottom:1px solid #000;margin-bottom:8px}
+.printhead h2{font-size:13pt}
+.printhead .sub{font-size:8pt;color:#444;margin-top:2px}
+</style>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="eyebrow">Berliner Wirtschaft &middot; IHK Berlin</span>
+    <h1>Produktionsplan</h1>
+  </div>
+  <div class="yearbox">
+    <label for="yearInput">Planungsjahr</label>
+    <div class="stepper">
+      <button type="button" id="yearMinus" aria-label="Jahr zurück">&minus;</button>
+      <input type="number" id="yearInput" min="2000" max="2100" step="1" value="2027" inputmode="numeric">
+      <button type="button" id="yearPlus" aria-label="Jahr vor">+</button>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button type="button" role="tab" data-view="plan" aria-selected="true">Terminplan</button>
+    <button type="button" role="tab" data-view="ausgabe" aria-selected="false">Ausgabe</button>
+    <button type="button" role="tab" data-view="kalender" aria-selected="false">Kalender</button>
+    <button type="button" role="tab" data-view="pruefung" aria-selected="false">Prüfung<span class="cnt zero" id="warnCount">0</span></button>
+    <button type="button" role="tab" data-view="regeln" aria-selected="false">Regelwerk</button>
+    <button type="button" role="tab" data-view="export" aria-selected="false">Export</button>
+  </nav>
+</header>
+
+<main class="layout">
+  <aside class="rail">
+    <section class="card">
+      <header>
+        <h2>Erscheinungstermine</h2>
+        <span class="hint" id="issueCount">10 Hefte</span>
+      </header>
+      <div class="body">
+        <div class="issues" id="issueList"></div>
+        <div class="rowbtns">
+          <button type="button" class="btn sm" id="addIssue">+ Ausgabe</button>
+          <button type="button" class="btn sm" id="suggestDates">Termine vorschlagen</button>
+        </div>
+        <div id="issueNote"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <header>
+        <h2>Feiertage &amp; freie Tage</h2>
+        <span class="hint" id="holCount"></span>
+      </header>
+      <div class="body">
+        <div class="holidays" id="holidayList"></div>
+        <div class="addhol">
+          <input type="text" id="holName" placeholder="Betriebsferien …" aria-label="Bezeichnung">
+          <input type="date" id="holDate" aria-label="Datum">
+          <button type="button" class="btn sm" id="addHol">+</button>
+        </div>
+        <div class="rowbtns">
+          <button type="button" class="btn sm ghost" id="excelMode">Feiertage wie in der Excel</button>
+          <button type="button" class="btn sm ghost" id="resetHol">Zurücksetzen</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <header><h2>Daten</h2></header>
+      <div class="body">
+        <div class="rowbtns" style="margin-top:0">
+          <button type="button" class="btn sm" id="printBtn">Plan drucken</button>
+          <button type="button" class="btn sm ghost" id="resetAll">Alles zurücksetzen</button>
+        </div>
+      </div>
+    </section>
+  </aside>
+
+  <section class="stage">
+    <div class="metabar" id="metabar"></div>
+    <div id="panel"></div>
+  </section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* =========================================================================
+   Produktionsplan Berliner Wirtschaft
+   Rückwärtsterminierung vom Erscheinungstag (E-Tag) über 24 Produktions-
+   schritte. Die Rechenregel ist die 1:1-Portierung der LAMBDA-Funktion
+   fnPlantermin aus der Excel-Vorlage (Blätter Plan / Feiertage / Eingabe /
+   Stammdaten) und liefert für 2027 exakt dieselben 240 Termine.
+   ========================================================================= */
+
+/* ---------- Datums-Werkzeuge (alles in UTC, damit keine DST-Sprünge) ------ */
+var MS = 864e5;
+var WD_SHORT = ["Mo","Di","Mi","Do","Fr","Sa","So"];
+var WD_LONG  = ["Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag"];
+var MONTHS   = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+
+function D(y,m,d){ return new Date(Date.UTC(y, m-1, d)); }
+function iso(dt){ return dt.toISOString().slice(0,10); }
+function parseISO(s){ var p = String(s).split("-"); return D(+p[0], +p[1], +p[2]); }
+function addDays(dt,n){ return new Date(dt.getTime() + n*MS); }
+function diffDays(a,b){ return Math.round((b - a)/MS); }
+function dow(dt){ var w = dt.getUTCDay(); return w === 0 ? 7 : w; }   /* 1 = Mo … 7 = So */
+function fmt(dt){ var p=n=>String(n).padStart(2,"0"); return p(dt.getUTCDate())+"."+p(dt.getUTCMonth()+1)+"."+dt.getUTCFullYear(); }
+function fmtShort(dt){ var p=n=>String(n).padStart(2,"0"); return p(dt.getUTCDate())+"."+p(dt.getUTCMonth()+1)+"."+String(dt.getUTCFullYear()).slice(2); }
+function wd(dt){ return WD_SHORT[dow(dt)-1]; }
+function isoWeek(dt){
+  var t = new Date(dt.getTime());
+  t.setUTCDate(t.getUTCDate() + 4 - dow(t));
+  var y0 = D(t.getUTCFullYear(),1,1);
+  return Math.ceil(((t - y0)/MS + 1)/7);
+}
+function easter(y){
+  var a=y%19, b=Math.floor(y/100), c=y%100, d=Math.floor(b/4), e=b%4,
+      f=Math.floor((b+8)/25), g=Math.floor((b-f+1)/3),
+      h=(19*a+b-d-g+15)%30, i=Math.floor(c/4), k=c%4,
+      l=(32+2*e+2*i-h-k)%7, m=Math.floor((a+11*h+22*l)/451);
+  return D(y, Math.floor((h+l-7*m+114)/31), ((h+l-7*m+114)%31)+1);
+}
+
+/* ---------- Feiertage Berlin --------------------------------------------- */
+/* on:false = Vorschlag, standardmäßig nicht als arbeitsfrei gewertet        */
+function holidaysOfYear(y){
+  var o = easter(y);
+  return [
+    {id:y+"-neujahr",  name:"Neujahr",                   date:iso(D(y,1,1)),      on:true},
+    {id:y+"-frauen",   name:"Internationaler Frauentag", date:iso(D(y,3,8)),      on:true,  tag:"seit 2019 in Berlin"},
+    {id:y+"-karfr",    name:"Karfreitag",                date:iso(addDays(o,-2)), on:true},
+    {id:y+"-ostso",    name:"Ostersonntag",              date:iso(o),             on:true},
+    {id:y+"-ostmo",    name:"Ostermontag",               date:iso(addDays(o,1)),  on:true},
+    {id:y+"-mai",      name:"Tag der Arbeit",            date:iso(D(y,5,1)),      on:true},
+    {id:y+"-himmel",   name:"Christi Himmelfahrt",       date:iso(addDays(o,39)), on:true},
+    {id:y+"-pfiso",    name:"Pfingstsonntag",            date:iso(addDays(o,49)), on:true},
+    {id:y+"-pfimo",    name:"Pfingstmontag",             date:iso(addDays(o,50)), on:true},
+    {id:y+"-einheit",  name:"Tag der Deutschen Einheit", date:iso(D(y,10,3)),     on:true},
+    {id:y+"-reform",   name:"Reformationstag",           date:iso(D(y,10,31)),    on:false, tag:"in Berlin kein Feiertag"},
+    {id:y+"-heilig",   name:"Heiligabend",               date:iso(D(y,12,24)),    on:false, tag:"betriebsfrei?"},
+    {id:y+"-weih1",    name:"1. Weihnachtstag",          date:iso(D(y,12,25)),    on:true},
+    {id:y+"-weih2",    name:"2. Weihnachtstag",          date:iso(D(y,12,26)),    on:true},
+    {id:y+"-silv",     name:"Silvester",                 date:iso(D(y,12,31)),    on:false, tag:"betriebsfrei?"}
+  ];
+}
+
+/* ---------- Produktionsschritte (Stammdaten) ------------------------------
+   wd     : Ziel-Wochentag 1=Mo … 5=Fr, 0 = flexibel (jeder Arbeitstag)
+   anchor : Nr. des Schritts, von dem aus gerechnet wird (0 = E-Tag/Wurzel)
+   offset : Kalendertage gegenüber dem Anker
+   dir    : -1 = bei Konflikt rückwärts suchen, 1 = vorwärts
+   ------------------------------------------------------------------------- */
+var PHASES = [
+  {key:"a", label:"Anzeigen & Material", css:"var(--ph-1)"},
+  {key:"b", label:"Redaktion",           css:"var(--ph-2)"},
+  {key:"c", label:"Herstellung & Layout",css:"var(--ph-3)"},
+  {key:"d", label:"Druck, Versand, Erscheinen", css:"var(--ph-4)"}
+];
+var DEFAULT_STEPS = [
+  {nr:1,  label:"Umfangsmeldung für Papierbestellung",                                       wd:0, anchor:2,  offset:7,  dir:-1, phase:"a"},
+  {nr:2,  label:"Anmeldung Sonderformate, Beihefter, TOC an Herstellung und Redaktion",      wd:0, anchor:3,  offset:-3, dir:-1, phase:"a"},
+  {nr:3,  label:"Buchungsschluss und Anlieferung Material Advertorial",                      wd:0, anchor:4,  offset:-4, dir:-1, phase:"a"},
+  {nr:4,  label:"Anmeldung Fachabteilungen",                                                 wd:5, anchor:5,  offset:-3, dir:-1, phase:"b"},
+  {nr:5,  label:"Kleine Redaktionskonferenz",                                                wd:1, anchor:6,  offset:-2, dir:-1, phase:"b"},
+  {nr:6,  label:"Große Redaktionskonferenz",                                                 wd:3, anchor:7,  offset:-8, dir:-1, phase:"b"},
+  {nr:7,  label:"Anzeigenschluss und Inhaltsprüfung Beihefter und Beilagen",                 wd:0, anchor:8,  offset:-4, dir:1,  phase:"b"},
+  {nr:8,  label:"Redaktionsschluss",                                                         wd:0, anchor:12, offset:-7, dir:-1, phase:"b"},
+  {nr:9,  label:"Druckunterlagenschluss und Start Bildbearbeitung",                          wd:3, anchor:11, offset:-5, dir:-1, phase:"c"},
+  {nr:10, label:"Auflagenmeldung von der IHK und dpv bis 10.00 Uhr",                         wd:3, anchor:17, offset:-8, dir:-1, phase:"c"},
+  {nr:11, label:"Ausdrucke der Anzeigen an die IHK",                                         wd:1, anchor:12, offset:0,  dir:-1, phase:"c"},
+  {nr:12, label:"Start der Seitenfreigabe",                                                  wd:0, anchor:13, offset:-1, dir:-1, phase:"c"},
+  {nr:13, label:"EPSe bereitstellen für die Redaktion",                                      wd:2, anchor:15, offset:-2, dir:-1, phase:"c"},
+  {nr:14, label:"Beilagenanlieferung eintreffend Druckerei bis 15.00 Uhr",                   wd:0, anchor:21, offset:-5, dir:-1, phase:"c"},
+  {nr:15, label:"Layout-Imprimatur, Endabstimmung mit IHK bis 18.00 Uhr, Ende Bildbearbeitung", wd:4, anchor:16, offset:1, dir:-1, phase:"c"},
+  {nr:16, label:"Seiten von Redaktion an Herstellung",                                       wd:3, anchor:18, offset:-1, dir:-1, phase:"c"},
+  {nr:17, label:"Auflagenmeldung an Druckerei bis 14.00 Uhr",                                wd:0, anchor:18, offset:0,  dir:-1, phase:"c"},
+  {nr:18, label:"Proofabstimmung mit der Redaktion",                                         wd:4, anchor:19, offset:-1, dir:-1, phase:"c"},
+  {nr:19, label:"Prooffreigabe, Daten an Druckerei bis 17.00 Uhr, Druckfreigabe",            wd:5, anchor:21, offset:-3, dir:-1, phase:"d"},
+  {nr:20, label:"E-Paper erstellen (100 dpi, Einzelseiten, Export „nur epaper“)",            wd:0, anchor:21, offset:0,  dir:-1, phase:"d"},
+  {nr:21, label:"Druck",                                                                     wd:1, anchor:24, offset:-9, dir:-1, phase:"d"},
+  {nr:22, label:"Belege eintreffend (lt. Anschriftenliste)",                                 wd:0, anchor:23, offset:0,  dir:-1, phase:"d"},
+  {nr:23, label:"Postversand",                                                               wd:5, anchor:24, offset:-5, dir:-1, phase:"d"},
+  {nr:24, label:"E-Tag Berliner Wirtschaft",                                                 wd:3, anchor:0,  offset:0,  dir:-1, phase:"d"}
+];
+
+/* ---------- Standard-Heftraster ------------------------------------------ */
+/* Doppelhefte erscheinen am letzten Mittwoch des ersten Monats, alle
+   anderen Hefte am ersten Mittwoch ihres Monats.                            */
+var ISSUE_TEMPLATE = [
+  {name:"Januar / Februar", month:1,  rule:"last"},
+  {name:"März",             month:3,  rule:"first"},
+  {name:"April",            month:4,  rule:"first"},
+  {name:"Mai",              month:5,  rule:"first"},
+  {name:"Juni",             month:6,  rule:"first"},
+  {name:"Juli / August",    month:7,  rule:"last"},
+  {name:"September",        month:9,  rule:"first"},
+  {name:"Oktober",          month:10, rule:"first"},
+  {name:"November",         month:11, rule:"first"},
+  {name:"Dezember",         month:12, rule:"first"}
+];
+function nthWeekday(year, month, target, mode){
+  if (mode === "first"){
+    var d = D(year, month, 1);
+    while (dow(d) !== target) d = addDays(d, 1);
+    return d;
+  }
+  var last = D(year, month + 1, 1); last = addDays(last, -1);
+  while (dow(last) !== target) last = addDays(last, -1);
+  return last;
+}
+function suggestIssues(year){
+  return ISSUE_TEMPLATE.map(function(t, i){
+    return {id:"i"+(i+1), name:t.name, raw:iso(nthWeekday(year, t.month, 3, t.rule))};
+  });
+}
+
+/* =========================================================================
+   Rechenkern – 1:1-Portierung von fnPlantermin
+   ========================================================================= */
+function isFreeDay(dt, hol){ return dow(dt) >= 6 || hol.has(iso(dt)); }
+
+/* Excel WORKDAY(): zählt Mo–Fr ohne Feiertage */
+function workday(start, days, hol){
+  var step = days > 0 ? 1 : -1, n = Math.abs(days), x = start, guard = 0;
+  while (n > 0 && guard++ < 3000){ x = addDays(x, step); if (!isFreeDay(x, hol)) n--; }
+  return x;
+}
+/* Excel WORKDAY.INTL() mit Maske für genau einen Wochentag */
+function workdayWd(start, days, target, hol){
+  var step = days > 0 ? 1 : -1, n = Math.abs(days), x = start, guard = 0;
+  while (n > 0 && guard++ < 3000){ x = addDays(x, step); if (dow(x) === target && !hol.has(iso(x))) n--; }
+  return x;
+}
+/* Basisdatum auf einen zulässigen Termin ziehen */
+function planTermin(basis, target, hol, dir){
+  var conflict = hol.has(iso(basis)) || dow(basis) >= 6;
+  if (target === 0){
+    if (!conflict) return basis;
+    return dir === 1 ? workday(addDays(basis,-1), 1, hol) : workday(addDays(basis,1), -1, hol);
+  }
+  if (dow(basis) !== target || conflict){
+    return dir === 1 ? workdayWd(addDays(basis,-1), 1, target, hol) : workdayWd(addDays(basis,1), -1, target, hol);
+  }
+  return basis;
+}
+/* Kompletten Heftplan rückwärts vom E-Tag rechnen */
+function computePlan(steps, etag, hol){
+  var byNr = new Map(steps.map(function(s){ return [s.nr, s]; }));
+  var done = new Map(), busy = new Set();
+  function resolve(nr){
+    if (done.has(nr)) return done.get(nr);
+    if (busy.has(nr)) throw new Error("Zirkelbezug: Schritt " + nr + " hängt von sich selbst ab.");
+    var s = byNr.get(nr);
+    if (!s) throw new Error("Schritt " + nr + " ist als Anker angegeben, existiert aber nicht.");
+    busy.add(nr);
+    var basis = s.anchor === 0 ? etag : addDays(resolve(s.anchor).date, s.offset);
+    var date  = planTermin(basis, s.wd, hol, s.dir);
+    busy.delete(nr);
+    var r = {step:s, basis:basis, date:date, shift:diffDays(basis, date)};
+    done.set(nr, r);
+    return r;
+  }
+  return steps.map(function(s){ return resolve(s.nr); });
+}
+
+/* =========================================================================
+   Zustand
+   ========================================================================= */
+var STORE = "bw-produktionsplan-v1";
+var state, undoSnapshot = null;
+
+function defaultState(year){
+  return {
+    year: year,
+    issues: suggestIssues(year),
+    steps: DEFAULT_STEPS.map(function(s){ return Object.assign({}, s); }),
+    holOff: [],      /* deaktivierte Standard-Feiertage (ids) */
+    holOn:  [],      /* zusätzlich aktivierte Vorschläge (ids) */
+    holExtra: [],    /* eigene freie Tage {id,name,date} */
+    view: "plan",
+    orientation: "steps",
+    selected: 0
+  };
+}
+function load(){
+  try{
+    var raw = localStorage.getItem(STORE);
+    if (raw){
+      var s = JSON.parse(raw);
+      if (s && s.year && Array.isArray(s.issues) && Array.isArray(s.steps)) return s;
+    }
+  }catch(e){}
+  return defaultState(2027);
+}
+function save(){
+  try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){}
+}
+
+/* ---------- Feiertagsliste für Vor-, Plan- und Folgejahr ------------------ */
+function holidayModel(){
+  var years = [state.year - 1, state.year, state.year + 1], groups = [];
+  var off = new Set(state.holOff), on = new Set(state.holOn);
+  years.forEach(function(y){
+    var items = holidaysOfYear(y).map(function(h){
+      return Object.assign({}, h, {active: h.on ? !off.has(h.id) : on.has(h.id), year:y});
+    });
+    state.holExtra.filter(function(x){ return parseISO(x.date).getUTCFullYear() === y; })
+      .forEach(function(x){ items.push({id:x.id, name:x.name, date:x.date, active:true, custom:true, year:y}); });
+    items.sort(function(a,b){ return a.date < b.date ? -1 : 1; });
+    groups.push({year:y, items:items});
+  });
+  var set = new Set();
+  groups.forEach(function(g){ g.items.forEach(function(h){ if (h.active) set.add(h.date); }); });
+  return {groups:groups, set:set};
+}
+
+/* =========================================================================
+   Modell: Eingaben + Regeln -> fertiger Plan + Befunde
+   ========================================================================= */
+function buildModel(){
+  var hol = holidayModel();
+  var steps = state.steps.slice().sort(function(a,b){ return a.nr - b.nr; });
+  var findings = [], issues = [], error = null;
+
+  state.issues.forEach(function(inp, idx){
+    var raw = parseISO(inp.raw);
+    var corrected = isFreeDay(raw, hol.set) ? workday(addDays(raw,1), -1, hol.set) : raw;
+    var rows;
+    try{
+      rows = computePlan(steps, corrected, hol.set);
+    }catch(e){
+      error = e.message; rows = [];
+    }
+    var byNr = new Map(rows.map(function(r){ return [r.step.nr, r]; }));
+    var root = steps.filter(function(s){ return s.anchor === 0; })[0];
+    var etagRow = root ? byNr.get(root.nr) : null;
+    var dates = rows.map(function(r){ return r.date; });
+    issues.push({
+      id: inp.id, name: inp.name, index: idx,
+      raw: raw, corrected: corrected,
+      rows: rows, byNr: byNr,
+      etag: etagRow ? etagRow.date : corrected,
+      first: dates.length ? new Date(Math.min.apply(null, dates)) : corrected,
+      last:  dates.length ? new Date(Math.max.apply(null, dates)) : corrected
+    });
+  });
+
+  if (error){
+    findings.push({sev:"crit", t:"Regelwerk nicht auflösbar", m:error});
+    return {issues:issues, steps:steps, hol:hol, findings:findings, broken:true};
+  }
+
+  /* --- Befunde ---------------------------------------------------------- */
+  issues.forEach(function(is){
+    if (+is.corrected !== +is.raw){
+      findings.push({sev:"info", issue:is.name,
+        t:"Erscheinungstermin verschoben",
+        m:"<b>"+fmt(is.raw)+"</b> ("+WD_LONG[dow(is.raw)-1]+") ist kein Arbeitstag – gerechnet wird mit <b>"+fmt(is.corrected)+"</b>."});
+    }
+    if (+is.etag !== +is.corrected){
+      findings.push({sev:"warn", issue:is.name,
+        t:"E-Tag weicht vom eingegebenen Termin ab",
+        m:"Eingabe <b>"+fmt(is.corrected)+"</b> ("+WD_LONG[dow(is.corrected)-1]+"), Ziel-Wochentag des E-Tags ist "+WD_LONG[(is.byNr.get(24)?is.byNr.get(24).step.wd:3)-1]+" &rarr; geplant auf <b>"+fmt(is.etag)+"</b>. Im Regelwerk lässt sich der Ziel-Wochentag auf „flexibel“ stellen."});
+    }
+    is.rows.forEach(function(r){
+      if (Math.abs(r.shift) >= 3){
+        findings.push({sev:"warn", issue:is.name,
+          t:"Schritt "+r.step.nr+" um "+Math.abs(r.shift)+" Tage verschoben",
+          m:"„"+r.step.label+"“: Rechenbasis <b>"+fmt(r.basis)+"</b> &rarr; nächster zulässiger Termin <b>"+fmt(r.date)+"</b>. Ursache: Feiertag, Wochenende oder Ziel-Wochentag."});
+      }
+      var m = r.date.getUTCMonth(), d = r.date.getUTCDate();
+      if ((m === 11 && d >= 23) || (m === 0 && d <= 2)){
+        findings.push({sev:"info", issue:is.name,
+          t:"Termin zwischen den Jahren",
+          m:"„"+r.step.label+"“ liegt am <b>"+fmt(r.date)+"</b>. Betriebsruhe im Verlag oder in der Druckerei prüfen."});
+      }
+      if (r.step.anchor !== 0){
+        var a = is.byNr.get(r.step.anchor);
+        if (a && r.step.offset < 0 && r.date > a.date){
+          findings.push({sev:"warn", issue:is.name,
+            t:"Schritt "+r.step.nr+" liegt hinter seinem Anker",
+            m:"„"+r.step.label+"“ (<b>"+fmt(r.date)+"</b>) fällt nach Schritt "+a.step.nr+" „"+a.step.label+"“ (<b>"+fmt(a.date)+"</b>), obwohl der Versatz negativ ist."});
+        }
+      }
+    });
+  });
+  for (var i = 1; i < issues.length; i++){
+    if (issues[i].etag <= issues[i-1].etag){
+      findings.push({sev:"crit", issue:issues[i].name,
+        t:"Erscheinungstermine nicht in Reihenfolge",
+        m:"„"+issues[i].name+"“ (<b>"+fmt(issues[i].etag)+"</b>) erscheint nicht nach „"+issues[i-1].name+"“ (<b>"+fmt(issues[i-1].etag)+"</b>)."});
+    }
+  }
+  if (issues.length > 2){
+    var runs = issues.map(function(is){ return diffDays(is.first, is.etag); });
+    var med = runs.slice().sort(function(a,b){ return a-b; })[Math.floor(runs.length/2)];
+    issues.forEach(function(is, i){
+      if (Math.abs(runs[i] - med) > 7){
+        findings.push({sev:"info", issue:is.name,
+          t:"Vorlauf weicht ab",
+          m:"Produktionsvorlauf <b>"+runs[i]+" Tage</b> gegenüber üblicherweise <b>"+med+" Tagen</b>. Grund sind meist Feiertagsketten (Ostern, Weihnachten) oder eine lange Sommerpause."});
+      }
+    });
+  }
+  var rank = {crit:0, warn:1, info:2};
+  findings.sort(function(a,b){ return rank[a.sev] - rank[b.sev]; });
+  return {issues:issues, steps:steps, hol:hol, findings:findings, broken:false};
+}
+
+/* =========================================================================
+   Rendering
+   ========================================================================= */
+var PH = {}; PHASES.forEach(function(p){ PH[p.key] = p; });
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function el(id){ return document.getElementById(id); }
+function wdName(code){ return code === 0 ? "flexibel" : WD_LONG[code-1]; }
+function phaseOf(s){ return PH[s.phase] || PHASES[0]; }
+
+var model = null;
+
+function render(withRail){
+  model = buildModel();
+  if (withRail !== false){ renderIssues(); renderHolidays(); }
+  renderMeta();
+  renderPanel();
+  var n = model.findings.filter(function(f){ return f.sev !== "info"; }).length;
+  var c = el("warnCount"); c.textContent = n; c.className = "cnt" + (n ? "" : " zero");
+  el("issueCount").textContent = state.issues.length + (state.issues.length === 1 ? " Heft" : " Hefte");
+  el("holCount").textContent = model.hol.set.size + " Tage";
+  save();
+}
+
+/* ---------- Rail: Erscheinungstermine ------------------------------------ */
+function renderIssues(){
+  el("issueList").innerHTML = state.issues.map(function(is, i){
+    return '<div class="issue" data-i="'+i+'">'+
+      '<span class="n">'+(i+1)+'</span>'+
+      '<input type="text" value="'+esc(is.name)+'" data-f="name" aria-label="Bezeichnung Heft '+(i+1)+'">'+
+      '<input type="date" value="'+esc(is.raw)+'" data-f="raw" aria-label="Erscheinungstermin Heft '+(i+1)+'">'+
+      '<button type="button" class="x" data-f="del" title="Ausgabe entfernen" aria-label="Ausgabe entfernen">&times;</button>'+
+    '</div>';
+  }).join("");
+  var note = el("issueNote");
+  note.innerHTML = undoSnapshot
+    ? '<div class="note"><span>Termine für '+state.year+' vorgeschlagen. Jede Zeile ist frei änderbar.</span><button type="button" id="undoBtn">Rückgängig</button></div>'
+    : '';
+  if (undoSnapshot) el("undoBtn").addEventListener("click", function(){
+      state.issues = undoSnapshot.issues; state.year = undoSnapshot.year;
+      undoSnapshot = null; el("yearInput").value = state.year; render();
+    });
+}
+
+/* ---------- Rail: Feiertage ---------------------------------------------- */
+function renderHolidays(){
+  el("holidayList").innerHTML = model.hol.groups.map(function(g){
+    return '<div class="yeargroup">'+g.year+(g.year === state.year ? " · Planungsjahr" : "")+'</div>'+
+      g.items.map(function(h){
+        var d = parseISO(h.date);
+        return '<label class="hol'+(h.active ? "" : " off")+'">'+
+          '<input type="checkbox" data-hol="'+esc(h.id)+'"'+(h.active ? " checked" : "")+'>'+
+          '<span class="nm">'+esc(h.name)+(h.tag ? '<span class="tag '+(h.custom ? "info" : "opt")+'">'+esc(h.tag)+'</span>' : "")+
+            (h.custom ? '<span class="tag info">eigener Eintrag</span>' : "")+'</span>'+
+          '<span class="dt">'+wd(d)+" "+fmtShort(d)+'</span>'+
+          (h.custom ? '<button type="button" class="x" data-delhol="'+esc(h.id)+'" title="Entfernen">&times;</button>' : "")+
+        '</label>';
+      }).join("");
+  }).join("");
+}
+
+/* ---------- Kopfzeile mit Kennzahlen ------------------------------------- */
+function renderMeta(){
+  var is = model.issues;
+  if (!is.length){ el("metabar").innerHTML = '<div class="m"><span class="k">Keine Ausgaben</span><span class="v">–</span></div>'; return; }
+  var first = new Date(Math.min.apply(null, is.map(function(x){ return +x.first; })));
+  var last  = new Date(Math.max.apply(null, is.map(function(x){ return +x.last; })));
+  var warn  = model.findings.filter(function(f){ return f.sev !== "info"; }).length;
+  var runs  = is.map(function(x){ return diffDays(x.first, x.etag); });
+  var avg   = Math.round(runs.reduce(function(a,b){ return a+b; }, 0) / runs.length);
+  el("metabar").innerHTML = [
+    ["Ausgaben", is.length + " × " + state.steps.length + " Termine"],
+    ["Produktionsstart", wd(first) + " " + fmt(first)],
+    ["Letzter Termin", wd(last) + " " + fmt(last)],
+    ["Vorlauf ø", avg + " Tage"],
+    ["Prüfung", warn ? warn + (warn === 1 ? " Hinweis" : " Hinweise") : "ohne Befund", warn ? "warnv" : "okv"]
+  ].map(function(m){
+    return '<div class="m"><span class="k">'+m[0]+'</span><span class="v '+(m[2]||"")+'">'+m[1]+'</span></div>';
+  }).join("");
+}
+
+/* ---------- Panel-Router -------------------------------------------------- */
+function renderPanel(){
+  var v = state.view, html;
+  if (model.broken && v !== "regeln") v = "pruefung";
+  if      (v === "plan")     html = viewPlan();
+  else if (v === "ausgabe")  html = viewIssue();
+  else if (v === "kalender") html = viewCalendar();
+  else if (v === "pruefung") html = viewFindings();
+  else if (v === "regeln")   html = viewRules();
+  else                       html = viewExport();
+  el("panel").innerHTML = html;
+  if (state.view === "export") buildExport();
+}
+
+/* ---------- Ansicht: Terminplan ------------------------------------------ */
+function cellHTML(r, prev){
+  var cls = "cell" + (Math.abs(r.shift) >= 1 ? " shifted" : "") +
+            (prev && prev.getUTCMonth() !== r.date.getUTCMonth() ? " newmonth" : "");
+  var title = r.shift
+    ? "Rechenbasis " + fmt(r.basis) + " → " + fmt(r.date) + " (" + WD_LONG[dow(r.date)-1] + ", " +
+      (r.shift > 0 ? "+" : "") + r.shift + " Tage)"
+    : WD_LONG[dow(r.date)-1] + ", KW " + isoWeek(r.date);
+  return '<td class="'+cls+'" title="'+esc(title)+'"><span class="wd">'+wd(r.date)+'</span>'+fmtShort(r.date)+'</td>';
+}
+function viewPlan(){
+  var is = model.issues;
+  if (!is.length) return card("Terminplan", '<div class="empty">Noch keine Ausgabe angelegt.</div>');
+  var head =
+    '<div class="printhead"><h2>Produktionsplan Berliner Wirtschaft '+esc(is[0].name)+" bis "+esc(is[is.length-1].name)+' '+state.year+'</h2>'+
+    '<div class="sub">Stand '+fmt(D(new Date().getFullYear(), new Date().getMonth()+1, new Date().getDate()))+'</div></div>';
+  var body;
+  if (state.orientation === "steps"){
+    var rows = "", lastPhase = null;
+    model.steps.forEach(function(s){
+      var ph = phaseOf(s);
+      if (ph.key !== lastPhase){
+        rows += '<tr class="phaserow" style="--ph:'+ph.css+'"><th class="rowhead"><span class="phaselabel">'+esc(ph.label)+
+                '</span></th><td colspan="'+is.length+'"></td></tr>';
+        lastPhase = ph.key;
+      }
+      rows += '<tr'+(s.anchor === 0 ? ' class="milestone"' : "")+' style="--ph:'+ph.css+'">'+
+        '<th class="rowhead"><div class="steprow"><span class="stepnr">'+s.nr+'</span>'+
+        '<span class="stepname">'+esc(s.label)+'</span>'+
+        '<span class="wdbadge'+(s.wd ? " fix" : "")+'">'+(s.wd ? WD_SHORT[s.wd-1] : "flex")+'</span></div></th>'+
+        is.map(function(x){ var r = x.byNr.get(s.nr); return r ? cellHTML(r, null) : '<td class="cell">–</td>'; }).join("")+
+      '</tr>';
+    });
+    body = '<table class="plan"><thead><tr><th class="corner">Produktionsschritt</th>'+
+      is.map(function(x){ return '<th>'+esc(x.name)+'<span class="sub">'+wd(x.etag)+" "+fmtShort(x.etag)+'</span></th>'; }).join("")+
+      '</tr></thead><tbody>'+rows+'</tbody></table>';
+  } else {
+    body = '<table class="plan wide"><thead><tr><th class="corner">Ausgabe</th>'+
+      model.steps.map(function(s){
+        return '<th class="stepcol" style="--ph:'+phaseOf(s).css+'"><span class="stepnr">'+s.nr+'</span> '+esc(s.label)+
+               '<span class="sub">'+(s.wd ? WD_SHORT[s.wd-1] : "flex")+'</span></th>';
+      }).join("")+'</tr></thead><tbody>'+
+      is.map(function(x){
+        var prev = null;
+        return '<tr style="--ph:var(--ph-2)"><th class="rowhead"><div class="steprow"><span class="stepname">'+esc(x.name)+
+          '</span></div></th>'+
+          model.steps.map(function(s){ var r = x.byNr.get(s.nr); return r ? cellHTML(r, null) : '<td class="cell">–</td>'; }).join("")+
+        '</tr>';
+      }).join("")+'</tbody></table>';
+  }
+  var tools =
+    '<button type="button" class="btn sm" data-act="orient" data-v="steps" aria-pressed="'+(state.orientation === "steps")+'">Schritte als Zeilen</button>'+
+    '<button type="button" class="btn sm" data-act="orient" data-v="issues" aria-pressed="'+(state.orientation === "issues")+'">Ausgaben als Zeilen</button>';
+  return card("Terminplan " + state.year, head + '<div class="tablewrap">'+body+'</div>', tools);
+}
+
+/* ---------- Ansicht: einzelne Ausgabe ------------------------------------ */
+function viewIssue(){
+  var is = model.issues;
+  if (!is.length) return card("Ausgabe", '<div class="empty">Noch keine Ausgabe angelegt.</div>');
+  var idx = Math.min(state.selected, is.length - 1), x = is[idx];
+  var rows = x.rows.slice().sort(function(a,b){ return a.date - b.date || a.step.nr - b.step.nr; });
+  var lastPhase = null, out = "";
+  rows.forEach(function(r){
+    var ph = phaseOf(r.step);
+    if (ph.key !== lastPhase){
+      out += '<div class="phasebar" style="--ph:'+ph.css+'">'+esc(ph.label)+'<span class="ln"></span></div>';
+      lastPhase = ph.key;
+    }
+    var rel = diffDays(r.date, x.etag);
+    out += '<div class="tl'+(r.step.anchor === 0 ? " ms" : "")+'" style="--ph:'+ph.css+'">'+
+      '<span class="d"><span class="wd">'+wd(r.date)+'</span>'+fmt(r.date)+'</span>'+
+      '<span class="kw">KW&nbsp;'+isoWeek(r.date)+'</span>'+
+      '<span class="nm"><span class="nr">'+r.step.nr+'</span>'+esc(r.step.label)+
+        (r.shift ? '<span class="shift">Basis '+fmt(r.basis)+' → verschoben auf '+WD_LONG[dow(r.date)-1]+' ('+(r.shift>0?"+":"")+r.shift+' Tage)</span>' : "")+
+      '</span>'+
+      '<span class="rel">'+(rel > 0 ? "E − " + rel + " T" : "E-Tag")+'</span>'+
+    '</div>';
+  });
+  var sel = '<select id="issueSel" aria-label="Ausgabe wählen">'+is.map(function(y, i){
+      return '<option value="'+i+'"'+(i === idx ? " selected" : "")+'>'+esc(y.name)+'</option>';
+    }).join("")+'</select>';
+  var headBar = '<div class="detailhead">'+sel+
+    '<span class="etag">E-Tag '+wd(x.etag)+" "+fmt(x.etag)+'</span>'+
+    '<span class="kw" style="font-family:var(--mono);font-size:12px;color:var(--ink-3)">Vorlauf '+diffDays(x.first, x.etag)+' Tage · Start '+fmt(x.first)+'</span>'+
+    '<span class="spacer"></span></div>';
+  return card("Ausgabe im Detail", headBar + '<div class="timeline">'+out+'</div>');
+}
+
+/* ---------- Ansicht: Jahreskalender -------------------------------------- */
+function viewCalendar(){
+  var is = model.issues;
+  if (!is.length) return card("Kalender", '<div class="empty">Noch keine Ausgabe angelegt.</div>');
+  var byDay = new Map();
+  is.forEach(function(x){
+    x.rows.forEach(function(r){
+      var k = iso(r.date);
+      if (!byDay.has(k)) byDay.set(k, []);
+      byDay.get(k).push({issue:x, r:r});
+    });
+  });
+  var min = new Date(Math.min.apply(null, is.map(function(x){ return +x.first; })));
+  var max = new Date(Math.max.apply(null, is.map(function(x){ return +x.last; })));
+  var months = [], cur = D(min.getUTCFullYear(), min.getUTCMonth()+1, 1);
+  while (cur <= max){
+    months.push(cur);
+    cur = D(cur.getUTCFullYear(), cur.getUTCMonth()+2, 1);
+  }
+  var grid = months.map(function(m){
+    var y = m.getUTCFullYear(), mo = m.getUTCMonth()+1;
+    var firstDow = dow(m), daysIn = new Date(Date.UTC(y, mo, 0)).getUTCDate();
+    var cells = WD_SHORT.map(function(w){ return '<span class="wdh">'+w+'</span>'; }).join("");
+    for (var i = 1; i < firstDow; i++) cells += '<span class="day"></span>';
+    for (var d = 1; d <= daysIn; d++){
+      var dt = D(y, mo, d), k = iso(dt), hits = byDay.get(k) || [];
+      var isHol = model.hol.set.has(k), isEtag = hits.some(function(h){ return h.r.step.anchor === 0; });
+      var cls = "day" + (dow(dt) >= 6 ? " we" : "") + (isHol ? " hol" : "") +
+                (hits.length ? " has" : "") + (isEtag ? " etag" : "");
+      var title = (isHol ? "Feiertag / frei" : WD_LONG[dow(dt)-1]) + " " + fmt(dt) +
+        (hits.length ? "\n" + hits.map(function(h){ return "• " + h.issue.name + ": " + h.r.step.label; }).join("\n") : "");
+      var dots = hits.slice(0,4).map(function(h){ return '<i style="--ph:'+phaseOf(h.r.step).css+'"></i>'; }).join("");
+      cells += '<span class="'+cls+'" title="'+esc(title)+'">'+d+'<span class="dots">'+dots+'</span></span>';
+    }
+    return '<div class="month"><h3>'+MONTHS[mo-1]+' <span>'+y+'</span></h3><div class="days">'+cells+'</div></div>';
+  }).join("");
+  var legend = '<div class="callegend">'+
+    PHASES.map(function(p){ return '<span><i style="background:'+p.css+'"></i>'+esc(p.label)+'</span>'; }).join("")+
+    '<span><i style="background:var(--milestone)"></i>E-Tag</span>'+
+    '<span><i style="background:var(--crit-soft);border:1px solid var(--crit)"></i>Feiertag / frei</span></div>';
+  return card("Kalender " + fmt(min) + " – " + fmt(max), '<div class="calgrid">'+grid+'</div>'+legend);
+}
+
+/* ---------- Ansicht: Prüfung --------------------------------------------- */
+function viewFindings(){
+  var f = model.findings;
+  if (!f.length) return card("Prüfung", '<div class="empty"><strong>Ohne Befund</strong>Alle Termine liegen auf Arbeitstagen, halten ihre Ziel-Wochentage ein und stehen in gültiger Reihenfolge.</div>');
+  var body = '<div class="findings">'+f.map(function(x){
+    var label = x.sev === "crit" ? "Fehler" : x.sev === "warn" ? "Prüfen" : "Hinweis";
+    return '<div class="finding"><span class="sev '+x.sev+'">'+label+'</span><div>'+
+      '<div class="t">'+esc(x.t)+(x.issue ? ' <span class="tag">'+esc(x.issue)+'</span>' : "")+'</div>'+
+      '<div class="m">'+x.m+'</div></div></div>';
+  }).join("")+'</div>';
+  return card("Prüfung · " + f.length + (f.length === 1 ? " Eintrag" : " Einträge"), body);
+}
+
+/* ---------- Ansicht: Regelwerk ------------------------------------------- */
+function viewRules(){
+  var sample = model.issues[Math.min(state.selected, Math.max(0, model.issues.length-1))];
+  var opts = function(sel){
+    return [[0,"flexibel"],[1,"Montag"],[2,"Dienstag"],[3,"Mittwoch"],[4,"Donnerstag"],[5,"Freitag"]]
+      .map(function(o){ return '<option value="'+o[0]+'"'+(sel === o[0] ? " selected" : "")+'>'+o[1]+'</option>'; }).join("");
+  };
+  var anchors = function(cur, self){
+    return '<option value="0"'+(cur === 0 ? " selected" : "")+'>E-Tag (Wurzel)</option>'+
+      model.steps.filter(function(s){ return s.nr !== self; }).map(function(s){
+        return '<option value="'+s.nr+'"'+(cur === s.nr ? " selected" : "")+'>'+s.nr+" · "+esc(s.label.slice(0,34))+'</option>';
+      }).join("");
+  };
+  var rows = model.steps.map(function(s){
+    var r = sample ? sample.byNr.get(s.nr) : null;
+    return '<tr data-nr="'+s.nr+'" style="--ph:'+phaseOf(s).css+'">'+
+      '<td class="nr">'+s.nr+'</td>'+
+      '<td><input type="text" data-r="label" value="'+esc(s.label)+'" aria-label="Bezeichnung Schritt '+s.nr+'"></td>'+
+      '<td><select data-r="wd" aria-label="Ziel-Wochentag">'+opts(s.wd)+'</select></td>'+
+      '<td><select data-r="anchor" aria-label="Anker">'+anchors(s.anchor, s.nr)+'</select></td>'+
+      '<td><input type="number" data-r="offset" value="'+s.offset+'" step="1" aria-label="Versatz in Tagen"'+(s.anchor === 0 ? " disabled" : "")+'></td>'+
+      '<td><select data-r="dir" aria-label="Suchrichtung"><option value="-1"'+(s.dir === -1 ? " selected" : "")+'>rückwärts</option>'+
+        '<option value="1"'+(s.dir === 1 ? " selected" : "")+'>vorwärts</option></select></td>'+
+      '<td><select data-r="phase" aria-label="Phase">'+PHASES.map(function(p){
+        return '<option value="'+p.key+'"'+(s.phase === p.key ? " selected" : "")+'>'+esc(p.label)+'</option>'; }).join("")+'</select></td>'+
+      '<td class="res">'+(r ? wd(r.date)+" "+fmtShort(r.date) : "–")+'</td>'+
+    '</tr>';
+  }).join("");
+  var head = '<div class="ruleshead">Jeder Schritt rechnet <b>Ankertermin + Versatz</b> und zieht das Ergebnis auf den nächsten '+
+    'zulässigen Tag: bei festem Ziel-Wochentag auf diesen Wochentag, sonst auf den nächsten Arbeitstag. '+
+    'Die Spalte rechts zeigt das Ergebnis für <b>'+(sample ? esc(sample.name) : "–")+'</b>.</div>';
+  var table = '<div class="tablewrap"><table class="rules"><thead><tr>'+
+    ["#","Produktionsschritt","Ziel-Wochentag","Anker","Versatz (Tage)","Richtung","Phase","Ergebnis"]
+      .map(function(h){ return "<th>"+h+"</th>"; }).join("")+
+    '</tr></thead><tbody>'+rows+'</tbody></table></div>';
+  return card("Regelwerk · " + model.steps.length + " Schritte", head + table,
+    '<button type="button" class="btn sm" data-act="resetRules">Standard wiederherstellen</button>');
+}
+
+/* ---------- Ansicht: Export ---------------------------------------------- */
+var EXPORT_FORMATS = [
+  {k:"csv-matrix", n:"CSV · Matrix"},
+  {k:"csv-liste",  n:"CSV · Terminliste"},
+  {k:"ics",        n:"Kalender (.ics)"},
+  {k:"json",       n:"Konfiguration (.json)"}
+];
+var exportFormat = "csv-matrix";
+function viewExport(){
+  var bar = '<div class="exportbar">'+
+    EXPORT_FORMATS.map(function(f){
+      return '<button type="button" class="btn sm" data-act="fmt" data-v="'+f.k+'" aria-pressed="'+(exportFormat === f.k)+'">'+f.n+'</button>';
+    }).join("")+
+    '<span class="spacer"></span>'+
+    '<button type="button" class="btn sm" data-act="copy">Kopieren</button>'+
+    '<button type="button" class="btn sm primary" data-act="download">Datei sichern</button></div>';
+  return card("Export", bar + '<textarea id="exportText" spellcheck="false" aria-label="Exportdaten"></textarea>'+
+    '<div class="exphint">CSV mit Semikolon und BOM – öffnet sich in Excel direkt in Spalten. '+
+    'Die .ics-Datei legt jeden Termin als ganztägigen Kalendereintrag an. '+
+    'Falls „Datei sichern“ in der eingebetteten Ansicht blockiert wird: Inhalt kopieren und lokal einfügen.</div>');
+}
+function exportPayload(){
+  var is = model.issues;
+  if (exportFormat === "json") return {name:"produktionsplan-"+state.year+".json", type:"application/json", text:JSON.stringify(state, null, 2)};
+  if (exportFormat === "ics"){
+    var stamp = new Date().toISOString().replace(/[-:]/g,"").split(".")[0]+"Z", lines = [
+      "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//IHK Berlin//Produktionsplan Berliner Wirtschaft//DE","CALSCALE:GREGORIAN"];
+    is.forEach(function(x){
+      x.rows.forEach(function(r){
+        var d1 = iso(r.date).replace(/-/g,""), d2 = iso(addDays(r.date,1)).replace(/-/g,"");
+        lines.push("BEGIN:VEVENT",
+          "UID:bw-"+state.year+"-"+x.id+"-"+r.step.nr+"@ihk-berlin.de",
+          "DTSTAMP:"+stamp, "DTSTART;VALUE=DATE:"+d1, "DTEND;VALUE=DATE:"+d2,
+          "SUMMARY:BW "+x.name+": "+r.step.label.replace(/[,;]/g," "),
+          "DESCRIPTION:Berliner Wirtschaft "+x.name+" – Schritt "+r.step.nr+" von "+model.steps.length+
+            "\\nE-Tag "+fmt(x.etag)+"\\nZiel-Wochentag: "+wdName(r.step.wd),
+          "TRANSP:TRANSPARENT","END:VEVENT");
+      });
+    });
+    lines.push("END:VCALENDAR");
+    return {name:"produktionsplan-"+state.year+".ics", type:"text/calendar", text:lines.join("\r\n")};
+  }
+  var rows = [];
+  if (exportFormat === "csv-liste"){
+    rows.push(["Ausgabe","E-Tag","Schritt-Nr","Produktionsschritt","Datum","Wochentag","KW","Ziel-Wochentag","Verschiebung (Tage)"]);
+    is.forEach(function(x){
+      x.rows.slice().sort(function(a,b){ return a.date - b.date; }).forEach(function(r){
+        rows.push([x.name, fmt(x.etag), r.step.nr, r.step.label, fmt(r.date), WD_LONG[dow(r.date)-1], isoWeek(r.date), wdName(r.step.wd), r.shift]);
+      });
+    });
+  } else {
+    rows.push(["Nr","Produktionsschritt","Ziel-Wochentag"].concat(is.map(function(x){ return x.name; })));
+    model.steps.forEach(function(s){
+      rows.push([s.nr, s.label, wdName(s.wd)].concat(is.map(function(x){
+        var r = x.byNr.get(s.nr); return r ? fmt(r.date) : "";
+      })));
+    });
+  }
+  var csv = rows.map(function(r){
+    return r.map(function(c){
+      c = String(c);
+      return /[";\n]/.test(c) ? '"'+c.replace(/"/g,'""')+'"' : c;
+    }).join(";");
+  }).join("\r\n");
+  return {name:"produktionsplan-"+state.year+".csv", type:"text/csv", text:"﻿"+csv};
+}
+function buildExport(){
+  var t = el("exportText");
+  if (t) t.value = exportPayload().text;
+}
+
+/* ---------- Karten-Hülle -------------------------------------------------- */
+function card(title, body, tools){
+  return '<section class="card"><header><h2>'+esc(title)+'</h2>'+(tools || "")+'</header>'+body+'</section>';
+}
+function toast(msg){
+  var t = el("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t = setTimeout(function(){ t.classList.remove("show"); }, 1900);
+}
+
+/* =========================================================================
+   Interaktion
+   ========================================================================= */
+function setYear(y){
+  y = Math.max(2000, Math.min(2100, y|0));
+  if (y === state.year) return;
+  undoSnapshot = {year:state.year, issues:state.issues.map(function(i){ return Object.assign({}, i); })};
+  var names = state.issues.map(function(i){ return i.name; });
+  state.year = y;
+  state.issues = suggestIssues(y).map(function(s, i){
+    return names[i] ? Object.assign({}, s, {name:names[i]}) : s;
+  });
+  el("yearInput").value = y;
+  render();
+}
+
+/* Rail: Jahr */
+el("yearInput").addEventListener("change", function(){ setYear(+this.value); });
+el("yearMinus").addEventListener("click", function(){ setYear(state.year - 1); });
+el("yearPlus").addEventListener("click", function(){ setYear(state.year + 1); });
+
+/* Rail: Ausgaben */
+el("issueList").addEventListener("input", function(e){
+  var f = e.target.dataset.f, row = e.target.closest(".issue");
+  if (!f || !row) return;
+  var i = +row.dataset.i;
+  if (f === "name") state.issues[i].name = e.target.value;
+  if (f === "raw" && e.target.value) state.issues[i].raw = e.target.value;
+  render(false);
+});
+el("issueList").addEventListener("click", function(e){
+  if (e.target.dataset.f !== "del") return;
+  var i = +e.target.closest(".issue").dataset.i;
+  state.issues.splice(i, 1);
+  if (state.selected >= state.issues.length) state.selected = Math.max(0, state.issues.length - 1);
+  render();
+});
+el("addIssue").addEventListener("click", function(){
+  var last = state.issues[state.issues.length - 1];
+  var next = last ? iso(nthWeekday(parseISO(last.raw).getUTCFullYear() + (parseISO(last.raw).getUTCMonth() === 11 ? 1 : 0),
+                     (parseISO(last.raw).getUTCMonth() + 2 > 12 ? 1 : parseISO(last.raw).getUTCMonth() + 2), 3, "first"))
+                 : iso(nthWeekday(state.year, 1, 3, "first"));
+  state.issues.push({id:"i"+Date.now(), name:"Neue Ausgabe", raw:next});
+  render();
+});
+el("suggestDates").addEventListener("click", function(){
+  undoSnapshot = {year:state.year, issues:state.issues.map(function(i){ return Object.assign({}, i); })};
+  state.issues = suggestIssues(state.year);
+  state.selected = 0;
+  render();
+  toast("Standardraster für " + state.year + " eingesetzt");
+});
+
+/* Rail: Feiertage */
+el("holidayList").addEventListener("change", function(e){
+  var id = e.target.dataset.hol;
+  if (!id) return;
+  var std = null;
+  model.hol.groups.forEach(function(g){ g.items.forEach(function(h){ if (h.id === id) std = h; }); });
+  if (!std) return;
+  var off = new Set(state.holOff), on = new Set(state.holOn);
+  if (std.custom){
+    if (!e.target.checked) state.holExtra = state.holExtra.filter(function(x){ return x.id !== id; });
+  } else if (std.on){
+    e.target.checked ? off.delete(id) : off.add(id);
+  } else {
+    e.target.checked ? on.add(id) : on.delete(id);
+  }
+  state.holOff = Array.from(off); state.holOn = Array.from(on);
+  render();
+});
+el("holidayList").addEventListener("click", function(e){
+  var id = e.target.dataset.delhol;
+  if (!id) return;
+  state.holExtra = state.holExtra.filter(function(x){ return x.id !== id; });
+  render();
+});
+el("addHol").addEventListener("click", function(){
+  var n = el("holName").value.trim(), d = el("holDate").value;
+  if (!d){ toast("Bitte ein Datum wählen"); return; }
+  state.holExtra.push({id:"x"+Date.now(), name:n || "Frei", date:d});
+  el("holName").value = ""; el("holDate").value = "";
+  render();
+});
+el("excelMode").addEventListener("click", function(){
+  var off = new Set(), on = new Set();
+  [state.year-1, state.year, state.year+1].forEach(function(y){
+    off.add(y+"-frauen");          /* in der Excel-Vorlage nicht enthalten */
+    on.add(y+"-reform");           /* in der Excel-Vorlage enthalten       */
+  });
+  state.holOff = Array.from(off); state.holOn = Array.from(on);
+  render();
+  toast("Feiertage entsprechen jetzt der Excel-Vorlage");
+});
+el("resetHol").addEventListener("click", function(){
+  state.holOff = []; state.holOn = []; state.holExtra = [];
+  render();
+});
+
+/* Kopf: Ansichten */
+el("tabs").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-view]");
+  if (!b) return;
+  state.view = b.dataset.view;
+  Array.prototype.forEach.call(this.querySelectorAll("button"), function(x){
+    x.setAttribute("aria-selected", String(x.dataset.view === state.view));
+  });
+  renderPanel(); save();
+});
+
+/* Werkzeuge */
+el("printBtn").addEventListener("click", function(){
+  if (state.view !== "plan"){
+    state.view = "plan";
+    Array.prototype.forEach.call(el("tabs").querySelectorAll("button"), function(x){
+      x.setAttribute("aria-selected", String(x.dataset.view === "plan"));
+    });
+    renderPanel();
+  }
+  setTimeout(function(){ window.print(); }, 60);
+});
+el("resetAll").addEventListener("click", function(){
+  if (!window.confirm("Eingaben, Feiertage und Regelwerk auf den Auslieferungszustand zurücksetzen?")) return;
+  state = defaultState(state.year);
+  el("yearInput").value = state.year;
+  undoSnapshot = null;
+  render();
+});
+
+/* Panel: Delegation */
+el("panel").addEventListener("click", function(e){
+  var b = e.target.closest("[data-act]");
+  if (!b) return;
+  var a = b.dataset.act;
+  if (a === "orient"){ state.orientation = b.dataset.v; renderPanel(); save(); }
+  else if (a === "fmt"){ exportFormat = b.dataset.v; renderPanel(); }
+  else if (a === "resetRules"){
+    state.steps = DEFAULT_STEPS.map(function(s){ return Object.assign({}, s); });
+    render(); toast("Regelwerk zurückgesetzt");
+  }
+  else if (a === "copy"){
+    var t = el("exportText");
+    t.select();
+    var done = false;
+    try{ done = document.execCommand("copy"); }catch(err){}
+    if (!done && navigator.clipboard){ navigator.clipboard.writeText(t.value).then(function(){ toast("In die Zwischenablage kopiert"); }); return; }
+    toast(done ? "In die Zwischenablage kopiert" : "Kopieren nicht möglich – Text bitte manuell markieren");
+  }
+  else if (a === "download"){
+    var p = exportPayload();
+    try{
+      var blob = new Blob([p.text], {type:p.type + ";charset=utf-8"});
+      var url = URL.createObjectURL(blob), link = document.createElement("a");
+      link.href = url; link.download = p.name;
+      document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      toast(p.name + " gesichert");
+    }catch(err){
+      toast("Download hier nicht erlaubt – bitte „Kopieren“ verwenden");
+    }
+  }
+});
+el("panel").addEventListener("change", function(e){
+  if (e.target.id === "issueSel"){ state.selected = +e.target.value; renderPanel(); save(); return; }
+  var f = e.target.dataset.r, tr = e.target.closest("tr[data-nr]");
+  if (!f || !tr) return;
+  var nr = +tr.dataset.nr, s = state.steps.filter(function(x){ return x.nr === nr; })[0];
+  if (!s) return;
+  if (f === "label") s.label = e.target.value;
+  else if (f === "phase") s.phase = e.target.value;
+  else s[f] = +e.target.value;
+  render(false);
+});
+el("panel").addEventListener("input", function(e){
+  if (e.target.dataset.r === "label" || e.target.dataset.r === "offset"){
+    var tr = e.target.closest("tr[data-nr]"), nr = +tr.dataset.nr;
+    var s = state.steps.filter(function(x){ return x.nr === nr; })[0];
+    if (!s) return;
+    if (e.target.dataset.r === "label") s.label = e.target.value; else s.offset = +e.target.value || 0;
+    model = buildModel();
+    var res = tr.querySelector(".res");
+    var sample = model.issues[Math.min(state.selected, Math.max(0, model.issues.length - 1))];
+    var r = sample ? sample.byNr.get(nr) : null;
+    if (res) res.textContent = r ? wd(r.date) + " " + fmtShort(r.date) : "–";
+    renderMeta(); save();
+  }
+});
+
+/* Start */
+state = load();
+el("yearInput").value = state.year;
+Array.prototype.forEach.call(el("tabs").querySelectorAll("button"), function(x){
+  x.setAttribute("aria-selected", String(x.dataset.view === state.view));
+});
+render();
+</script>
