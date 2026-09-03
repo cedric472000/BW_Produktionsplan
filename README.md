@@ -73,17 +73,50 @@ Export weist sie in der Spalte *Herkunft* aus. Ein Jahreswechsel oder ein neuer
 Terminvorschlag verwirft sie (mit „Rückgängig“ wiederherstellbar), weil die
 Daten sonst nicht mehr zum Plan passen.
 
+## Feiertage
+
+Die Feiertage werden für jedes Jahr **gerechnet**, nicht abgerufen – die Seite
+braucht dafür keine Internetverbindung. Grundlage sind die feste Kalenderlage
+(Neujahr, 1. Mai, 3. Oktober, Weihnachten), die Osterformel (Karfreitag,
+Ostermontag, Christi Himmelfahrt, Pfingstmontag, Fronleichnam) und die Regel
+„Mittwoch vor dem 23. November" für den Buß- und Bettag.
+
+Aufgelistet sind **alle gesetzlichen Feiertage in Deutschland**, jeder mit
+Länderkennung, damit keiner untergeht. Voreingestellt frei sind die
+bundesweiten Feiertage sowie alles, was in **Berlin oder Hessen** gilt – die
+Chips *BE* und *HE* über der Liste schalten das um, weitere Länder lassen sich
+über *+ Land* dazunehmen. Jeder Tag bleibt einzeln an- und abwählbar; die
+Länderauswahl bestimmt nur die Voreinstellung. Länderabhängige
+Einführungsjahre sind berücksichtigt (Frauentag in Berlin seit 2019, in
+Mecklenburg-Vorpommern seit 2023; Reformationstag in HB/HH/NI/SH seit 2018;
+Weltkindertag in Thüringen seit 2019).
+
+Ostersonntag und Pfingstsonntag sind als Sonntage gekennzeichnet und ohnehin
+arbeitsfrei. Heiligabend und Silvester stehen als abwählbare Vorschläge für
+Betriebsruhe bereit, ebenso lassen sich eigene freie Tage eintragen. Der Filter
+*nur aktive* verkürzt die Liste über drei Jahre auf das Wesentliche.
+
+Für Berlin und Hessen bedeutet die Voreinstellung 2027 dreizehn freie Tage,
+darunter der **Internationale Frauentag** (Mo 08.03.) und **Fronleichnam**
+(Do 27.05., Hessen).
+
 ## Unterschiede zur Excel-Vorlage
 
 | Punkt | Excel | Diese Seite |
 |---|---|---|
 | Feiertagsjahre | nur das Planungsjahr | Vor-, Planungs- und Folgejahr – das Januar/Februar-Heft wird im Dezember des Vorjahres produziert, dessen Weihnachtsfeiertage die Excel nicht kennt |
+| Umfang | 11 Einträge für Berlin | alle deutschen Feiertage mit Länderkennung, Voreinstellung Berlin + Hessen |
 | Internationaler Frauentag (8.3.) | fehlt | enthalten (seit 2019 gesetzlicher Feiertag in Berlin) |
-| Reformationstag (31.10.) | enthalten | abgeschaltet (in Berlin kein gesetzlicher Feiertag) |
+| Fronleichnam | fehlt | enthalten (gesetzlicher Feiertag in Hessen) |
+| Reformationstag (31.10.) | enthalten | aus, weil weder in Berlin noch in Hessen gesetzlicher Feiertag |
 | Heiligabend / Silvester | – | abschaltbare Vorschläge für Betriebsruhe |
 
-Die Schaltfläche **„Feiertage wie in der Excel“** stellt den Excel-Stand her.
-Für 2027 sind beide Varianten bis auf die Frauentags-Kette identisch.
+Die Schaltfläche **„Feiertage wie in der Excel"** stellt den Excel-Stand her
+(nur Berlin, ohne Frauentag, mit Reformationstag). Für 2027 unterscheiden sich
+beide Varianten in **8 von 240 Terminen**: Der Frauentag am Montag, 8.3.2027
+trifft den Redaktionsschluss der April-Ausgabe und zieht deren gesamten Vorlauf
+um eine Woche nach vorn. Fronleichnam 2027 fällt in ein produktionsfreies
+Fenster und wirkt sich in diesem Jahr nicht aus – in anderen Jahren schon.
 
 ## Prüfungen
 
