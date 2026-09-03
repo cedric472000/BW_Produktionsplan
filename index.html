@@ -996,7 +996,7 @@ function viewExport(){
   return card("Export", bar + '<textarea id="exportText" spellcheck="false" aria-label="Exportdaten"></textarea>'+
     '<div class="exphint">CSV mit Semikolon und BOM – öffnet sich in Excel direkt in Spalten. '+
     'Die .ics-Datei legt jeden Termin als ganztägigen Kalendereintrag an. '+
-    'Falls „Datei sichern“ in der eingebetteten Ansicht blockiert wird: Inhalt kopieren und lokal einfügen.</div>');
+    'In der eingebetteten Ansicht fragt „Datei sichern“ um Bestätigung; Kalenderdateien lassen sich dort nur über „Kopieren“ übernehmen.</div>');
 }
 function exportPayload(){
   var is = model.issues;
@@ -1046,6 +1046,32 @@ function exportPayload(){
 function buildExport(){
   var t = el("exportText");
   if (t) t.value = exportPayload().text;
+}
+
+function saveFile(p){
+  if (downloadsApi){
+    downloadsApi.save({filename:p.name, data:p.text}).then(function(){
+      toast(p.name + " gesichert");
+    }, function(err){
+      var c = err && err.code;
+      if (c === "declined") return;
+      if (c === "rejected_extension" || c === "extension_not_enabled")
+        toast("Dieses Format lässt sich hier nicht sichern – bitte „Kopieren“ verwenden");
+      else if (c === "rate_limited") toast("Bitte kurz warten und erneut versuchen");
+      else toast("Sichern nicht möglich – bitte „Kopieren“ verwenden");
+    });
+    return;
+  }
+  try{
+    var blob = new Blob([p.text], {type:p.type + ";charset=utf-8"});
+    var url = URL.createObjectURL(blob), link = document.createElement("a");
+    link.href = url; link.download = p.name;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    toast(p.name + " gesichert");
+  }catch(err){
+    toast("Sichern hier nicht erlaubt – bitte „Kopieren“ verwenden");
+  }
 }
 
 /* ---------- Karten-Hülle -------------------------------------------------- */
@@ -1206,19 +1232,7 @@ el("panel").addEventListener("click", function(e){
     if (!done && navigator.clipboard){ navigator.clipboard.writeText(t.value).then(function(){ toast("In die Zwischenablage kopiert"); }); return; }
     toast(done ? "In die Zwischenablage kopiert" : "Kopieren nicht möglich – Text bitte manuell markieren");
   }
-  else if (a === "download"){
-    var p = exportPayload();
-    try{
-      var blob = new Blob([p.text], {type:p.type + ";charset=utf-8"});
-      var url = URL.createObjectURL(blob), link = document.createElement("a");
-      link.href = url; link.download = p.name;
-      document.body.appendChild(link); link.click(); document.body.removeChild(link);
-      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
-      toast(p.name + " gesichert");
-    }catch(err){
-      toast("Download hier nicht erlaubt – bitte „Kopieren“ verwenden");
-    }
-  }
+  else if (a === "download") saveFile(exportPayload());
 });
 el("panel").addEventListener("change", function(e){
   if (e.target.id === "issueSel"){ state.selected = +e.target.value; renderPanel(); save(); return; }
@@ -1245,6 +1259,15 @@ el("panel").addEventListener("input", function(e){
     renderMeta(); save();
   }
 });
+
+/* Datei-Sicherung: in der eingebetteten Ansicht über die Laufzeit-Fähigkeit,
+   als eigenständige Seite über einen Blob-Link. */
+var downloadsApi = null;
+try{
+  if (window.claude && typeof window.claude.use === "function"){
+    window.claude.use("downloads").then(function(d){ downloadsApi = d; }, function(){});
+  }
+}catch(e){}
 
 /* Start */
 state = load();
