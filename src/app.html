@@ -123,17 +123,18 @@ nav.tabs .cnt.zero{background:var(--surface-3);color:var(--ink-3)}
 .note button{background:none;border:0;color:var(--accent);cursor:pointer;font-size:11.5px;text-decoration:underline;padding:0;white-space:nowrap}
 
 /* ---------- holidays ---------- */
-.holidays{display:flex;flex-direction:column;gap:1px;max-height:326px;overflow-y:auto;margin:-2px -4px}
-.hol{display:grid;grid-template-columns:15px minmax(0,1fr) auto;gap:7px;align-items:center;padding:3px 4px;border-radius:4px}
+.holidays{display:flex;flex-direction:column;gap:1px;max-height:360px;overflow-y:auto;margin:-2px -4px}
+.hol{display:grid;grid-template-columns:15px minmax(0,1fr) auto auto;gap:7px;align-items:baseline;padding:4px;border-radius:4px}
 .hol:hover{background:var(--surface-2)}
-.hol input{margin:0;accent-color:var(--accent);cursor:pointer}
-.hol .nm{font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hol input{margin:0;accent-color:var(--accent);cursor:pointer;position:relative;top:2px}
+.hol .nm{font-size:12px;min-width:0;line-height:1.3;white-space:normal}
 .hol.off .nm{color:var(--ink-3);text-decoration:line-through}
-.hol .dt{font-family:var(--mono);font-size:11px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hol .dt{font-family:var(--mono);font-size:11px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap;position:relative;top:1px}
 .hol .x{background:none;border:0;color:var(--ink-3);cursor:pointer;padding:0 2px;font-size:13px}
 .hol .x:hover{color:var(--crit)}
 .tag{display:inline-block;font-size:9px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
-  padding:1px 5px;border-radius:3px;background:var(--surface-3);color:var(--ink-3);margin-left:5px;vertical-align:1px}
+  padding:1px 5px;border-radius:3px;background:var(--surface-3);color:var(--ink-3);margin-left:5px;
+  vertical-align:1px;white-space:nowrap}
 .tag.info{background:var(--accent-soft);color:var(--accent)}
 .tag.opt{background:var(--warn-soft);color:var(--warn)}
 .yeargroup{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600;
@@ -264,6 +265,22 @@ tr.phaserow th.rowhead{padding:0}
   padding:9px 18px;border-radius:20px;font-size:13px;z-index:99;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .18s}
 .toast.show{opacity:1}
 
+/* ---------- Länderauswahl ---------- */
+.regions{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:11px}
+.regions .rlab{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-right:2px}
+.chip{background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:3px 10px;cursor:pointer;
+  font-size:11.5px;font-weight:600;color:var(--ink-3);letter-spacing:.03em}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip.filter{font-weight:500;letter-spacing:0;text-transform:none}
+.chip.filter[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.regions select{background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:3px 6px;
+  font-size:11.5px;color:var(--ink-3);cursor:pointer}
+.regions select:hover{border-color:var(--accent);color:var(--accent)}
+.hol .nm .tag.on{background:var(--accent-soft);color:var(--accent)}
+.hol .nm .tag.off{background:var(--surface-3);color:var(--ink-3)}
+.hol .dt{margin-left:auto}
+
 /* ---------- manuelle Termine ---------- */
 td.cell.click{cursor:pointer}
 td.cell.click:hover{outline:1.5px solid var(--accent);outline-offset:-1.5px;background:var(--accent-soft)}
@@ -367,6 +384,7 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
         <span class="hint" id="holCount"></span>
       </header>
       <div class="body">
+        <div class="regions" id="regionBar"></div>
         <div class="holidays" id="holidayList"></div>
         <div class="addhol">
           <input type="text" id="holName" placeholder="Betriebsferien …" aria-label="Bezeichnung">
@@ -439,27 +457,94 @@ function easter(y){
   return D(y, Math.floor((h+l-7*m+114)/31), ((h+l-7*m+114)%31)+1);
 }
 
-/* ---------- Feiertage Berlin --------------------------------------------- */
-/* on:false = Vorschlag, standardmäßig nicht als arbeitsfrei gewertet        */
-function holidaysOfYear(y){
-  var o = easter(y);
-  return [
-    {id:y+"-neujahr",  name:"Neujahr",                   date:iso(D(y,1,1)),      on:true},
-    {id:y+"-frauen",   name:"Internationaler Frauentag", date:iso(D(y,3,8)),      on:true,  tag:"seit 2019 in Berlin"},
-    {id:y+"-karfr",    name:"Karfreitag",                date:iso(addDays(o,-2)), on:true},
-    {id:y+"-ostso",    name:"Ostersonntag",              date:iso(o),             on:true},
-    {id:y+"-ostmo",    name:"Ostermontag",               date:iso(addDays(o,1)),  on:true},
-    {id:y+"-mai",      name:"Tag der Arbeit",            date:iso(D(y,5,1)),      on:true},
-    {id:y+"-himmel",   name:"Christi Himmelfahrt",       date:iso(addDays(o,39)), on:true},
-    {id:y+"-pfiso",    name:"Pfingstsonntag",            date:iso(addDays(o,49)), on:true},
-    {id:y+"-pfimo",    name:"Pfingstmontag",             date:iso(addDays(o,50)), on:true},
-    {id:y+"-einheit",  name:"Tag der Deutschen Einheit", date:iso(D(y,10,3)),     on:true},
-    {id:y+"-reform",   name:"Reformationstag",           date:iso(D(y,10,31)),    on:false, tag:"in Berlin kein Feiertag"},
-    {id:y+"-heilig",   name:"Heiligabend",               date:iso(D(y,12,24)),    on:false, tag:"betriebsfrei?"},
-    {id:y+"-weih1",    name:"1. Weihnachtstag",          date:iso(D(y,12,25)),    on:true},
-    {id:y+"-weih2",    name:"2. Weihnachtstag",          date:iso(D(y,12,26)),    on:true},
-    {id:y+"-silv",     name:"Silvester",                 date:iso(D(y,12,31)),    on:false, tag:"betriebsfrei?"}
-  ];
+/* ---------- Feiertage ----------------------------------------------------
+   Alle gesetzlichen Feiertage in Deutschland, je Bundesland gekennzeichnet.
+   Die Daten werden für jedes Jahr gerechnet (Osterformel), nicht abgerufen –
+   die Seite braucht dafür keine Internetverbindung.
+   `states`: "ALL" = bundesweit, sonst die Länderkürzel.
+   `since` : Jahr, ab dem der Tag im jeweiligen Land gilt.
+   `sunday`: fällt immer auf einen Sonntag, ist also ohnehin arbeitsfrei.
+   ------------------------------------------------------------------------- */
+var STATES = {
+  BW:"Baden-Württemberg", BY:"Bayern", BE:"Berlin", BB:"Brandenburg", HB:"Bremen",
+  HH:"Hamburg", HE:"Hessen", MV:"Mecklenburg-Vorpommern", NI:"Niedersachsen",
+  NW:"Nordrhein-Westfalen", RP:"Rheinland-Pfalz", SL:"Saarland", SN:"Sachsen",
+  ST:"Sachsen-Anhalt", SH:"Schleswig-Holstein", TH:"Thüringen"
+};
+var STATE_ORDER = ["BW","BY","BE","BB","HB","HH","HE","MV","NI","NW","RP","SL","SN","ST","SH","TH"];
+
+function bussUndBettag(y){                    /* Mittwoch vor dem 23. November */
+  var d = D(y,11,22);
+  while (dow(d) !== 3) d = addDays(d,-1);
+  return d;
+}
+var HOLIDAY_DEFS = [
+  {key:"neujahr",        name:"Neujahr",                   fix:[1,1],   states:"ALL"},
+  {key:"dreikoenige",    name:"Heilige Drei Könige",       fix:[1,6],   states:["BW","BY","ST"]},
+  {key:"frauentag",      name:"Internationaler Frauentag", fix:[3,8],   states:["BE","MV"], since:{BE:2019, MV:2023}},
+  {key:"karfreitag",     name:"Karfreitag",                easter:-2,   states:"ALL"},
+  {key:"ostersonntag",   name:"Ostersonntag",              easter:0,    states:["BB"], sunday:true},
+  {key:"ostermontag",    name:"Ostermontag",               easter:1,    states:"ALL"},
+  {key:"mai",            name:"Tag der Arbeit",            fix:[5,1],   states:"ALL"},
+  {key:"himmelfahrt",    name:"Christi Himmelfahrt",       easter:39,   states:"ALL"},
+  {key:"pfingstsonntag", name:"Pfingstsonntag",            easter:49,   states:["BB"], sunday:true},
+  {key:"pfingstmontag",  name:"Pfingstmontag",             easter:50,   states:"ALL"},
+  {key:"fronleichnam",   name:"Fronleichnam",              easter:60,   states:["BW","BY","HE","NW","RP","SL"], note:"in SN und TH nur in einzelnen Gemeinden"},
+  {key:"mariae",         name:"Mariä Himmelfahrt",         fix:[8,15],  states:["SL"], note:"in BY nur in überwiegend katholischen Gemeinden"},
+  {key:"weltkindertag",  name:"Weltkindertag",             fix:[9,20],  states:["TH"], since:{TH:2019}},
+  {key:"einheit",        name:"Tag der Deutschen Einheit", fix:[10,3],  states:"ALL"},
+  {key:"reformation",    name:"Reformationstag",           fix:[10,31], states:["BB","HB","HH","MV","NI","SN","ST","SH","TH"], since:{HB:2018, HH:2018, NI:2018, SH:2018}},
+  {key:"allerheiligen",  name:"Allerheiligen",             fix:[11,1],  states:["BW","BY","NW","RP","SL"]},
+  {key:"bussbettag",     name:"Buß- und Bettag",           calc:bussUndBettag, states:["SN"]},
+  {key:"weih1",          name:"1. Weihnachtstag",          fix:[12,25], states:"ALL"},
+  {key:"weih2",          name:"2. Weihnachtstag",          fix:[12,26], states:"ALL"},
+  {key:"heiligabend",    name:"Heiligabend",               fix:[12,24], states:[], optional:true, note:"kein Feiertag – oft betriebsfrei"},
+  {key:"silvester",      name:"Silvester",                 fix:[12,31], states:[], optional:true, note:"kein Feiertag – oft betriebsfrei"}
+];
+function holidayDate(def, y){
+  if (def.calc) return def.calc(y);
+  if (def.fix)  return D(y, def.fix[0], def.fix[1]);
+  return addDays(easter(y), def.easter);
+}
+function appliesIn(def, st, y){
+  if (def.states === "ALL") return true;
+  if (def.states.indexOf(st) < 0) return false;
+  var since = def.since && def.since[st];
+  return !since || y >= since;
+}
+/* Ein Tag ist voreingestellt frei, wenn er bundesweit gilt, in einem der
+   gewählten Länder gilt oder ohnehin auf einen Sonntag fällt. */
+function holidaysOfYear(y, regions){
+  regions = regions || [];
+  return HOLIDAY_DEFS.map(function(def){
+    var inRegion = def.states !== "ALL" && regions.some(function(st){ return appliesIn(def, st, y); });
+    return {
+      id: y + "-" + def.key,
+      key: def.key,
+      name: def.name,
+      date: iso(holidayDate(def, y)),
+      states: def.states,
+      note: def.note,
+      sunday: !!def.sunday,
+      optional: !!def.optional,
+      inRegion: inRegion,
+      on: !def.optional && (def.states === "ALL" || inRegion || !!def.sunday)
+    };
+  });
+}
+/* Länderkürzel für die Anzeige, gültige zuerst */
+function statesLabel(h, regions){
+  if (h.states === "ALL") return "bundesweit";
+  if (!h.states.length) return h.optional ? "kein Feiertag" : "–";
+  var sel = h.states.filter(function(st){ return regions.indexOf(st) >= 0; });
+  var rest = h.states.filter(function(st){ return regions.indexOf(st) < 0; });
+  return sel.concat(rest).join(" ");
+}
+function statesTitle(h){
+  if (h.states === "ALL") return "Gesetzlicher Feiertag in allen Bundesländern";
+  if (!h.states.length) return h.note || "";
+  return "Gesetzlicher Feiertag in: " + h.states.map(function(st){ return STATES[st]; }).join(", ") +
+         (h.note ? "\n" + h.note : "");
 }
 
 /* ---------- Produktionsschritte (Stammdaten) ------------------------------
@@ -601,6 +686,7 @@ function defaultState(year){
     year: year,
     issues: suggestIssues(year),
     steps: DEFAULT_STEPS.map(function(s){ return Object.assign({}, s); }),
+    regions: ["BE","HE"],  /* Bundesländer, deren Feiertage voreingestellt gelten */
     holOff: [],      /* deaktivierte Standard-Feiertage (ids) */
     holOn:  [],      /* zusätzlich aktivierte Vorschläge (ids) */
     holExtra: [],    /* eigene freie Tage {id,name,date} */
@@ -617,6 +703,19 @@ function load(){
       var s = JSON.parse(raw);
       if (s && s.year && Array.isArray(s.issues) && Array.isArray(s.steps)){
         if (!s.overrides || typeof s.overrides !== "object") s.overrides = {};
+        if (!Array.isArray(s.regions)) s.regions = ["BE","HE"];
+        /* Feiertags-Ids einer früheren Fassung mitnehmen */
+        var moved = {frauen:"frauentag", karfr:"karfreitag", ostso:"ostersonntag", ostmo:"ostermontag",
+                     himmel:"himmelfahrt", pfiso:"pfingstsonntag", pfimo:"pfingstmontag",
+                     reform:"reformation", heilig:"heiligabend", silv:"silvester"};
+        ["holOff","holOn"].forEach(function(f){
+          if (!Array.isArray(s[f])) { s[f] = []; return; }
+          s[f] = s[f].map(function(id){
+            var i = id.indexOf("-");
+            var k = i > 0 ? id.slice(i+1) : id;
+            return moved[k] ? id.slice(0, i+1) + moved[k] : id;
+          });
+        });
         return s;
       }
     }
@@ -631,18 +730,20 @@ function save(){
 function holidayModel(){
   var years = [state.year - 1, state.year, state.year + 1], groups = [];
   var off = new Set(state.holOff), on = new Set(state.holOn);
+  var regions = state.regions || [];
   years.forEach(function(y){
-    var items = holidaysOfYear(y).map(function(h){
+    var items = holidaysOfYear(y, regions).map(function(h){
       return Object.assign({}, h, {active: h.on ? !off.has(h.id) : on.has(h.id), year:y});
     });
     state.holExtra.filter(function(x){ return parseISO(x.date).getUTCFullYear() === y; })
-      .forEach(function(x){ items.push({id:x.id, name:x.name, date:x.date, active:true, custom:true, year:y}); });
+      .forEach(function(x){ items.push({id:x.id, name:x.name, date:x.date, active:true, custom:true,
+                                        states:[], year:y}); });
     items.sort(function(a,b){ return a.date < b.date ? -1 : 1; });
     groups.push({year:y, items:items});
   });
   var set = new Set();
   groups.forEach(function(g){ g.items.forEach(function(h){ if (h.active) set.add(h.date); }); });
-  return {groups:groups, set:set};
+  return {groups:groups, set:set, regions:regions};
 }
 
 /* =========================================================================
@@ -803,15 +904,38 @@ function renderIssues(){
 }
 
 /* ---------- Rail: Feiertage ---------------------------------------------- */
+function renderRegions(){
+  var regions = state.regions || [];
+  var chips = ["BE","HE"].concat(regions.filter(function(st){ return st !== "BE" && st !== "HE"; }));
+  el("regionBar").innerHTML =
+    '<span class="rlab">Gelten für</span>'+
+    chips.map(function(st){
+      return '<button type="button" class="chip" data-region="'+st+'" aria-pressed="'+(regions.indexOf(st) >= 0)+
+        '" title="'+esc(STATES[st])+'">'+st+'</button>';
+    }).join("")+
+    '<select id="addRegion" aria-label="Weiteres Bundesland"><option value="">+ Land</option>'+
+      STATE_ORDER.filter(function(st){ return chips.indexOf(st) < 0; })
+        .map(function(st){ return '<option value="'+st+'">'+esc(STATES[st])+'</option>'; }).join("")+
+    '</select>'+
+    '<button type="button" class="chip filter" id="holFilter" aria-pressed="'+(!!state.holOnlyActive)+
+      '" title="Nur die aktiven Tage anzeigen">nur aktive</button>';
+}
 function renderHolidays(){
+  renderRegions();
+  var regions = state.regions || [];
   el("holidayList").innerHTML = model.hol.groups.map(function(g){
+    var items = state.holOnlyActive ? g.items.filter(function(h){ return h.active; }) : g.items;
+    if (!items.length) return "";
     return '<div class="yeargroup">'+g.year+(g.year === state.year ? " · Planungsjahr" : "")+'</div>'+
-      g.items.map(function(h){
+      items.map(function(h){
         var d = parseISO(h.date);
+        var badge = h.custom ? "eigener Eintrag" : statesLabel(h, regions);
+        var cls = h.custom ? "info" : (h.states === "ALL" || h.inRegion) ? "on" : "off";
         return '<label class="hol'+(h.active ? "" : " off")+'">'+
           '<input type="checkbox" data-hol="'+esc(h.id)+'"'+(h.active ? " checked" : "")+'>'+
-          '<span class="nm">'+esc(h.name)+(h.tag ? '<span class="tag '+(h.custom ? "info" : "opt")+'">'+esc(h.tag)+'</span>' : "")+
-            (h.custom ? '<span class="tag info">eigener Eintrag</span>' : "")+'</span>'+
+          '<span class="nm" title="'+esc(h.custom ? "" : statesTitle(h))+'">'+esc(h.name)+
+            '<span class="tag '+cls+'">'+esc(badge)+'</span>'+
+            (h.sunday ? '<span class="tag">Sonntag</span>' : "")+'</span>'+
           '<span class="dt">'+wd(d)+" "+fmtShort(d)+'</span>'+
           (h.custom ? '<button type="button" class="x" data-delhol="'+esc(h.id)+'" title="Entfernen">&times;</button>' : "")+
         '</label>';
@@ -1319,19 +1443,43 @@ el("addHol").addEventListener("click", function(){
   el("holName").value = ""; el("holDate").value = "";
   render();
 });
+el("regionBar").addEventListener("click", function(e){
+  if (e.target.id === "holFilter"){
+    state.holOnlyActive = !state.holOnlyActive;
+    renderHolidays(); save(); return;
+  }
+  var st = e.target.dataset.region;
+  if (!st) return;
+  var r = (state.regions || []).slice(), i = r.indexOf(st);
+  if (i >= 0) r.splice(i, 1); else r.push(st);
+  state.regions = r;
+  render();
+  toast(r.length ? "Feiertage für " + r.map(function(x){ return STATES[x]; }).join(" und ")
+                 : "Nur bundesweite Feiertage");
+});
+el("regionBar").addEventListener("change", function(e){
+  if (e.target.id !== "addRegion" || !e.target.value) return;
+  var r = (state.regions || []).slice();
+  if (r.indexOf(e.target.value) < 0) r.push(e.target.value);
+  state.regions = r;
+  render();
+});
 el("excelMode").addEventListener("click", function(){
   var off = new Set(), on = new Set();
   [state.year-1, state.year, state.year+1].forEach(function(y){
-    off.add(y+"-frauen");          /* in der Excel-Vorlage nicht enthalten */
-    on.add(y+"-reform");           /* in der Excel-Vorlage enthalten       */
+    off.add(y+"-frauentag");                    /* in der Excel-Vorlage nicht enthalten */
+    on.add(y+"-reformation");                   /* in der Excel-Vorlage enthalten       */
   });
+  state.regions = ["BE"];                       /* also ohne Fronleichnam (Hessen)      */
   state.holOff = Array.from(off); state.holOn = Array.from(on);
   render();
   toast("Feiertage entsprechen jetzt der Excel-Vorlage");
 });
 el("resetHol").addEventListener("click", function(){
+  state.regions = ["BE","HE"];
   state.holOff = []; state.holOn = []; state.holExtra = [];
   render();
+  toast("Berlin und Hessen, Stand der gesetzlichen Feiertage");
 });
 
 /* Kopf: Ansichten */
