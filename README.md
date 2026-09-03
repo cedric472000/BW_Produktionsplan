@@ -51,6 +51,28 @@ falls er auf ein Wochenende oder einen Feiertag fällt.
 Anker, Versatz, Ziel-Wochentag, Richtung und Phase sind im Reiter **Regelwerk**
 frei änderbar; Zirkelbezüge werden erkannt und gemeldet.
 
+## Manuelle Termine
+
+Einzelne Termine lassen sich pro Ausgabe von Hand setzen – für Urlaubszeiten,
+Feiertagsbrücken oder Sonderfälle. Ein Klick auf eine Zelle im Terminplan oder
+auf eine Zeile in der Ausgaben-Ansicht öffnet die Eingabe; sie zeigt den
+automatischen Termin zum Vergleich und warnt, wenn das gewählte Datum auf ein
+Wochenende, einen Feiertag oder den falschen Wochentag fällt – ohne es zu
+verhindern, denn die Entscheidung trifft die Redaktion.
+
+Ein fester Termin wird unverändert übernommen. **Alle Schritte, die ihn als
+Anker haben, rechnen von dort aus weiter** – in der Rückwärtskette sind das die
+vorgelagerten Schritte. Zieht man etwa den Start der Seitenfreigabe im Mai-Heft
+eine Woche vor, wandern Redaktionsschluss, Anzeigenschluss, beide
+Redaktionskonferenzen und der Druckunterlagenschluss mit; alles nach dem
+Seitenfreigabe-Start bleibt am E-Tag verankert.
+
+Gesetzte Termine sind blau markiert, stehen gesammelt in der Karte *Manuelle
+Termine* und lassen sich einzeln oder gesamt auf Automatik zurückstellen. Der
+Export weist sie in der Spalte *Herkunft* aus. Ein Jahreswechsel oder ein neuer
+Terminvorschlag verwirft sie (mit „Rückgängig“ wiederherstellbar), weil die
+Daten sonst nicht mehr zum Plan passen.
+
 ## Unterschiede zur Excel-Vorlage
 
 | Punkt | Excel | Diese Seite |

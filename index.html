@@ -278,11 +278,47 @@ tr.phaserow th.rowhead{padding:0}
   padding:9px 18px;border-radius:20px;font-size:13px;z-index:99;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .18s}
 .toast.show{opacity:1}
 
+/* ---------- manuelle Termine ---------- */
+td.cell.click{cursor:pointer}
+td.cell.click:hover{outline:1.5px solid var(--accent);outline-offset:-1.5px;background:var(--accent-soft)}
+td.cell.manual{background:var(--accent-soft);color:var(--accent);font-weight:600}
+td.cell.manual::before{content:"";position:absolute;top:0;left:0;border-top:7px solid var(--accent);
+  border-right:7px solid transparent}
+td.cell.manual.shifted{background:var(--accent-soft)}
+td.cell.manual.shifted::after{display:none}
+tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(--accent)}
+.tl.click{cursor:pointer}
+.tl.click:hover{background:var(--accent-soft)}
+.tl.manual .d{color:var(--accent);font-weight:600}
+.tl .manualnote{display:block;font-size:11px;color:var(--accent);margin-top:2px}
+.ovlist{display:flex;flex-direction:column;gap:1px;margin:-2px -4px}
+.ov{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:7px;align-items:center;padding:4px;border-radius:4px}
+.ov:hover{background:var(--surface-2)}
+.ov .nm{font-size:11.5px;line-height:1.3;min-width:0}
+.ov .nm b{display:block;font-weight:600;font-size:12px}
+.ov .dt{font-family:var(--mono);font-size:11px;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ov .x{background:none;border:0;color:var(--ink-3);cursor:pointer;font-size:14px;padding:0 2px;border-radius:3px}
+.ov .x:hover{color:var(--crit);background:var(--crit-soft)}
+.pop{position:fixed;z-index:80;background:var(--surface);border:1px solid var(--line-2);border-radius:8px;
+  box-shadow:0 12px 40px -12px rgba(16,26,36,.5);padding:13px;width:268px;display:flex;flex-direction:column;gap:9px}
+.pop h3{font-size:13px;line-height:1.3}
+.pop .who{font-size:11px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.pop input[type=date]{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:5px;
+  padding:6px 8px;font-family:var(--mono);font-size:13px}
+.pop input[type=date]:focus{background:var(--surface);border-color:var(--accent)}
+.pop .auto{font-size:11.5px;color:var(--ink-2);background:var(--surface-2);border-radius:5px;padding:6px 8px}
+.pop .auto b{font-family:var(--mono);font-weight:500}
+.pop .warnline{font-size:11.5px;color:var(--warn)}
+.pop .popbtns{display:flex;gap:6px;flex-wrap:wrap}
+.pop .popbtns .btn{flex:1}
+.popmask{position:fixed;inset:0;z-index:79}
+
 /* ---------- print ---------- */
 @media print{
   @page{size:A4 landscape;margin:9mm}
   body{background:#fff;font-size:8.5pt}
-  .topbar,.rail,nav.tabs,.exportbar,.metabar,.rowbtns,.detailhead .spacer,.btn,.callegend{display:none !important}
+  .topbar,.rail,nav.tabs,.exportbar,.metabar,.rowbtns,.detailhead .spacer,.btn,.callegend,.pop,.popmask{display:none !important}
+  td.cell.manual{outline:1px solid #000;outline-offset:-1px;font-weight:700}
   .layout{display:block;padding:0}
   .card{border:0;box-shadow:none;border-radius:0}
   .tablewrap{overflow:visible;max-height:none}
@@ -337,6 +373,8 @@ tr.phaserow th.rowhead{padding:0}
       </div>
     </section>
 
+    <div id="ovCard"></div>
+
     <section class="card">
       <header>
         <h2>Feiertage &amp; freie Tage</h2>
@@ -373,6 +411,8 @@ tr.phaserow th.rowhead{padding:0}
   </section>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="popmask" id="popMask" hidden></div>
+<div class="pop" id="pop" hidden role="dialog" aria-label="Termin manuell setzen"></div>
 
 <script>
 "use strict";
@@ -535,8 +575,11 @@ function planTermin(basis, target, hol, dir){
   }
   return basis;
 }
-/* Kompletten Heftplan rückwärts vom E-Tag rechnen */
-function computePlan(steps, etag, hol){
+/* Kompletten Heftplan rückwärts vom E-Tag rechnen.
+   `fix` enthält manuell gesetzte Termine je Schritt-Nr. Ein fester Termin
+   wird unverändert übernommen; alle Schritte, die ihn als Anker haben,
+   rechnen von dort aus weiter. */
+function computePlan(steps, etag, hol, fix){
   var byNr = new Map(steps.map(function(s){ return [s.nr, s]; }));
   var done = new Map(), busy = new Set();
   function resolve(nr){
@@ -545,10 +588,16 @@ function computePlan(steps, etag, hol){
     var s = byNr.get(nr);
     if (!s) throw new Error("Schritt " + nr + " ist als Anker angegeben, existiert aber nicht.");
     busy.add(nr);
-    var basis = s.anchor === 0 ? etag : addDays(resolve(s.anchor).date, s.offset);
-    var date  = planTermin(basis, s.wd, hol, s.dir);
+    var manual = fix && fix[s.nr] ? parseISO(fix[s.nr]) : null;
+    var basis, date;
+    if (manual){
+      basis = manual; date = manual;
+    } else {
+      basis = s.anchor === 0 ? etag : addDays(resolve(s.anchor).date, s.offset);
+      date  = planTermin(basis, s.wd, hol, s.dir);
+    }
     busy.delete(nr);
-    var r = {step:s, basis:basis, date:date, shift:diffDays(basis, date)};
+    var r = {step:s, basis:basis, date:date, shift:diffDays(basis, date), manual:!!manual};
     done.set(nr, r);
     return r;
   }
@@ -569,6 +618,7 @@ function defaultState(year){
     holOff: [],      /* deaktivierte Standard-Feiertage (ids) */
     holOn:  [],      /* zusätzlich aktivierte Vorschläge (ids) */
     holExtra: [],    /* eigene freie Tage {id,name,date} */
+    overrides: {},   /* manuelle Termine, Schlüssel "<Heft-Id>:<Schritt-Nr>" */
     view: "plan",
     orientation: "steps",
     selected: 0
@@ -579,7 +629,10 @@ function load(){
     var raw = localStorage.getItem(STORE);
     if (raw){
       var s = JSON.parse(raw);
-      if (s && s.year && Array.isArray(s.issues) && Array.isArray(s.steps)) return s;
+      if (s && s.year && Array.isArray(s.issues) && Array.isArray(s.steps)){
+        if (!s.overrides || typeof s.overrides !== "object") s.overrides = {};
+        return s;
+      }
     }
   }catch(e){}
   return defaultState(2027);
@@ -617,20 +670,27 @@ function buildModel(){
   state.issues.forEach(function(inp, idx){
     var raw = parseISO(inp.raw);
     var corrected = isFreeDay(raw, hol.set) ? workday(addDays(raw,1), -1, hol.set) : raw;
-    var rows;
+    var fix = {}, hasFix = false;
+    steps.forEach(function(st){
+      var v = state.overrides[inp.id + ":" + st.nr];
+      if (v){ fix[st.nr] = v; hasFix = true; }
+    });
+    var rows, autoRows = null;
     try{
-      rows = computePlan(steps, corrected, hol.set);
+      rows = computePlan(steps, corrected, hol.set, fix);
+      autoRows = hasFix ? computePlan(steps, corrected, hol.set, null) : rows;
     }catch(e){
-      error = e.message; rows = [];
+      error = e.message; rows = []; autoRows = [];
     }
     var byNr = new Map(rows.map(function(r){ return [r.step.nr, r]; }));
+    var autoByNr = new Map((autoRows || []).map(function(r){ return [r.step.nr, r]; }));
     var root = steps.filter(function(s){ return s.anchor === 0; })[0];
     var etagRow = root ? byNr.get(root.nr) : null;
     var dates = rows.map(function(r){ return r.date; });
     issues.push({
       id: inp.id, name: inp.name, index: idx,
       raw: raw, corrected: corrected,
-      rows: rows, byNr: byNr,
+      rows: rows, byNr: byNr, autoByNr: autoByNr, hasFix: hasFix,
       etag: etagRow ? etagRow.date : corrected,
       first: dates.length ? new Date(Math.min.apply(null, dates)) : corrected,
       last:  dates.length ? new Date(Math.max.apply(null, dates)) : corrected
@@ -655,7 +715,16 @@ function buildModel(){
         m:"Eingabe <b>"+fmt(is.corrected)+"</b> ("+WD_LONG[dow(is.corrected)-1]+"), Ziel-Wochentag des E-Tags ist "+WD_LONG[(is.byNr.get(24)?is.byNr.get(24).step.wd:3)-1]+" &rarr; geplant auf <b>"+fmt(is.etag)+"</b>. Im Regelwerk lässt sich der Ziel-Wochentag auf „flexibel“ stellen."});
     }
     is.rows.forEach(function(r){
-      if (Math.abs(r.shift) >= 3){
+      if (r.manual){
+        var a = is.autoByNr.get(r.step.nr);
+        var delta = a ? diffDays(a.date, r.date) : 0;
+        findings.push({sev: isFreeDay(r.date, hol.set) ? "warn" : "info", issue:is.name,
+          t:"Manueller Termin für Schritt " + r.step.nr,
+          m:"„"+r.step.label+"“ steht fest auf <b>"+wd(r.date)+" "+fmt(r.date)+"</b>"+
+            (a ? ", automatisch wäre <b>"+fmt(a.date)+"</b> ("+(delta>0?"+":"")+delta+" Tage)" : "")+"."+
+            (isFreeDay(r.date, hol.set) ? " Der Termin liegt auf einem Wochenende oder Feiertag." : "")});
+      }
+      if (!r.manual && Math.abs(r.shift) >= 3){
         findings.push({sev:"warn", issue:is.name,
           t:"Schritt "+r.step.nr+" um "+Math.abs(r.shift)+" Tage verschoben",
           m:"„"+r.step.label+"“: Rechenbasis <b>"+fmt(r.basis)+"</b> &rarr; nächster zulässiger Termin <b>"+fmt(r.date)+"</b>. Ursache: Feiertag, Wochenende oder Ziel-Wochentag."});
@@ -713,6 +782,7 @@ var model = null;
 function render(withRail){
   model = buildModel();
   if (withRail !== false){ renderIssues(); renderHolidays(); }
+  renderOverrides();
   renderMeta();
   renderPanel();
   var n = model.findings.filter(function(f){ return f.sev !== "info"; }).length;
@@ -733,11 +803,15 @@ function renderIssues(){
     '</div>';
   }).join("");
   var note = el("issueNote");
+  var hadOv = undoSnapshot && Object.keys(undoSnapshot.overrides || {}).length;
   note.innerHTML = undoSnapshot
-    ? '<div class="note"><span>Termine für '+state.year+' vorgeschlagen. Jede Zeile ist frei änderbar.</span><button type="button" id="undoBtn">Rückgängig</button></div>'
+    ? '<div class="note"><span>Termine für '+state.year+' vorgeschlagen. Jede Zeile ist frei änderbar.'+
+      (hadOv ? ' '+hadOv+' manuelle Termine wurden verworfen.' : "")+
+      '</span><button type="button" id="undoBtn">Rückgängig</button></div>'
     : '';
   if (undoSnapshot) el("undoBtn").addEventListener("click", function(){
       state.issues = undoSnapshot.issues; state.year = undoSnapshot.year;
+      state.overrides = undoSnapshot.overrides || {};
       undoSnapshot = null; el("yearInput").value = state.year; render();
     });
 }
@@ -757,6 +831,76 @@ function renderHolidays(){
         '</label>';
       }).join("");
   }).join("");
+}
+
+/* ---------- Rail: manuelle Termine --------------------------------------- */
+function renderOverrides(){
+  var box = el("ovCard");
+  var entries = [];
+  model.issues.forEach(function(x){
+    x.rows.forEach(function(r){
+      if (r.manual) entries.push({issue:x, r:r});
+    });
+  });
+  if (!entries.length){ box.innerHTML = ""; return; }
+  entries.sort(function(a,b){ return a.r.date - b.r.date; });
+  box.innerHTML = '<section class="card"><header><h2>Manuelle Termine</h2>'+
+    '<span class="hint">'+entries.length+'</span></header><div class="body"><div class="ovlist">'+
+    entries.map(function(e){
+      var auto = e.issue.autoByNr.get(e.r.step.nr);
+      return '<div class="ov"><span class="nm"><b>'+esc(e.issue.name)+'</b>'+esc(e.r.step.nr+" · "+e.r.step.label)+
+        (auto && +auto.date !== +e.r.date ? " · automatisch "+fmtShort(auto.date) : "")+'</span>'+
+        '<span class="dt">'+wd(e.r.date)+" "+fmtShort(e.r.date)+'</span>'+
+        '<button type="button" class="x" data-clearov="'+esc(e.issue.id)+":"+e.r.step.nr+
+        '" title="Auf Automatik zurücksetzen" aria-label="Auf Automatik zurücksetzen">&times;</button></div>';
+    }).join("")+'</div><div class="rowbtns"><button type="button" class="btn sm ghost" id="clearAllOv">Alle auf Automatik</button></div></div></section>';
+}
+
+/* ---------- Termin manuell setzen ---------------------------------------- */
+var popCtx = null;
+function openPop(issueId, stepNr, anchorEl){
+  var x = model.issues.filter(function(i){ return i.id === issueId; })[0];
+  if (!x) return;
+  var r = x.byNr.get(stepNr), auto = x.autoByNr.get(stepNr);
+  if (!r) return;
+  popCtx = {issue:x, nr:stepNr};
+  var pop = el("pop");
+  pop.innerHTML =
+    '<span class="who">'+esc(x.name)+'</span>'+
+    '<h3>'+stepNr+' · '+esc(r.step.label)+'</h3>'+
+    '<input type="date" id="popDate" value="'+iso(r.date)+'" aria-label="Termin">'+
+    '<div class="auto">Automatisch: <b>'+(auto ? wd(auto.date)+" "+fmt(auto.date) : "–")+'</b>'+
+      (r.step.wd ? ' · Ziel-Wochentag '+WD_LONG[r.step.wd-1] : ' · flexibler Arbeitstag')+'</div>'+
+    '<div class="warnline" id="popWarn"></div>'+
+    '<div class="popbtns">'+
+      '<button type="button" class="btn sm primary" data-pop="apply">Übernehmen</button>'+
+      (r.manual ? '<button type="button" class="btn sm" data-pop="clear">Automatik</button>' : "")+
+      '<button type="button" class="btn sm ghost" data-pop="close">Abbrechen</button>'+
+    '</div>';
+  pop.hidden = false; el("popMask").hidden = false;
+  var box = pop.getBoundingClientRect(), rect = anchorEl.getBoundingClientRect();
+  var top = Math.min(rect.bottom + 6, window.innerHeight - box.height - 10);
+  var left = Math.min(Math.max(8, rect.left), window.innerWidth - box.width - 10);
+  pop.style.top = Math.max(8, top) + "px";
+  pop.style.left = left + "px";
+  var inp = el("popDate");
+  inp.focus();
+  inp.addEventListener("input", popCheck);
+  popCheck();
+}
+function popCheck(){
+  var inp = el("popDate"), w = el("popWarn");
+  if (!inp || !w) return;
+  if (!inp.value){ w.textContent = ""; return; }
+  var d = parseISO(inp.value), msgs = [];
+  if (isFreeDay(d, model.hol.set)) msgs.push("Wochenende oder Feiertag");
+  var st = popCtx && popCtx.issue.byNr.get(popCtx.nr);
+  if (st && st.step.wd && dow(d) !== st.step.wd) msgs.push("nicht "+WD_LONG[st.step.wd-1]);
+  w.textContent = msgs.length ? "Hinweis: " + msgs.join(", ") + "." : "";
+}
+function closePop(){
+  popCtx = null;
+  el("pop").hidden = true; el("popMask").hidden = true;
 }
 
 /* ---------- Kopfzeile mit Kennzahlen ------------------------------------- */
@@ -794,14 +938,21 @@ function renderPanel(){
 }
 
 /* ---------- Ansicht: Terminplan ------------------------------------------ */
-function cellHTML(r, prev){
-  var cls = "cell" + (Math.abs(r.shift) >= 1 ? " shifted" : "") +
-            (prev && prev.getUTCMonth() !== r.date.getUTCMonth() ? " newmonth" : "");
-  var title = r.shift
-    ? "Rechenbasis " + fmt(r.basis) + " → " + fmt(r.date) + " (" + WD_LONG[dow(r.date)-1] + ", " +
-      (r.shift > 0 ? "+" : "") + r.shift + " Tage)"
-    : WD_LONG[dow(r.date)-1] + ", KW " + isoWeek(r.date);
-  return '<td class="'+cls+'" title="'+esc(title)+'"><span class="wd">'+wd(r.date)+'</span>'+fmtShort(r.date)+'</td>';
+function cellHTML(r, issue){
+  var cls = "cell click" + (r.manual ? " manual" : "") + (!r.manual && Math.abs(r.shift) >= 1 ? " shifted" : "");
+  var auto = issue ? issue.autoByNr.get(r.step.nr) : null;
+  var title;
+  if (r.manual){
+    title = "Manuell gesetzt auf " + WD_LONG[dow(r.date)-1] + ", " + fmt(r.date) +
+            (auto ? "\nAutomatisch wäre " + fmt(auto.date) : "") + "\nZum Ändern anklicken";
+  } else if (r.shift){
+    title = "Rechenbasis " + fmt(r.basis) + " → " + fmt(r.date) + " (" + WD_LONG[dow(r.date)-1] + ", " +
+            (r.shift > 0 ? "+" : "") + r.shift + " Tage)\nZum manuellen Setzen anklicken";
+  } else {
+    title = WD_LONG[dow(r.date)-1] + ", KW " + isoWeek(r.date) + "\nZum manuellen Setzen anklicken";
+  }
+  return '<td class="'+cls+'" data-issue="'+esc(issue ? issue.id : "")+'" data-step="'+r.step.nr+
+    '" title="'+esc(title)+'"><span class="wd">'+wd(r.date)+'</span>'+fmtShort(r.date)+'</td>';
 }
 function viewPlan(){
   var is = model.issues;
@@ -823,7 +974,7 @@ function viewPlan(){
         '<th class="rowhead"><div class="steprow"><span class="stepnr">'+s.nr+'</span>'+
         '<span class="stepname">'+esc(s.label)+'</span>'+
         '<span class="wdbadge'+(s.wd ? " fix" : "")+'">'+(s.wd ? WD_SHORT[s.wd-1] : "flex")+'</span></div></th>'+
-        is.map(function(x){ var r = x.byNr.get(s.nr); return r ? cellHTML(r, null) : '<td class="cell">–</td>'; }).join("")+
+        is.map(function(x){ var r = x.byNr.get(s.nr); return r ? cellHTML(r, x) : '<td class="cell">–</td>'; }).join("")+
       '</tr>';
     });
     body = '<table class="plan"><thead><tr><th class="corner">Produktionsschritt</th>'+
@@ -836,10 +987,9 @@ function viewPlan(){
                '<span class="sub">'+(s.wd ? WD_SHORT[s.wd-1] : "flex")+'</span></th>';
       }).join("")+'</tr></thead><tbody>'+
       is.map(function(x){
-        var prev = null;
         return '<tr style="--ph:var(--ph-2)"><th class="rowhead"><div class="steprow"><span class="stepname">'+esc(x.name)+
           '</span></div></th>'+
-          model.steps.map(function(s){ var r = x.byNr.get(s.nr); return r ? cellHTML(r, null) : '<td class="cell">–</td>'; }).join("")+
+          model.steps.map(function(s){ var r = x.byNr.get(s.nr); return r ? cellHTML(r, x) : '<td class="cell">–</td>'; }).join("")+
         '</tr>';
       }).join("")+'</tbody></table>';
   }
@@ -863,12 +1013,15 @@ function viewIssue(){
       lastPhase = ph.key;
     }
     var rel = diffDays(r.date, x.etag);
-    out += '<div class="tl'+(r.step.anchor === 0 ? " ms" : "")+'" style="--ph:'+ph.css+'">'+
+    var auto = x.autoByNr.get(r.step.nr);
+    var extra = r.manual
+      ? '<span class="manualnote">Manuell gesetzt'+(auto && +auto.date !== +r.date ? ' · automatisch '+fmt(auto.date) : "")+'</span>'
+      : (r.shift ? '<span class="shift">Basis '+fmt(r.basis)+' → verschoben auf '+WD_LONG[dow(r.date)-1]+' ('+(r.shift>0?"+":"")+r.shift+' Tage)</span>' : "");
+    out += '<div class="tl click'+(r.step.anchor === 0 ? " ms" : "")+(r.manual ? " manual" : "")+
+      '" style="--ph:'+ph.css+'" data-issue="'+esc(x.id)+'" data-step="'+r.step.nr+'" title="Zum Setzen eines eigenen Termins anklicken">'+
       '<span class="d"><span class="wd">'+wd(r.date)+'</span>'+fmt(r.date)+'</span>'+
       '<span class="kw">KW&nbsp;'+isoWeek(r.date)+'</span>'+
-      '<span class="nm"><span class="nr">'+r.step.nr+'</span>'+esc(r.step.label)+
-        (r.shift ? '<span class="shift">Basis '+fmt(r.basis)+' → verschoben auf '+WD_LONG[dow(r.date)-1]+' ('+(r.shift>0?"+":"")+r.shift+' Tage)</span>' : "")+
-      '</span>'+
+      '<span class="nm"><span class="nr">'+r.step.nr+'</span>'+esc(r.step.label)+extra+'</span>'+
       '<span class="rel">'+(rel > 0 ? "E − " + rel + " T" : "E-Tag")+'</span>'+
     '</div>';
   });
@@ -1012,7 +1165,8 @@ function exportPayload(){
           "DTSTAMP:"+stamp, "DTSTART;VALUE=DATE:"+d1, "DTEND;VALUE=DATE:"+d2,
           "SUMMARY:BW "+x.name+": "+r.step.label.replace(/[,;]/g," "),
           "DESCRIPTION:Berliner Wirtschaft "+x.name+" – Schritt "+r.step.nr+" von "+model.steps.length+
-            "\\nE-Tag "+fmt(x.etag)+"\\nZiel-Wochentag: "+wdName(r.step.wd),
+            "\\nE-Tag "+fmt(x.etag)+"\\nZiel-Wochentag: "+wdName(r.step.wd)+
+            (r.manual ? "\\nManuell gesetzter Sondertermin" : ""),
           "TRANSP:TRANSPARENT","END:VEVENT");
       });
     });
@@ -1021,10 +1175,13 @@ function exportPayload(){
   }
   var rows = [];
   if (exportFormat === "csv-liste"){
-    rows.push(["Ausgabe","E-Tag","Schritt-Nr","Produktionsschritt","Datum","Wochentag","KW","Ziel-Wochentag","Verschiebung (Tage)"]);
+    rows.push(["Ausgabe","E-Tag","Schritt-Nr","Produktionsschritt","Datum","Wochentag","KW","Ziel-Wochentag","Verschiebung (Tage)","Herkunft","Automatisch wäre"]);
     is.forEach(function(x){
       x.rows.slice().sort(function(a,b){ return a.date - b.date; }).forEach(function(r){
-        rows.push([x.name, fmt(x.etag), r.step.nr, r.step.label, fmt(r.date), WD_LONG[dow(r.date)-1], isoWeek(r.date), wdName(r.step.wd), r.shift]);
+        var a = x.autoByNr.get(r.step.nr);
+        rows.push([x.name, fmt(x.etag), r.step.nr, r.step.label, fmt(r.date), WD_LONG[dow(r.date)-1], isoWeek(r.date),
+                   wdName(r.step.wd), r.manual ? 0 : r.shift, r.manual ? "manuell" : "automatisch",
+                   r.manual && a ? fmt(a.date) : ""]);
       });
     });
   } else {
@@ -1090,8 +1247,10 @@ function toast(msg){
 function setYear(y){
   y = Math.max(2000, Math.min(2100, y|0));
   if (y === state.year) return;
-  undoSnapshot = {year:state.year, issues:state.issues.map(function(i){ return Object.assign({}, i); })};
+  undoSnapshot = {year:state.year, issues:state.issues.map(function(i){ return Object.assign({}, i); }),
+                  overrides:Object.assign({}, state.overrides)};
   var names = state.issues.map(function(i){ return i.name; });
+  state.overrides = {};
   state.year = y;
   state.issues = suggestIssues(y).map(function(s, i){
     return names[i] ? Object.assign({}, s, {name:names[i]}) : s;
@@ -1117,6 +1276,10 @@ el("issueList").addEventListener("input", function(e){
 el("issueList").addEventListener("click", function(e){
   if (e.target.dataset.f !== "del") return;
   var i = +e.target.closest(".issue").dataset.i;
+  var goneId = state.issues[i].id;
+  Object.keys(state.overrides).forEach(function(k){
+    if (k.indexOf(goneId + ":") === 0) delete state.overrides[k];
+  });
   state.issues.splice(i, 1);
   if (state.selected >= state.issues.length) state.selected = Math.max(0, state.issues.length - 1);
   render();
@@ -1130,8 +1293,10 @@ el("addIssue").addEventListener("click", function(){
   render();
 });
 el("suggestDates").addEventListener("click", function(){
-  undoSnapshot = {year:state.year, issues:state.issues.map(function(i){ return Object.assign({}, i); })};
+  undoSnapshot = {year:state.year, issues:state.issues.map(function(i){ return Object.assign({}, i); }),
+                  overrides:Object.assign({}, state.overrides)};
   state.issues = suggestIssues(state.year);
+  state.overrides = {};
   state.selected = 0;
   render();
   toast("Standardraster für " + state.year + " eingesetzt");
@@ -1213,8 +1378,45 @@ el("resetAll").addEventListener("click", function(){
   render();
 });
 
+/* Manuelle Termine: Rail-Karte */
+el("ovCard").addEventListener("click", function(e){
+  if (e.target.id === "clearAllOv"){ state.overrides = {}; render(); toast("Alle Termine wieder automatisch"); return; }
+  var k = e.target.dataset.clearov;
+  if (!k) return;
+  delete state.overrides[k];
+  render();
+});
+
+/* Manuelle Termine: Popover */
+el("popMask").addEventListener("click", closePop);
+document.addEventListener("keydown", function(e){
+  if (e.key === "Escape" && popCtx) closePop();
+});
+el("pop").addEventListener("click", function(e){
+  var b = e.target.closest("[data-pop]");
+  if (!b || !popCtx) return;
+  var a = b.dataset.pop, key = popCtx.issue.id + ":" + popCtx.nr;
+  if (a === "apply"){
+    var v = el("popDate").value;
+    if (!v){ toast("Bitte ein Datum wählen"); return; }
+    var autoRow = popCtx.issue.autoByNr.get(popCtx.nr);
+    if (autoRow && iso(autoRow.date) === v) delete state.overrides[key];
+    else state.overrides[key] = v;
+    closePop(); render();
+    toast("Termin gesetzt – abhängige Schritte neu gerechnet");
+  } else if (a === "clear"){
+    delete state.overrides[key];
+    closePop(); render();
+    toast("Wieder automatisch");
+  } else {
+    closePop();
+  }
+});
+
 /* Panel: Delegation */
 el("panel").addEventListener("click", function(e){
+  var t = e.target.closest("[data-issue][data-step]");
+  if (t && t.dataset.issue){ openPop(t.dataset.issue, +t.dataset.step, t); return; }
   var b = e.target.closest("[data-act]");
   if (!b) return;
   var a = b.dataset.act;
