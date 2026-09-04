@@ -31,6 +31,21 @@ GitHub Page. Alle Eingaben werden im Browser (localStorage) gespeichert.
 `src/app.html` ist bewusst ohne `<!doctype>`/`<html>`/`<head>`/`<body>` geschrieben,
 damit dieselbe Quelle als eigenständige Seite **und** als eingebettetes Artifact läuft.
 
+## Gestaltung
+
+Die Seite folgt dem Corporate Design der IHK-Organisation: Hausfarbe ist
+IHK-Blau (Pantone 294, hier `#003087`), die Produktionsphasen tragen die
+Sekundärtöne der IHK-Geschäftsfelder (Pantone Orange 021, 376, Rot 032), für
+Fließtext auf lesbaren Kontrast abgedunkelt. Der Zeitschriftenkopf zitiert den
+Bogen aus dem IHK-Zeichen als abstraktes Motiv – kein Nachbau des Logos.
+Schriften: Newsreader für Überschriften und den Titelkopf, Archivo für die
+Oberfläche, IBM Plex Mono für alle Datumsangaben.
+
+Sämtliche Markenwerte stehen als CSS-Variablen im Block `:root` ganz oben in
+`src/app.html` (`--ihk-blau`, `--ihk-orange`, `--ihk-gruen`, `--ihk-rot`,
+`--sans`, `--serif`). Wer die verbindlichen Hausfarben oder die Hausschrift
+zur Hand hat, tauscht sie dort an einer Stelle aus.
+
 ## Rechenregel
 
 Jeder Schritt ist definiert durch **Anker**, **Versatz**, **Ziel-Wochentag** und

@@ -1,73 +1,95 @@
 <title>Produktionsplan Berliner Wirtschaft</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap">
 <style>
+/* -------------------------------------------------------------------------
+   Farbwelt nach dem Corporate Design der IHK-Organisation:
+   IHK-Blau ist Pantone 294, die Geschäftsfelder tragen eigene Sekundärtöne
+   (Pantone 3005, 376, Rot 032). Diese Sekundärtöne markieren hier die vier
+   Produktionsphasen. Für Text sind die Töne auf lesbaren Kontrast abgedunkelt.
+   Alle Marken-Werte stehen in diesem einen Block und lassen sich austauschen.
+   ------------------------------------------------------------------------- */
 :root{
-  --paper:#e9eef3; --surface:#ffffff; --surface-2:#f4f7fa; --surface-3:#eaeff5;
-  --ink:#101a24; --ink-2:#47586a; --ink-3:#76889a;
-  --line:#d4dde6; --line-2:#bfcbd8;
-  --accent:#0a4d8c; --accent-2:#0d68bd; --accent-soft:#e0ecf8;
-  --milestone:#9d1250; --milestone-soft:#fae4ee;
-  --ok:#166b47; --ok-soft:#dcf0e7;
-  --warn:#8a5300; --warn-soft:#fbedd5;
-  --crit:#9d2b20; --crit-soft:#fae1de;
-  --ph-1:#5c7590; --ph-2:#0a4d8c; --ph-3:#0e6a6a; --ph-4:#9d1250;
-  --shadow:0 1px 2px rgba(16,26,36,.06), 0 8px 24px -16px rgba(16,26,36,.35);
-  --r:6px;
-  --sans:"IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
-  --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --ihk-blau:#003087;          /* Pantone 294  */
+  --ihk-orange:#B25400;        /* Pantone Orange 021, abgedunkelt */
+  --ihk-gruen:#5F8A00;         /* Pantone 376, abgedunkelt */
+  --ihk-rot:#B3202B;           /* Pantone Rot 032, abgedunkelt */
+
+  --paper:#EDF0F5; --surface:#ffffff; --surface-2:#F4F6FA; --surface-3:#E7ECF4;
+  --ink:#0D1626; --ink-2:#44546B; --ink-3:#74839A;
+  --line:#D3DBE6; --line-2:#B7C3D4;
+  --accent:var(--ihk-blau); --accent-2:#0B4EA2; --accent-soft:#E2EAF6;
+  --milestone:var(--ihk-rot); --milestone-soft:#FBE6E7;
+  --ok:#14663F; --ok-soft:#DDEFE6;
+  --warn:#8A5100; --warn-soft:#FAEBD3;
+  --crit:#9A2018; --crit-soft:#F9E0DD;
+  --ph-1:var(--ihk-orange); --ph-2:var(--ihk-blau); --ph-3:var(--ihk-gruen); --ph-4:var(--ihk-rot);
+  --flag:var(--ihk-blau); --flag-ink:#ffffff;
+  --shadow:0 1px 2px rgba(0,22,60,.07), 0 10px 26px -18px rgba(0,22,60,.45);
+  --r:5px;
+  --sans:"Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif:"Newsreader", "Times New Roman", Times, serif;
   --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#0d141b; --surface:#151f28; --surface-2:#1b2732; --surface-3:#22303c;
-    --ink:#e4ecf3; --ink-2:#a3b3c1; --ink-3:#7b8b99;
-    --line:#293743; --line-2:#3a4b59;
-    --accent:#61a9ec; --accent-2:#86c1f7; --accent-soft:#16293b;
-    --milestone:#ef85b3; --milestone-soft:#38182a;
-    --ok:#63c79b; --ok-soft:#13291f;
-    --warn:#e0a24a; --warn-soft:#302410;
-    --crit:#f08c81; --crit-soft:#331917;
-    --ph-1:#8ea6bd; --ph-2:#61a9ec; --ph-3:#4fb3ad; --ph-4:#ef85b3;
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.9);
+    --paper:#0A111C; --surface:#131E2E; --surface-2:#1A2637; --surface-3:#223247;
+    --ink:#E6EDF6; --ink-2:#A4B3C6; --ink-3:#7A8AA0;
+    --line:#26344A; --line-2:#37475F;
+    --accent:#6FA8E8; --accent-2:#93C0F2; --accent-soft:#14253F;
+    --milestone:#F0949A; --milestone-soft:#38191D;
+    --ok:#5FC79A; --ok-soft:#12291F;
+    --warn:#E0A24A; --warn-soft:#2F2410;
+    --crit:#F0918A; --crit-soft:#331A17;
+    --ph-1:#E5954F; --ph-2:#6FA8E8; --ph-3:#9BC94A; --ph-4:#F0949A;
+    --flag:#0B2E6B; --flag-ink:#EAF1FB;
+    --shadow:0 1px 2px rgba(0,0,0,.45), 0 12px 30px -20px rgba(0,0,0,.9);
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0d141b; --surface:#151f28; --surface-2:#1b2732; --surface-3:#22303c;
-  --ink:#e4ecf3; --ink-2:#a3b3c1; --ink-3:#7b8b99;
-  --line:#293743; --line-2:#3a4b59;
-  --accent:#61a9ec; --accent-2:#86c1f7; --accent-soft:#16293b;
-  --milestone:#ef85b3; --milestone-soft:#38182a;
-  --ok:#63c79b; --ok-soft:#13291f;
-  --warn:#e0a24a; --warn-soft:#302410;
-  --crit:#f08c81; --crit-soft:#331917;
-  --ph-1:#8ea6bd; --ph-2:#61a9ec; --ph-3:#4fb3ad; --ph-4:#ef85b3;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.9);
+  --paper:#0A111C; --surface:#131E2E; --surface-2:#1A2637; --surface-3:#223247;
+  --ink:#E6EDF6; --ink-2:#A4B3C6; --ink-3:#7A8AA0;
+  --line:#26344A; --line-2:#37475F;
+  --accent:#6FA8E8; --accent-2:#93C0F2; --accent-soft:#14253F;
+  --milestone:#F0949A; --milestone-soft:#38191D;
+  --ok:#5FC79A; --ok-soft:#12291F;
+  --warn:#E0A24A; --warn-soft:#2F2410;
+  --crit:#F0918A; --crit-soft:#331A17;
+  --ph-1:#E5954F; --ph-2:#6FA8E8; --ph-3:#9BC94A; --ph-4:#F0949A;
+  --flag:#0B2E6B; --flag-ink:#EAF1FB;
+  --shadow:0 1px 2px rgba(0,0,0,.45), 0 12px 30px -20px rgba(0,0,0,.9);
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0;text-wrap:balance;letter-spacing:-.005em}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:3px}
 @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
 
 /* ---------- top bar ---------- */
 .topbar{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1px solid var(--line);
-  display:flex;align-items:center;gap:20px;padding:10px 20px;flex-wrap:wrap}
-.brand{display:flex;flex-direction:column;gap:1px;padding-right:18px;border-right:1px solid var(--line);min-width:0}
-.brand .eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
-.brand h1{font-size:19px;line-height:1.15}
-.yearbox{display:flex;align-items:center;gap:6px}
+  display:flex;align-items:stretch;gap:0;padding:0 20px 0 0;flex-wrap:wrap;box-shadow:0 1px 0 rgba(0,22,60,.04)}
+.flag{background:var(--flag);color:var(--flag-ink);display:flex;align-items:center;gap:11px;
+  padding:9px 20px 9px 20px;min-width:0}
+.flag .arc{width:30px;height:19px;flex:none;opacity:.9}
+.flag .wm{display:flex;flex-direction:column;gap:0;min-width:0}
+.flag .mag{font-family:var(--serif);font-weight:600;font-size:17px;line-height:1.1;letter-spacing:.005em;
+  text-transform:uppercase;white-space:nowrap}
+.flag .sub{font-size:9px;letter-spacing:.16em;text-transform:uppercase;opacity:.72;font-weight:500;margin-top:2px}
+.brand{display:flex;align-items:center;padding:0 18px;border-right:1px solid var(--line);min-width:0}
+.brand h1{font-size:18px;line-height:1.15;font-weight:600}
+.brand .eyebrow{display:none}
+.yearbox{display:flex;align-items:center;gap:7px;padding-left:18px}
 .yearbox label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
 .stepper{display:flex;align-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .stepper button{background:none;border:0;padding:5px 9px;cursor:pointer;color:var(--ink-2);font-size:15px;line-height:1}
 .stepper button:hover{background:var(--surface-3);color:var(--accent)}
 .stepper input{width:58px;border:0;background:none;text-align:center;font-family:var(--mono);font-size:15px;font-weight:600;padding:5px 0;letter-spacing:.02em}
 .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-nav.tabs{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+nav.tabs{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap;align-items:center}
 nav.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:7px 11px;cursor:pointer;
-  color:var(--ink-2);font-weight:500;font-size:13px;border-radius:3px 3px 0 0}
+  color:var(--ink-2);font-weight:500;font-size:13px;border-radius:3px 3px 0 0;letter-spacing:.005em}
 nav.tabs button:hover{color:var(--ink);background:var(--surface-2)}
 nav.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 nav.tabs .cnt{display:inline-block;margin-left:5px;font-size:10px;font-family:var(--mono);background:var(--warn-soft);color:var(--warn);
@@ -90,16 +112,16 @@ nav.tabs .cnt.zero{background:var(--surface-3);color:var(--ink-3)}
 @media (max-width:1080px){.layout{grid-template-columns:minmax(0,1fr)}}
 .rail{display:flex;flex-direction:column;gap:14px;position:sticky;top:60px}
 @media (max-width:1080px){.rail{position:static}}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);overflow:hidden}
-.card>header{display:flex;align-items:center;gap:8px;padding:10px 13px;border-bottom:1px solid var(--line);background:var(--surface-2)}
-.card>header h2{font-size:14px;flex:1}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);overflow:hidden}
+.card>header{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.card>header h2{font-size:15px;flex:1;letter-spacing:.002em}
 .card>header .hint{font-size:11px;color:var(--ink-3);font-family:var(--mono)}
 .card .body{padding:12px 13px}
 .stage{min-width:0;display:flex;flex-direction:column;gap:14px}
 
 /* ---------- meta strip ---------- */
-.metabar{display:flex;flex-wrap:wrap;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;
-  box-shadow:var(--shadow);overflow:hidden}
+.metabar{display:flex;flex-wrap:wrap;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:6px;
+  box-shadow:var(--shadow);overflow:hidden;border-top:2px solid var(--accent)}
 .metabar .m{padding:9px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:1px;min-width:118px}
 .metabar .m:last-child{border-right:0}
 .metabar .k{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
@@ -320,7 +342,7 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
 @media print{
   @page{size:A4 landscape;margin:9mm}
   body{background:#fff;font-size:8.5pt}
-  .topbar,.rail,nav.tabs,.exportbar,.metabar,.rowbtns,.detailhead .spacer,.btn,.callegend,.pop,.popmask{display:none !important}
+  .topbar,.rail,nav.tabs,.exportbar,.metabar,.rowbtns,.detailhead .spacer,.btn,.callegend,.pop,.popmask,.regions{display:none !important}
   td.cell.manual{outline:1px solid #000;outline-offset:-1px;font-weight:700}
   .layout{display:block;padding:0}
   .card{border:0;box-shadow:none;border-radius:0}
@@ -331,16 +353,24 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
   .printhead{display:block !important}
   tr{break-inside:avoid}
 }
-.printhead{display:none;padding:0 0 8px;border-bottom:1px solid #000;margin-bottom:8px}
-.printhead h2{font-size:13pt}
+.printhead{display:none;padding:0 0 7px;border-bottom:2px solid #000;margin-bottom:9px}
+.printhead .mag{font-family:var(--serif);font-size:15pt;font-weight:700;text-transform:uppercase;letter-spacing:.01em;line-height:1}
+.printhead h2{font-size:10pt;font-weight:600;margin-top:3px}
 .printhead .sub{font-size:8pt;color:#444;margin-top:2px}
 </style>
 
 <header class="topbar">
-  <div class="brand">
-    <span class="eyebrow">Berliner Wirtschaft &middot; IHK Berlin</span>
-    <h1>Produktionsplan</h1>
+  <div class="flag">
+    <svg class="arc" viewBox="0 0 40 24" aria-hidden="true" focusable="false">
+      <path d="M2 22.5 A18 18 0 0 1 38 22.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="square"></path>
+      <path d="M11 22.5 A9 9 0 0 1 29 22.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="square" opacity=".5"></path>
+    </svg>
+    <span class="wm">
+      <span class="mag">Berliner Wirtschaft</span>
+      <span class="sub">Magazin der IHK Berlin</span>
+    </span>
   </div>
+  <div class="brand"><h1>Produktionsplan</h1></div>
   <div class="yearbox">
     <label for="yearInput">Planungsjahr</label>
     <div class="stepper">
@@ -1068,8 +1098,9 @@ function viewPlan(){
   var is = model.issues;
   if (!is.length) return card("Terminplan", '<div class="empty">Noch keine Ausgabe angelegt.</div>');
   var head =
-    '<div class="printhead"><h2>Produktionsplan Berliner Wirtschaft '+esc(is[0].name)+" bis "+esc(is[is.length-1].name)+' '+state.year+'</h2>'+
-    '<div class="sub">Stand '+fmt(D(new Date().getFullYear(), new Date().getMonth()+1, new Date().getDate()))+'</div></div>';
+    '<div class="printhead"><div class="mag">Berliner Wirtschaft</div>'+
+    '<h2>Produktionsplan '+esc(is[0].name)+" bis "+esc(is[is.length-1].name)+' '+state.year+'</h2>'+
+    '<div class="sub">Magazin der IHK Berlin · Stand '+fmt(D(new Date().getFullYear(), new Date().getMonth()+1, new Date().getDate()))+'</div></div>';
   var body;
   if (state.orientation === "steps"){
     var rows = "", lastPhase = null;
