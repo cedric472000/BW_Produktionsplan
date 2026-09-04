@@ -287,6 +287,96 @@ tr.phaserow th.rowhead{padding:0}
   padding:9px 18px;border-radius:20px;font-size:13px;z-index:99;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .18s}
 .toast.show{opacity:1}
 
+/* ---------- Plan: Kopfleiste und Seitenkarte ---------- */
+.planbox{display:flex;align-items:center;gap:8px;padding:0 18px;border-right:1px solid var(--line);min-width:0}
+.planbox .pl{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}
+.planbox .sv{font-size:10.5px;color:var(--ink-3);font-family:var(--mono);white-space:nowrap}
+.stat{font-size:9px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.stat.fertig{background:var(--ok-soft);color:var(--ok)}
+.stat.entwurf{background:var(--warn-soft);color:var(--warn)}
+.stat.offen{background:var(--accent-soft);color:var(--accent)}
+.plancard #planTitel{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;
+  padding:6px 8px;font-size:13.5px;font-weight:600;font-family:var(--serif)}
+.plancard #planTitel:focus{background:var(--surface);border-color:var(--accent)}
+.planstat{display:flex;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap}
+.planstat .tsum{font-size:11.5px;color:var(--ink-3);font-family:var(--mono)}
+body.gesperrt .rail input,body.gesperrt .rail select{opacity:.55}
+body.gesperrt td.cell.click{cursor:default}
+body.gesperrt td.cell.click:hover{outline:0;background:inherit}
+
+/* ---------- Ansicht Pläne ---------- */
+.aktuell{padding:16px 18px;border-bottom:1px solid var(--line);background:var(--accent-soft);
+  border-left:3px solid var(--accent)}
+.aktuell.leer{background:var(--surface-2);border-left-color:var(--line-2)}
+.aktuell .lbl{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+.aktuell.leer .lbl{color:var(--ink-3)}
+.aktuell .ttl{font-family:var(--serif);font-size:19px;font-weight:600;margin-top:3px}
+.aktuell .meta{font-size:12px;color:var(--ink-2);margin-top:3px}
+.aktuell .rowbtns{margin-top:10px}
+.planlist{display:flex;flex-direction:column}
+.planrow{display:grid;grid-template-columns:minmax(0,1fr) 56px auto;gap:12px;align-items:center;
+  padding:11px 18px;border-bottom:1px solid var(--line)}
+.planrow:last-child{border-bottom:0}
+.planrow:hover{background:var(--surface-2)}
+.planrow.offen{background:var(--surface-2)}
+.planrow .pn{min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:7px}
+.planrow .pn b{font-size:13.5px;font-weight:600}
+.planrow .pn .sub{flex-basis:100%;font-size:11.5px;color:var(--ink-3);font-family:var(--mono)}
+.planrow .pj{font-family:var(--mono);font-size:13px;color:var(--ink-2);text-align:right}
+.planrow .pa{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.ablage{font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.ablage b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+
+/* ---------- Ansicht Aufgaben ---------- */
+.taskbar{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line);
+  background:var(--surface-2);flex-wrap:wrap}
+.prog{display:flex;align-items:center;gap:10px;flex:1;min-width:220px}
+.prog .bar{flex:1;height:7px;background:var(--surface-3);border-radius:4px;overflow:hidden;max-width:340px}
+.prog .bar span{display:block;height:100%;background:var(--ok);border-radius:4px;transition:width .25s}
+.prog .pt{font-size:12px;color:var(--ink-2);font-family:var(--mono);white-space:nowrap}
+.taskform{display:grid;grid-template-columns:minmax(160px,2fr) 1fr 1fr 1.4fr 1fr 118px auto;gap:6px;
+  padding:12px 16px;border-bottom:1px solid var(--line);align-items:center}
+@media (max-width:1180px){.taskform{grid-template-columns:1fr 1fr 1fr}}
+.taskform input,.taskform select{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;
+  padding:5px 8px;font-size:12.5px;min-width:0}
+.taskform input[type=date]{font-family:var(--mono);font-size:12px}
+.taskform input:focus,.taskform select:focus{background:var(--surface);border-color:var(--accent)}
+.tasklist{padding:4px 0 8px}
+.taskgroup{padding:2px 0}
+.tghead{display:flex;align-items:center;gap:9px;padding:12px 16px 5px;font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;font-weight:700;color:var(--ink-2)}
+.tghead .tgcount{font-family:var(--mono);font-size:10.5px;letter-spacing:0;color:var(--ink-3);font-weight:500}
+.task{display:grid;grid-template-columns:18px minmax(0,1fr) auto 22px;gap:11px;align-items:baseline;
+  padding:7px 16px;border-bottom:1px solid var(--line)}
+.task:hover{background:var(--surface-2)}
+.task input[type=checkbox]{accent-color:var(--ok);cursor:pointer;margin:0;position:relative;top:2px;width:15px;height:15px}
+.task .tmain{min-width:0}
+.task .tt{font-size:13px;line-height:1.35}
+.task.done .tt{color:var(--ink-3);text-decoration:line-through}
+.task .tmeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.task .who{font-size:10.5px;background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:1px 6px;font-weight:600}
+.task .lnk{font-size:11px;color:var(--ink-3);font-family:var(--mono)}
+.task .note2{font-size:11px;color:var(--ink-3)}
+.task .tdue{font-family:var(--mono);font-size:12px;color:var(--ink-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.task .tdue.late{color:var(--crit);font-weight:600}
+.task.done .tdue{color:var(--ink-3)}
+.task .x{background:none;border:0;color:var(--ink-3);cursor:pointer;font-size:15px;padding:0 2px;border-radius:3px;line-height:1}
+.task .x:hover{color:var(--crit);background:var(--crit-soft)}
+
+/* ---------- Team ---------- */
+.teamlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.teamgroup{border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--surface-2)}
+.teamgroup .tg{display:flex;align-items:center;gap:6px;padding:6px 9px;background:var(--surface-3);
+  border-bottom:1px solid var(--line);font-size:12.5px}
+.teamgroup .tg b{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.teamgroup .tp{display:flex;align-items:center;gap:6px;padding:4px 9px;font-size:12px;border-bottom:1px solid var(--line)}
+.teamgroup .tp:last-of-type{border-bottom:0}
+.teamgroup .x{background:none;border:0;color:var(--ink-3);cursor:pointer;font-size:13px;padding:0 2px;line-height:1}
+.teamgroup .x:hover{color:var(--crit)}
+.teamgroup .tadd{padding:5px 7px;border-top:1px solid var(--line);background:var(--surface)}
+.teamgroup .tadd input{width:100%;background:none;border:0;font-size:11.5px;padding:2px 2px;color:var(--ink)}
+.teamgroup .tadd input::placeholder{color:var(--ink-3)}
+
 /* ---------- Länderauswahl ---------- */
 .regions{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:11px}
 .regions .rlab{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-right:2px}
@@ -342,7 +432,8 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
 @media print{
   @page{size:A4 landscape;margin:9mm}
   body{background:#fff;font-size:8.5pt}
-  .topbar,.rail,nav.tabs,.exportbar,.metabar,.rowbtns,.detailhead .spacer,.btn,.callegend,.pop,.popmask,.regions{display:none !important}
+  .topbar,.rail,nav.tabs,.exportbar,.metabar,.rowbtns,.detailhead .spacer,.btn,.callegend,.pop,.popmask,.regions,
+  .taskform,.taskbar,.planbox{display:none !important}
   td.cell.manual{outline:1px solid #000;outline-offset:-1px;font-weight:700}
   .layout{display:block;padding:0}
   .card{border:0;box-shadow:none;border-radius:0}
@@ -371,6 +462,7 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
     </span>
   </div>
   <div class="brand"><h1>Produktionsplan</h1></div>
+  <div class="planbox" id="planBox"></div>
   <div class="yearbox">
     <label for="yearInput">Planungsjahr</label>
     <div class="stepper">
@@ -380,9 +472,11 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
     </div>
   </div>
   <nav class="tabs" role="tablist" id="tabs">
+    <button type="button" role="tab" data-view="plaene" aria-selected="false">Pläne</button>
     <button type="button" role="tab" data-view="plan" aria-selected="true">Terminplan</button>
     <button type="button" role="tab" data-view="ausgabe" aria-selected="false">Ausgabe</button>
     <button type="button" role="tab" data-view="kalender" aria-selected="false">Kalender</button>
+    <button type="button" role="tab" data-view="aufgaben" aria-selected="false">Aufgaben<span class="cnt zero" id="taskCount">0</span></button>
     <button type="button" role="tab" data-view="pruefung" aria-selected="false">Prüfung<span class="cnt zero" id="warnCount">0</span></button>
     <button type="button" role="tab" data-view="regeln" aria-selected="false">Regelwerk</button>
     <button type="button" role="tab" data-view="export" aria-selected="false">Export</button>
@@ -391,6 +485,8 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
 
 <main class="layout">
   <aside class="rail">
+    <div id="planCard"></div>
+
     <section class="card">
       <header>
         <h2>Erscheinungstermine</h2>
@@ -708,8 +804,18 @@ function computePlan(steps, etag, hol, fix){
 /* =========================================================================
    Zustand
    ========================================================================= */
-var STORE = "bw-produktionsplan-v1";
-var state, undoSnapshot = null;
+var STORE_ALT = "bw-produktionsplan-v1";      /* Einzelplan früherer Fassungen */
+var STORE     = "bw-produktionsplan-v2";      /* lokale Ablage aller Pläne        */
+var LAST_KEY  = "bw-produktionsplan-zuletzt"; /* zuletzt geöffneter Plan          */
+
+var state, undoSnapshot = null;   /* Inhalt des offenen Plans */
+var planMeta = null;              /* Kopfdaten des offenen Plans */
+var plaene = [];                  /* alle Pläne (Kopfdaten + Inhalt) */
+var aufgaben = [];                /* Aufgaben des offenen Plans */
+var team = [];                    /* Abteilungen und Personen */
+
+function uid(prefix){ return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function nowISO(){ return new Date().toISOString(); }
 
 function defaultState(year){
   return {
@@ -726,34 +832,204 @@ function defaultState(year){
     selected: 0
   };
 }
-function load(){
-  try{
-    var raw = localStorage.getItem(STORE);
-    if (raw){
-      var s = JSON.parse(raw);
-      if (s && s.year && Array.isArray(s.issues) && Array.isArray(s.steps)){
-        if (!s.overrides || typeof s.overrides !== "object") s.overrides = {};
-        if (!Array.isArray(s.regions)) s.regions = ["BE","HE"];
-        /* Feiertags-Ids einer früheren Fassung mitnehmen */
-        var moved = {frauen:"frauentag", karfr:"karfreitag", ostso:"ostersonntag", ostmo:"ostermontag",
-                     himmel:"himmelfahrt", pfiso:"pfingstsonntag", pfimo:"pfingstmontag",
-                     reform:"reformation", heilig:"heiligabend", silv:"silvester"};
-        ["holOff","holOn"].forEach(function(f){
-          if (!Array.isArray(s[f])) { s[f] = []; return; }
-          s[f] = s[f].map(function(id){
-            var i = id.indexOf("-");
-            var k = i > 0 ? id.slice(i+1) : id;
-            return moved[k] ? id.slice(0, i+1) + moved[k] : id;
-          });
-        });
-        return s;
-      }
-    }
-  }catch(e){}
-  return defaultState(2027);
+/* Inhalt aus einer gespeicherten Fassung übernehmen und ergänzen */
+function normState(raw, year){
+  var s = raw && typeof raw === "object" ? raw : {};
+  var d = defaultState(year || s.year || 2027);
+  ["year","issues","steps","regions","holOff","holOn","holExtra","overrides","view","orientation","selected"]
+    .forEach(function(k){ if (s[k] !== undefined && s[k] !== null) d[k] = s[k]; });
+  if (!d.overrides || typeof d.overrides !== "object") d.overrides = {};
+  if (!Array.isArray(d.regions)) d.regions = ["BE","HE"];
+  /* Feiertags-Ids einer früheren Fassung mitnehmen */
+  var moved = {frauen:"frauentag", karfr:"karfreitag", ostso:"ostersonntag", ostmo:"ostermontag",
+               himmel:"himmelfahrt", pfiso:"pfingstsonntag", pfimo:"pfingstmontag",
+               reform:"reformation", heilig:"heiligabend", silv:"silvester"};
+  ["holOff","holOn"].forEach(function(f){
+    if (!Array.isArray(d[f])) { d[f] = []; return; }
+    d[f] = d[f].map(function(id){
+      var i = String(id).indexOf("-");
+      var k = i > 0 ? String(id).slice(i+1) : String(id);
+      return moved[k] ? String(id).slice(0, i+1) + moved[k] : id;
+    });
+  });
+  if (!Array.isArray(d.holExtra)) d.holExtra = [];
+  if (!Array.isArray(d.issues) || !d.issues.length) d.issues = suggestIssues(d.year);
+  if (!Array.isArray(d.steps) || !d.steps.length) d.steps = DEFAULT_STEPS.map(function(x){ return Object.assign({}, x); });
+  return d;
 }
+function planInhalt(){
+  return {year:state.year, issues:state.issues, steps:state.steps, regions:state.regions,
+          holOff:state.holOff, holOn:state.holOn, holExtra:state.holExtra, overrides:state.overrides,
+          orientation:state.orientation};
+}
+function istGesperrt(){ return !!planMeta && planMeta.status === "fertig"; }
+
+/* =========================================================================
+   Ablage – geteilte Datenbank im Artifact, sonst der lokale Browserspeicher.
+   Beide Wege haben dieselbe Schnittstelle, damit die Seite auch als einzelne
+   Datei auf einem Netzlaufwerk vollständig funktioniert.
+   ========================================================================= */
+var Ablage = {
+  modus: "lokal",        /* "geteilt", sobald die Datenbank antwortet */
+  db: null,
+  planAbo: null,
+  beiPlaenen: function(){}, beiAufgaben: function(){}, beiTeam: function(){},
+
+  /* --- lokaler Speicher --------------------------------------------- */
+  _lesen: function(){
+    try{
+      var r = JSON.parse(localStorage.getItem(STORE) || "null");
+      if (r && r.plaene) return r;
+    }catch(e){}
+    return {plaene:{}, aufgaben:{}, team:{}};
+  },
+  _schreiben: function(d){ try{ localStorage.setItem(STORE, JSON.stringify(d)); }catch(e){} },
+
+  /* --- Start -------------------------------------------------------- */
+  start: function(fertig){
+    var self = this;
+    var lokalGeladen = false;
+    function lokalStarten(){
+      if (lokalGeladen) return;
+      lokalGeladen = true;
+      var d = self._lesen();
+      /* Einzelplan einer früheren Fassung als ersten Plan übernehmen */
+      if (!Object.keys(d.plaene).length){
+        try{
+          var alt = JSON.parse(localStorage.getItem(STORE_ALT) || "null");
+          if (alt && alt.year){
+            var id = uid("p");
+            d.plaene[id] = {id:id, titel:"Produktionsplan " + alt.year, jahr:alt.year, status:"entwurf",
+                            erstelltAm:nowISO(), geaendertAm:nowISO(), inhalt:normState(alt)};
+            self._schreiben(d);
+          }
+        }catch(e){}
+      }
+      self._melden(d);
+      fertig();
+    }
+    var beantwortet = false;
+    try{
+      if (window.claude && typeof window.claude.use === "function"){
+        window.claude.use("db").then(function(db){
+          beantwortet = true;
+          if (!db){ lokalStarten(); return; }
+          self.db = db; self.modus = "geteilt";
+          var offen = 2;
+          function evtl(){ if (--offen === 0) fertig(); }
+          db.collection("plaene").onSnapshot(function(snap){
+            plaene = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+            self.beiPlaenen(); evtl();
+          }, function(){ self.beiPlaenen(); evtl(); });
+          db.collection("team").onSnapshot(function(snap){
+            team = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+            self.beiTeam(); evtl();
+          }, function(){ self.beiTeam(); evtl(); });
+        }, function(){ beantwortet = true; lokalStarten(); });
+        setTimeout(function(){ if (!beantwortet) lokalStarten(); }, 10500);
+        return;
+      }
+    }catch(e){}
+    lokalStarten();
+  },
+  _melden: function(d){
+    plaene = Object.keys(d.plaene).map(function(k){ return d.plaene[k]; });
+    team = Object.keys(d.team || {}).map(function(k){ return d.team[k]; });
+    this.beiPlaenen(); this.beiTeam();
+  },
+
+  /* --- Pläne -------------------------------------------------------- */
+  planSichern: function(plan){
+    plan.geaendertAm = nowISO();
+    if (this.db){
+      var body = Object.assign({}, plan); delete body.id;
+      return this.db.doc("plaene/" + plan.id).set(body).catch(function(e){ dbFehler(e); });
+    }
+    var d = this._lesen(); d.plaene[plan.id] = plan; this._schreiben(d); this._melden(d);
+    return Promise.resolve();
+  },
+  planLoeschen: function(id){
+    var self = this;
+    if (this.db){
+      return this.db.collection("plaene/" + id + "/aufgaben").get().then(function(snap){
+        return Promise.all(snap.docs.map(function(t){ return self.db.doc("plaene/" + id + "/aufgaben/" + t.id).delete(); }));
+      }).then(function(){ return self.db.doc("plaene/" + id).delete(); }).catch(function(e){ dbFehler(e); });
+    }
+    var d = this._lesen(); delete d.plaene[id]; delete d.aufgaben[id]; this._schreiben(d); this._melden(d);
+    return Promise.resolve();
+  },
+
+  /* --- Aufgaben ----------------------------------------------------- */
+  aufgabenOeffnen: function(planId){
+    var self = this;
+    if (this.planAbo){ this.planAbo(); this.planAbo = null; }
+    if (this.db){
+      this.planAbo = this.db.collection("plaene/" + planId + "/aufgaben").onSnapshot(function(snap){
+        aufgaben = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+        self.beiAufgaben();
+      }, function(){ aufgaben = []; self.beiAufgaben(); });
+      return;
+    }
+    var d = this._lesen();
+    aufgaben = Object.keys((d.aufgaben || {})[planId] || {}).map(function(k){ return d.aufgaben[planId][k]; });
+    this.beiAufgaben();
+  },
+  aufgabeSichern: function(planId, t){
+    if (this.db){
+      var body = Object.assign({}, t); delete body.id;
+      return this.db.doc("plaene/" + planId + "/aufgaben/" + t.id).set(body).catch(function(e){ dbFehler(e); });
+    }
+    var d = this._lesen();
+    d.aufgaben = d.aufgaben || {}; d.aufgaben[planId] = d.aufgaben[planId] || {};
+    d.aufgaben[planId][t.id] = t;
+    this._schreiben(d); this.aufgabenOeffnen(planId);
+    return Promise.resolve();
+  },
+  aufgabeLoeschen: function(planId, id){
+    if (this.db) return this.db.doc("plaene/" + planId + "/aufgaben/" + id).delete().catch(function(e){ dbFehler(e); });
+    var d = this._lesen();
+    if (d.aufgaben && d.aufgaben[planId]) delete d.aufgaben[planId][id];
+    this._schreiben(d); this.aufgabenOeffnen(planId);
+    return Promise.resolve();
+  },
+
+  /* --- Team --------------------------------------------------------- */
+  teamSichern: function(m){
+    if (this.db){
+      var body = Object.assign({}, m); delete body.id;
+      return this.db.doc("team/" + m.id).set(body).catch(function(e){ dbFehler(e); });
+    }
+    var d = this._lesen(); d.team = d.team || {}; d.team[m.id] = m; this._schreiben(d); this._melden(d);
+    return Promise.resolve();
+  },
+  teamLoeschen: function(id){
+    if (this.db) return this.db.doc("team/" + id).delete().catch(function(e){ dbFehler(e); });
+    var d = this._lesen(); if (d.team) delete d.team[id]; this._schreiben(d); this._melden(d);
+    return Promise.resolve();
+  }
+};
+function dbFehler(e){
+  var c = e && e.code;
+  if (c === "quota_exceeded") toast("Speicher voll – bitte alte Pläne löschen");
+  else if (c === "resource_exhausted") toast("Zu viele Zugriffe – bitte kurz warten");
+  else if (c === "revoked" || c === "not_granted") toast("Kein Zugriff auf die geteilte Ablage");
+  else toast("Konnte nicht gespeichert werden");
+}
+
+/* Speichern mit kurzer Verzögerung, damit Tippen nicht jeden Tastendruck schreibt */
+var sichernTimer = null, sichernOffen = false;
 function save(){
-  try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){}
+  if (!planMeta) return;
+  planMeta.inhalt = planInhalt();
+  planMeta.jahr = state.year;
+  sichernOffen = true; zeigeSpeicherstand();
+  clearTimeout(sichernTimer);
+  sichernTimer = setTimeout(function(){
+    Ablage.planSichern(planMeta).then(function(){
+      sichernOffen = false; zeigeSpeicherstand();
+    });
+  }, 700);
+  try{ localStorage.setItem(LAST_KEY, planMeta.id); }catch(e){}
 }
 
 /* ---------- Feiertagsliste für Vor-, Plan- und Folgejahr ------------------ */
@@ -900,13 +1176,57 @@ function render(withRail){
   model = buildModel();
   if (withRail !== false){ renderIssues(); renderHolidays(); }
   renderOverrides();
+  renderPlanCard();
   renderMeta();
   renderPanel();
   var n = model.findings.filter(function(f){ return f.sev !== "info"; }).length;
   var c = el("warnCount"); c.textContent = n; c.className = "cnt" + (n ? "" : " zero");
+  var offen = aufgaben.filter(function(t){ return !t.erledigt; }).length;
+  var tc = el("taskCount"); tc.textContent = offen; tc.className = "cnt" + (offen ? "" : " zero");
   el("issueCount").textContent = state.issues.length + (state.issues.length === 1 ? " Heft" : " Hefte");
   el("holCount").textContent = model.hol.set.size + " Tage";
+  sperreAnwenden();
   save();
+}
+
+/* Ein freigegebener Plan wird nicht mehr verändert, bis er entsperrt wird. */
+function sperreAnwenden(){
+  var aus = istGesperrt();
+  document.body.classList.toggle("gesperrt", aus);
+  /* Gesperrt sind die Eingaben des Plans. Planverwaltung, Drucken und
+     Aufgaben bleiben erreichbar. */
+  var sel = "#issueList input, #issueList button, #addIssue, #suggestDates," +
+            "#regionBar button, #regionBar select, #holidayList input, #holidayList button," +
+            "#holName, #holDate, #addHol, #excelMode, #resetHol," +
+            "#ovCard button, #yearInput, #yearMinus, #yearPlus, #resetAll";
+  Array.prototype.forEach.call(document.querySelectorAll(sel), function(x){ x.disabled = aus; });
+}
+function zeigeSpeicherstand(){
+  var b = el("planBox");
+  if (!b || !planMeta) return;
+  var s = b.querySelector(".sv");
+  if (s) s.textContent = sichernOffen ? "speichert …" : "gespeichert";
+}
+function renderPlanCard(){
+  if (!planMeta){ el("planCard").innerHTML = ""; el("planBox").innerHTML = ""; return; }
+  var fertig = aufgaben.filter(function(t){ return t.erledigt; }).length;
+  el("planBox").innerHTML =
+    '<span class="pl">'+esc(planMeta.titel)+'</span>'+statusChip(planMeta)+
+    '<span class="sv">'+(sichernOffen ? "speichert …" : "gespeichert")+'</span>';
+  el("planCard").innerHTML = '<section class="card plancard"><header><h2>Plan</h2>'+
+    '<span class="hint">'+(Ablage.modus === "geteilt" ? "geteilt" : "lokal")+'</span></header><div class="body">'+
+    '<input type="text" id="planTitel" value="'+esc(planMeta.titel)+'" aria-label="Bezeichnung des Plans">'+
+    '<div class="planstat">'+statusChip(planMeta)+
+      (aufgaben.length ? '<span class="tsum">Aufgaben '+fertig+'/'+aufgaben.length+'</span>'
+                       : '<span class="tsum">noch keine Aufgaben</span>')+'</div>'+
+    (istGesperrt()
+      ? '<div class="note"><span>Freigegeben – die Eingaben sind gesperrt.</span>'+
+        '<button type="button" data-act="entsperren">Entsperren</button></div>'
+      : '')+
+    '<div class="rowbtns">'+
+      '<button type="button" class="btn sm" data-act="planNew">+ Neuer Plan</button>'+
+      '<button type="button" class="btn sm ghost" data-act="planCopy" data-v="'+esc(planMeta.id)+'">Duplizieren</button>'+
+    '</div></div></section>';
 }
 
 /* ---------- Rail: Erscheinungstermine ------------------------------------ */
@@ -1067,7 +1387,9 @@ function renderMeta(){
 function renderPanel(){
   var v = state.view, html;
   if (model.broken && v !== "regeln") v = "pruefung";
-  if      (v === "plan")     html = viewPlan();
+  if      (v === "plaene")   html = viewPlaene();
+  else if (v === "aufgaben") html = viewAufgaben();
+  else if (v === "plan")     html = viewPlan();
   else if (v === "ausgabe")  html = viewIssue();
   else if (v === "kalender") html = viewCalendar();
   else if (v === "pruefung") html = viewFindings();
@@ -1075,6 +1397,7 @@ function renderPanel(){
   else                       html = viewExport();
   el("panel").innerHTML = html;
   if (state.view === "export") buildExport();
+  if (state.view === "aufgaben") fuellePersonen();
 }
 
 /* ---------- Ansicht: Terminplan ------------------------------------------ */
@@ -1269,6 +1592,176 @@ function viewRules(){
     '</tr></thead><tbody>'+rows+'</tbody></table></div>';
   return card("Regelwerk · " + model.steps.length + " Schritte", head + table,
     '<button type="button" class="btn sm" data-act="resetRules">Standard wiederherstellen</button>');
+}
+
+/* ---------- Ansicht: Pläne ------------------------------------------------ */
+function planFortschritt(planId){
+  var list = planId === (planMeta && planMeta.id) ? aufgaben : null;
+  if (!list) return null;
+  var fertig = list.filter(function(t){ return t.erledigt; }).length;
+  return {gesamt:list.length, fertig:fertig};
+}
+function statusChip(pl){
+  return pl.status === "fertig"
+    ? '<span class="stat fertig">Freigegeben</span>'
+    : '<span class="stat entwurf">In Arbeit</span>';
+}
+function viewPlaene(){
+  var sortiert = plaene.slice().sort(function(a,b){
+    if ((a.status === "fertig") !== (b.status === "fertig")) return a.status === "fertig" ? -1 : 1;
+    return String(b.geaendertAm || "").localeCompare(String(a.geaendertAm || ""));
+  });
+  var aktuell = sortiert.filter(function(x){ return x.status === "fertig"; })[0];
+  var kopf = aktuell
+    ? '<div class="aktuell"><div class="lbl">Aktueller Plan</div>'+
+      '<div class="ttl">'+esc(aktuell.titel)+'</div>'+
+      '<div class="meta">Freigegeben am '+(aktuell.freigegebenAm ? fmt(parseISO(aktuell.freigegebenAm.slice(0,10))) : "–")+
+        ' · '+(aktuell.inhalt && aktuell.inhalt.issues ? aktuell.inhalt.issues.length : 0)+' Ausgaben</div>'+
+      '<div class="rowbtns"><button type="button" class="btn sm primary" data-act="planOpen" data-v="'+esc(aktuell.id)+'">Öffnen</button></div></div>'
+    : '<div class="aktuell leer"><div class="lbl">Noch kein Plan freigegeben</div>'+
+      '<div class="meta">Sobald alle Aufgaben eines Plans erledigt sind, wird er freigegeben und erscheint hier.</div></div>';
+  var zeilen = sortiert.map(function(pl){
+    var offen = planMeta && pl.id === planMeta.id;
+    var fs = offen ? planFortschritt(pl.id) : null;
+    return '<div class="planrow'+(offen ? " offen" : "")+'">'+
+      '<div class="pn"><b>'+esc(pl.titel)+'</b>'+statusChip(pl)+(offen ? '<span class="stat offen">geöffnet</span>' : "")+
+        '<span class="sub">'+(pl.inhalt && pl.inhalt.issues ? pl.inhalt.issues.length : 0)+' Ausgaben · zuletzt geändert '+
+        (pl.geaendertAm ? fmt(parseISO(pl.geaendertAm.slice(0,10))) : "–")+
+        (fs && fs.gesamt ? ' · Aufgaben '+fs.fertig+'/'+fs.gesamt : "")+'</span></div>'+
+      '<div class="pj">'+esc(String(pl.jahr || ""))+'</div>'+
+      '<div class="pa">'+
+        (offen ? '' : '<button type="button" class="btn sm" data-act="planOpen" data-v="'+esc(pl.id)+'">Öffnen</button>')+
+        '<button type="button" class="btn sm ghost" data-act="planCopy" data-v="'+esc(pl.id)+'">Duplizieren</button>'+
+        '<button type="button" class="btn sm ghost" data-act="planDel" data-v="'+esc(pl.id)+'">Löschen</button>'+
+      '</div></div>';
+  }).join("");
+  var tools = '<button type="button" class="btn sm primary" data-act="planNew">+ Neuer Plan</button>';
+  return card("Pläne · " + plaene.length, kopf + '<div class="planlist">'+(zeilen || '<div class="empty">Noch kein Plan gespeichert.</div>')+'</div>', tools) +
+    '<section class="card"><header><h2>Ablage</h2></header><div class="body"><div class="ablage">'+
+    (Ablage.modus === "geteilt"
+      ? '<b>Geteilte Ablage</b> Pläne, Aufgaben und das Team liegen zentral. Alle, die diese Seite öffnen dürfen, sehen denselben Stand; Änderungen erscheinen bei den anderen live.'
+      : '<b>Lokale Ablage</b> Diese Fassung speichert im Browser dieses Rechners. Über die veröffentlichte Seite arbeitet das ganze Team auf demselben Stand.')+
+    '</div></div></section>';
+}
+
+/* ---------- Ansicht: Aufgaben --------------------------------------------- */
+function abteilungen(){ return team.filter(function(m){ return m.art === "abteilung"; }); }
+function personen(abtId){
+  return team.filter(function(m){ return m.art === "person" && (!abtId || m.abteilungId === abtId); });
+}
+function mitglied(id){ return team.filter(function(m){ return m.id === id; })[0] || null; }
+/* Fälligkeit einer Aufgabe: an einen Produktionsschritt gekoppelt oder frei */
+function aufgabeFaellig(t){
+  if (t.schrittNr && t.ausgabeId){
+    var x = model.issues.filter(function(i){ return i.id === t.ausgabeId; })[0];
+    var r = x && x.byNr.get(+t.schrittNr);
+    if (r) return r.date;
+  }
+  return t.faellig ? parseISO(t.faellig) : null;
+}
+function viewAufgaben(){
+  if (!planMeta) return card("Aufgaben", '<div class="empty">Kein Plan geöffnet.</div>');
+  var fertig = aufgaben.filter(function(t){ return t.erledigt; }).length;
+  var quote = aufgaben.length ? Math.round(fertig / aufgaben.length * 100) : 0;
+
+  var abt = abteilungen();
+  var gruppen = abt.map(function(a){
+    return {a:a, list:aufgaben.filter(function(t){ return t.abteilungId === a.id; })};
+  });
+  var ohne = aufgaben.filter(function(t){ return !t.abteilungId || !mitglied(t.abteilungId); });
+  if (ohne.length) gruppen.push({a:{id:"", name:"Ohne Abteilung"}, list:ohne});
+
+  var listen = gruppen.filter(function(g){ return g.list.length; }).map(function(g){
+    var sortiert = g.list.slice().sort(function(x, y){
+      if (!!x.erledigt !== !!y.erledigt) return x.erledigt ? 1 : -1;
+      var dx = aufgabeFaellig(x), dy = aufgabeFaellig(y);
+      if (dx && dy) return dx - dy;
+      return dx ? -1 : dy ? 1 : 0;
+    });
+    var gf = g.list.filter(function(t){ return t.erledigt; }).length;
+    return '<div class="taskgroup"><div class="tghead">'+esc(g.a.name)+
+      '<span class="tgcount">'+gf+'/'+g.list.length+'</span></div>'+
+      sortiert.map(function(t){
+        var d = aufgabeFaellig(t);
+        var pers = t.personId ? mitglied(t.personId) : null;
+        var schritt = t.schrittNr ? model.steps.filter(function(x){ return x.nr === +t.schrittNr; })[0] : null;
+        var ausg = t.ausgabeId ? model.issues.filter(function(i){ return i.id === t.ausgabeId; })[0] : null;
+        var spaet = d && !t.erledigt && d < heute();
+        return '<div class="task'+(t.erledigt ? " done" : "")+'" data-task="'+esc(t.id)+'">'+
+          '<input type="checkbox" data-tdone="'+esc(t.id)+'"'+(t.erledigt ? " checked" : "")+
+            ' aria-label="Aufgabe erledigt"'+(istGesperrt() ? "" : "")+'>'+
+          '<div class="tmain"><span class="tt">'+esc(t.titel)+'</span>'+
+            '<span class="tmeta">'+
+              (pers ? '<span class="who">'+esc(pers.name)+'</span>' : "")+
+              (schritt ? '<span class="lnk">Schritt '+schritt.nr+' · '+esc(schritt.label.slice(0,38))+(ausg ? " · "+esc(ausg.name) : "")+'</span>' : "")+
+              (t.notiz ? '<span class="note2">'+esc(t.notiz)+'</span>' : "")+
+            '</span></div>'+
+          '<span class="tdue'+(spaet ? " late" : "")+'">'+(d ? wd(d)+" "+fmtShort(d) : "–")+'</span>'+
+          '<button type="button" class="x" data-tdel="'+esc(t.id)+'" title="Aufgabe löschen" aria-label="Aufgabe löschen">&times;</button>'+
+        '</div>';
+      }).join("")+'</div>';
+  }).join("");
+
+  var stepOpts = '<option value="">kein Bezug</option>' + model.steps.map(function(st){
+    return '<option value="'+st.nr+'">'+st.nr+' · '+esc(st.label.slice(0,40))+'</option>';
+  }).join("");
+  var issueOpts = '<option value="">alle Ausgaben</option>' + model.issues.map(function(x){
+    return '<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>';
+  }).join("");
+  var abtOpts = abt.length
+    ? abt.map(function(a){ return '<option value="'+esc(a.id)+'">'+esc(a.name)+'</option>'; }).join("")
+    : '<option value="">– erst Abteilung anlegen –</option>';
+
+  var form = '<div class="taskform">'+
+    '<input type="text" id="tTitel" placeholder="Was ist zu tun?" aria-label="Aufgabe">'+
+    '<select id="tAbt" aria-label="Abteilung">'+abtOpts+'</select>'+
+    '<select id="tPers" aria-label="Person"><option value="">Person (optional)</option></select>'+
+    '<select id="tSchritt" aria-label="Produktionsschritt">'+stepOpts+'</select>'+
+    '<select id="tAusgabe" aria-label="Ausgabe">'+issueOpts+'</select>'+
+    '<input type="date" id="tDatum" aria-label="Fällig am">'+
+    '<button type="button" class="btn sm primary" id="tAdd">Hinzufügen</button>'+
+  '</div>';
+
+  var bar = '<div class="taskbar">'+
+    '<div class="prog"><div class="bar"><span style="width:'+quote+'%"></span></div>'+
+      '<span class="pt">'+fertig+' von '+aufgaben.length+' erledigt</span></div>'+
+    (aufgaben.length && fertig === aufgaben.length && planMeta.status !== "fertig"
+      ? '<button type="button" class="btn sm primary" data-act="freigeben">Plan freigeben</button>' : "")+
+    (planMeta.status === "fertig"
+      ? '<button type="button" class="btn sm" data-act="entsperren">Zur Bearbeitung entsperren</button>' : "")+
+  '</div>';
+
+  return card("Aufgaben · " + esc(planMeta.titel), bar + form +
+      '<div class="tasklist">'+(listen || '<div class="empty">Noch keine Aufgabe angelegt. Trage oben ein, was für diesen Plan zu erledigen ist – etwa „Themen für die Große Redaktionskonferenz sammeln“ für die Redaktion.</div>')+'</div>') +
+    teamCard();
+}
+function teamCard(){
+  var abt = abteilungen();
+  var body = abt.length || personen().length
+    ? '<div class="teamlist">'+abt.map(function(a){
+        return '<div class="teamgroup"><div class="tg"><b>'+esc(a.name)+'</b>'+
+          '<button type="button" class="x" data-teamdel="'+esc(a.id)+'" title="Abteilung entfernen" aria-label="Abteilung entfernen">&times;</button></div>'+
+          personen(a.id).map(function(pp){
+            return '<div class="tp">'+esc(pp.name)+
+              '<button type="button" class="x" data-teamdel="'+esc(pp.id)+'" title="Person entfernen" aria-label="Person entfernen">&times;</button></div>';
+          }).join("")+
+          '<div class="tadd"><input type="text" data-pers-for="'+esc(a.id)+'" placeholder="Person hinzufügen …" aria-label="Person in '+esc(a.name)+'"></div>'+
+        '</div>';
+      }).join("")+'</div>'
+    : '<div class="empty" style="padding:18px 20px">Noch keine Abteilung angelegt.'+
+      '<div class="rowbtns" style="justify-content:center"><button type="button" class="btn sm" data-act="teamSeed">Redaktion, Herstellung, Anzeigen, Vertrieb und Druckerei anlegen</button></div></div>';
+  return '<section class="card"><header><h2>Abteilungen &amp; Personen</h2>'+
+    '<span class="hint">'+abt.length+(abt.length === 1 ? " Abteilung" : " Abteilungen")+' · '+
+    personen().length+(personen().length === 1 ? " Person" : " Personen")+'</span></header>'+
+    '<div class="body">'+body+
+    '<div class="addhol" style="grid-template-columns:1fr auto;margin-top:12px">'+
+      '<input type="text" id="abtName" placeholder="Neue Abteilung …" aria-label="Neue Abteilung">'+
+      '<button type="button" class="btn sm" id="abtAdd">+ Abteilung</button>'+
+    '</div></div></section>';
+}
+function heute(){
+  var n = new Date();
+  return D(n.getFullYear(), n.getMonth()+1, n.getDate());
 }
 
 /* ---------- Ansicht: Export ---------------------------------------------- */
@@ -1578,8 +2071,97 @@ el("pop").addEventListener("click", function(e){
   }
 });
 
+/* Plan-Karte in der Seitenspalte */
+el("planCard").addEventListener("click", function(e){
+  var b = e.target.closest("[data-act]");
+  if (b) planAktion(b.dataset.act, b.dataset.v);
+});
+el("planCard").addEventListener("input", function(e){
+  if (e.target.id !== "planTitel" || !planMeta) return;
+  planMeta.titel = e.target.value;
+  save();
+  var pb = el("planBox").querySelector(".pl");
+  if (pb) pb.textContent = planMeta.titel;
+});
+
+/* Aktionen rund um Pläne, Freigabe und Team */
+function planAktion(a, v){
+  if (a === "planOpen"){ planOeffnen(v); toast("Plan geöffnet"); }
+  else if (a === "planNew"){
+    planAnlegen(defaultState(state ? state.year : 2027), "Neuer Plan " + (state ? state.year : 2027), state ? state.year : 2027)
+      .then(function(pl){ planOeffnen(pl.id); toast("Neuer Plan angelegt"); });
+  }
+  else if (a === "planCopy"){
+    var q = plaene.filter(function(x){ return x.id === v; })[0];
+    if (!q) return;
+    var kopieAufgaben = q.id === (planMeta && planMeta.id) ? aufgaben.slice() : [];
+    planAnlegen(JSON.parse(JSON.stringify(q.inhalt)), q.titel + " (Kopie)", q.jahr).then(function(pl){
+      kopieAufgaben.forEach(function(t){
+        var n = Object.assign({}, t, {id:uid("t"), erledigt:false, erledigtAm:""});
+        Ablage.aufgabeSichern(pl.id, n);
+      });
+      planOeffnen(pl.id);
+      toast(kopieAufgaben.length ? "Plan mit Aufgaben dupliziert" : "Plan dupliziert");
+    });
+  }
+  else if (a === "planDel"){
+    var pd = plaene.filter(function(x){ return x.id === v; })[0];
+    if (!pd) return;
+    if (!window.confirm("Plan „" + pd.titel + "“ mit allen Aufgaben löschen?")) return;
+    plaene = plaene.filter(function(x){ return x.id !== v; });
+    Ablage.planLoeschen(v).then(function(){
+      if (planMeta && planMeta.id === v){
+        planMeta = null; aufgaben = [];
+        if (plaene.length) planOeffnen(plaene[0].id);
+        else planAnlegen(defaultState(2027), "Produktionsplan 2027", 2027).then(function(pl){ planOeffnen(pl.id); });
+      } else render();
+    });
+    toast("Plan gelöscht");
+  }
+  else if (a === "freigeben"){
+    if (aufgaben.some(function(t){ return !t.erledigt; }) &&
+        !window.confirm("Es sind noch Aufgaben offen. Plan trotzdem freigeben?")) return;
+    planStatus("fertig");
+    toast("Plan freigegeben");
+  }
+  else if (a === "entsperren"){ planStatus("entwurf"); toast("Plan wieder in Arbeit"); }
+  else if (a === "teamSeed"){
+    ["Redaktion","Herstellung","Anzeigen","Vertrieb","Druckerei"].forEach(function(n){ teamAnlegen(n, "abteilung"); });
+    render();
+  }
+}
+
 /* Panel: Delegation */
 el("panel").addEventListener("click", function(e){
+  var pb = e.target.closest("[data-act]");
+  if (pb && ["planOpen","planNew","planCopy","planDel","freigeben","entsperren","teamSeed"].indexOf(pb.dataset.act) >= 0){
+    planAktion(pb.dataset.act, pb.dataset.v); return;
+  }
+  if (e.target.id === "tAdd"){ aufgabeAnlegen(); return; }
+  if (e.target.id === "abtAdd"){
+    var n = el("abtName").value.trim();
+    if (!n){ toast("Bitte einen Namen eingeben"); return; }
+    teamAnlegen(n, "abteilung"); render();
+    return;
+  }
+  var td = e.target.dataset.tdel;
+  if (td && planMeta){
+    aufgaben = aufgaben.filter(function(x){ return x.id !== td; });
+    Ablage.aufgabeLoeschen(planMeta.id, td);
+    renderPanel(); renderPlanCard();
+    return;
+  }
+  var mdel = e.target.dataset.teamdel;
+  if (mdel){
+    var m = mitglied(mdel);
+    if (!m) return;
+    if (m.art === "abteilung" && !window.confirm("Abteilung „"+m.name+"“ und ihre Personen entfernen?")) return;
+    var weg = [mdel].concat(team.filter(function(x){ return x.abteilungId === mdel; }).map(function(x){ return x.id; }));
+    team = team.filter(function(x){ return weg.indexOf(x.id) < 0; });
+    weg.forEach(function(idx){ Ablage.teamLoeschen(idx); });
+    render();
+    return;
+  }
   var t = e.target.closest("[data-issue][data-step]");
   if (t && t.dataset.issue){ openPop(t.dataset.issue, +t.dataset.step, t); return; }
   var b = e.target.closest("[data-act]");
@@ -1602,6 +2184,18 @@ el("panel").addEventListener("click", function(e){
   else if (a === "download") saveFile(exportPayload());
 });
 el("panel").addEventListener("change", function(e){
+  var done = e.target.dataset.tdone;
+  if (done && planMeta){
+    var t = aufgaben.filter(function(x){ return x.id === done; })[0];
+    if (!t) return;
+    t.erledigt = e.target.checked;
+    t.erledigtAm = e.target.checked ? nowISO() : "";
+    Ablage.aufgabeSichern(planMeta.id, t).then(function(){ pruefeFreigabe(); render(false); });
+    render(false);
+    return;
+  }
+  if (e.target.id === "tAbt"){ fuellePersonen(); return; }
+  if (e.target.id === "tSchritt" || e.target.id === "tAusgabe"){ setzeFaellig(); return; }
   if (e.target.id === "issueSel"){ state.selected = +e.target.value; renderPanel(); save(); return; }
   var f = e.target.dataset.r, tr = e.target.closest("tr[data-nr]");
   if (!f || !tr) return;
@@ -1612,6 +2206,40 @@ el("panel").addEventListener("change", function(e){
   else s[f] = +e.target.value;
   render(false);
 });
+/* Person über die Eingabezeile einer Abteilung anlegen */
+el("panel").addEventListener("keydown", function(e){
+  if (e.key !== "Enter") return;
+  var abt = e.target.dataset.persFor;
+  if (abt !== undefined){
+    var n = e.target.value.trim();
+    if (!n) return;
+    teamAnlegen(n, "person", abt); render();
+    return;
+  }
+  if (e.target.id === "tTitel"){ aufgabeAnlegen(); }
+  if (e.target.id === "abtName"){
+    var na = e.target.value.trim();
+    if (na){ teamAnlegen(na, "abteilung"); render(); }
+  }
+});
+/* Personenauswahl an die gewählte Abteilung koppeln */
+function fuellePersonen(){
+  var sel = el("tPers"), abtSel = el("tAbt");
+  if (!sel || !abtSel) return;
+  var list = personen(abtSel.value);
+  sel.innerHTML = '<option value="">Person (optional)</option>' +
+    list.map(function(m){ return '<option value="'+esc(m.id)+'">'+esc(m.name)+'</option>'; }).join("");
+}
+/* Fälligkeit aus dem gewählten Produktionsschritt übernehmen */
+function setzeFaellig(){
+  var st = el("tSchritt"), au = el("tAusgabe"), dd = el("tDatum");
+  if (!st || !au || !dd) return;
+  if (!st.value || !au.value) return;
+  var x = model.issues.filter(function(i){ return i.id === au.value; })[0];
+  var r = x && x.byNr.get(+st.value);
+  if (r) dd.value = iso(r.date);
+}
+
 el("panel").addEventListener("input", function(e){
   if (e.target.dataset.r === "label" || e.target.dataset.r === "offset"){
     var tr = e.target.closest("tr[data-nr]"), nr = +tr.dataset.nr;
@@ -1636,11 +2264,100 @@ try{
   }
 }catch(e){}
 
+/* =========================================================================
+   Pläne, Aufgaben, Team
+   ========================================================================= */
+function planOeffnen(id){
+  var pl = plaene.filter(function(x){ return x.id === id; })[0];
+  if (!pl) return;
+  planMeta = pl;
+  state = normState(pl.inhalt, pl.jahr);
+  state.view = state.view || "plan";
+  el("yearInput").value = state.year;
+  Ablage.aufgabenOeffnen(pl.id);
+  try{ localStorage.setItem(LAST_KEY, pl.id); }catch(e){}
+  render();
+}
+function planAnlegen(inhalt, titel, jahr){
+  var j = jahr || (state ? state.year : 2027);
+  var pl = {id:uid("p"), titel:titel || ("Produktionsplan " + j), jahr:j, status:"entwurf",
+            erstelltAm:nowISO(), geaendertAm:nowISO(),
+            inhalt: inhalt || defaultState(j)};
+  plaene.push(pl);
+  return Ablage.planSichern(pl).then(function(){ return pl; });
+}
+function planStatus(status){
+  if (!planMeta) return;
+  planMeta.status = status;
+  if (status === "fertig") planMeta.freigegebenAm = nowISO();
+  else delete planMeta.freigegebenAm;
+  Ablage.planSichern(planMeta);
+  render();
+}
+/* Sind alle Aufgaben erledigt, gilt der Plan als freigegeben und liegt im Archiv. */
+function pruefeFreigabe(){
+  if (!planMeta || planMeta.status === "fertig") return;
+  if (!aufgaben.length) return;
+  if (aufgaben.some(function(t){ return !t.erledigt; })) return;
+  planMeta.status = "fertig";
+  planMeta.freigegebenAm = nowISO();
+  Ablage.planSichern(planMeta);
+  toast("Alle Aufgaben erledigt – Plan freigegeben und abgelegt");
+}
+function aufgabeAnlegen(){
+  if (!planMeta) return;
+  var titel = el("tTitel").value.trim();
+  if (!titel){ toast("Bitte die Aufgabe benennen"); return; }
+  var t = {
+    id: uid("t"), titel: titel,
+    abteilungId: el("tAbt").value || "",
+    personId: el("tPers").value || "",
+    schrittNr: el("tSchritt").value ? +el("tSchritt").value : 0,
+    ausgabeId: el("tAusgabe").value || "",
+    faellig: el("tDatum").value || "",
+    erledigt: false, erstelltAm: nowISO()
+  };
+  aufgaben.push(t);
+  Ablage.aufgabeSichern(planMeta.id, t);
+  renderPanel(); renderPlanCard();
+  var f = el("tTitel"); if (f){ f.value = ""; f.focus(); }
+  var dd = el("tDatum"); if (dd) dd.value = "";
+}
+function teamAnlegen(name, art, abteilungId){
+  var m = {id: uid(art === "person" ? "m" : "a"), name: name, art: art,
+           abteilungId: abteilungId || "", erstelltAm: nowISO()};
+  team.push(m);
+  Ablage.teamSichern(m);
+  return m;
+}
+
 /* Start */
-state = load();
-el("yearInput").value = state.year;
-Array.prototype.forEach.call(el("tabs").querySelectorAll("button"), function(x){
-  x.setAttribute("aria-selected", String(x.dataset.view === state.view));
+Ablage.beiPlaenen = function(){
+  if (planMeta){
+    var akt = plaene.filter(function(x){ return x.id === planMeta.id; })[0];
+    if (akt && akt !== planMeta){
+      planMeta = akt;
+      if (!sichernOffen) state = normState(akt.inhalt, akt.jahr);
+    }
+    if (!akt){ planMeta = null; }
+  }
+  if (model) render(false);
+};
+Ablage.beiAufgaben = function(){ if (model){ pruefeFreigabe(); render(false); } };
+Ablage.beiTeam    = function(){ if (model) render(false); };
+
+Ablage.start(function(){
+  var letzte = null;
+  try{ letzte = localStorage.getItem(LAST_KEY); }catch(e){}
+  var ziel = plaene.filter(function(x){ return x.id === letzte; })[0];
+  if (!ziel){
+    var fertige = plaene.filter(function(x){ return x.status === "fertig"; })
+      .sort(function(a,b){ return String(b.freigegebenAm||"").localeCompare(String(a.freigegebenAm||"")); });
+    ziel = fertige[0] || plaene.slice().sort(function(a,b){
+      return String(b.geaendertAm||"").localeCompare(String(a.geaendertAm||"")); })[0];
+  }
+  if (ziel){ planOeffnen(ziel.id); return; }
+  state = defaultState(2027);
+  planAnlegen(defaultState(2027), "Produktionsplan 2027", 2027).then(function(pl){ planOeffnen(pl.id); });
 });
-render();
 </script>

@@ -66,6 +66,39 @@ falls er auf ein Wochenende oder einen Feiertag fällt.
 Anker, Versatz, Ziel-Wochentag, Richtung und Phase sind im Reiter **Regelwerk**
 frei änderbar; Zirkelbezüge werden erkannt und gemeldet.
 
+## Pläne, Aufgaben und Freigabe
+
+Die Seite verwaltet **mehrere Pläne**. Jeder Plan hat eine Bezeichnung, ein
+Jahr und einen Status (*In Arbeit* oder *Freigegeben*) und speichert seine
+kompletten Eingaben – Erscheinungstermine, Feiertagsauswahl, Regelwerk und
+manuelle Termine. Über *Duplizieren* entsteht aus dem laufenden Jahr die
+Vorlage für das nächste; die Aufgaben werden mitkopiert und auf offen
+zurückgesetzt.
+
+Im Reiter **Aufgaben** wird festgehalten, was für einen Plan zu erledigen ist.
+Jede Aufgabe gehört zu einer Abteilung und wahlweise zu einer Person; beides
+wird unter *Abteilungen & Personen* gepflegt. Eine Aufgabe lässt sich an einen
+Produktionsschritt und eine Ausgabe koppeln – dann übernimmt sie deren
+berechneten Termin als Fälligkeit und wandert mit, wenn sich der Plan
+verschiebt. Überfällige Aufgaben sind rot markiert.
+
+**Sind alle Aufgaben erledigt, gilt der Plan als freigegeben**: Er wird gegen
+weitere Änderungen gesperrt, mit Datum abgelegt und steht im Reiter *Pläne*
+unter *Aktueller Plan*. Beim nächsten Öffnen der Seite ist er die
+Standardansicht. Über *Entsperren* geht er zurück in Arbeit.
+
+### Wo die Daten liegen
+
+| Umgebung | Ablage |
+|---|---|
+| veröffentlichte Seite (Artifact) | geteilte Datenbank – alle im Team sehen denselben Stand, Änderungen erscheinen live |
+| `index.html` als Datei oder GitHub Page | Browserspeicher des jeweiligen Rechners |
+
+Beide Wege nutzen dieselbe Schnittstelle (`Ablage` in `src/app.html`), die
+Seite funktioniert also in jedem Fall vollständig. Die geteilte Ablage legt
+Pläne unter `plaene/<id>`, Aufgaben unter `plaene/<id>/aufgaben/<id>` und das
+Team unter `team/<id>` ab.
+
 ## Manuelle Termine
 
 Einzelne Termine lassen sich pro Ausgabe von Hand setzen – für Urlaubszeiten,
