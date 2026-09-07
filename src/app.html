@@ -366,10 +366,15 @@ body.gesperrt td.cell.click:hover{outline:0;background:inherit}
 /* ---------- Team ---------- */
 .teamlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
 .teamgroup{border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--surface-2)}
-.teamgroup .tg{display:flex;align-items:center;gap:6px;padding:6px 9px;background:var(--surface-3);
+.teamgroup .tg{display:flex;align-items:center;gap:4px;padding:5px 6px;background:var(--surface-3);
   border-bottom:1px solid var(--line);font-size:12.5px}
-.teamgroup .tg b{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.teamgroup .tp{display:flex;align-items:center;gap:6px;padding:4px 9px;font-size:12px;border-bottom:1px solid var(--line)}
+.teamgroup .tg input,.teamgroup .tp input{flex:1;min-width:0;background:none;border:1px solid transparent;
+  border-radius:4px;padding:2px 5px;font-size:12.5px;color:var(--ink)}
+.teamgroup .tg input{font-weight:600}
+.teamgroup .tp input{font-size:12px}
+.teamgroup input:hover{border-color:var(--line-2);background:var(--surface)}
+.teamgroup input:focus{border-color:var(--accent);background:var(--surface)}
+.teamgroup .tp{display:flex;align-items:center;gap:4px;padding:3px 6px;font-size:12px;border-bottom:1px solid var(--line)}
 .teamgroup .tp:last-of-type{border-bottom:0}
 .teamgroup .x{background:none;border:0;color:var(--ink-3);cursor:pointer;font-size:13px;padding:0 2px;line-height:1}
 .teamgroup .x:hover{color:var(--crit)}
@@ -414,25 +419,31 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
 .ov .dt{font-family:var(--mono);font-size:11px;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
 .ov .x{background:none;border:0;color:var(--ink-3);cursor:pointer;font-size:14px;padding:0 2px;border-radius:3px}
 .ov .x:hover{color:var(--crit);background:var(--crit-soft)}
-.pop{position:fixed;z-index:80;background:var(--surface);border:1px solid var(--line-2);border-radius:8px;
-  box-shadow:0 12px 40px -12px rgba(16,26,36,.5);padding:13px;width:268px;display:flex;flex-direction:column;gap:9px}
-.pop h3{font-size:13px;line-height:1.3}
-.pop .who{font-size:11px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
-.pop input[type=date]{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:5px;
-  padding:6px 8px;font-family:var(--mono);font-size:13px}
-.pop input[type=date]:focus{background:var(--surface);border-color:var(--accent)}
-.pop .auto{font-size:11.5px;color:var(--ink-2);background:var(--surface-2);border-radius:5px;padding:6px 8px}
-.pop .auto b{font-family:var(--mono);font-weight:500}
-.pop .warnline{font-size:11.5px;color:var(--warn)}
-.pop .popbtns{display:flex;gap:6px;flex-wrap:wrap}
-.pop .popbtns .btn{flex:1}
-.popmask{position:fixed;inset:0;z-index:79}
+.dlgback{position:fixed;inset:0;z-index:79;background:rgba(6,16,32,.45);backdrop-filter:blur(1.5px)}
+.dlg{position:fixed;z-index:80;top:50%;left:50%;transform:translate(-50%,-50%);width:min(360px,calc(100vw - 32px));
+  max-height:calc(100vh - 40px);overflow:auto;background:var(--surface);border:1px solid var(--line-2);border-radius:8px;
+  box-shadow:0 24px 60px -20px rgba(0,16,44,.55);padding:16px 17px 15px;display:flex;flex-direction:column;gap:10px}
+.dlg h3{font-size:15px;line-height:1.3;padding-right:22px}
+.dlg .who{font-size:10px;color:var(--ink-3);letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+.dlg .zu{position:absolute;top:9px;right:10px;background:none;border:0;color:var(--ink-3);font-size:19px;
+  line-height:1;cursor:pointer;padding:2px 6px;border-radius:4px}
+.dlg .zu:hover{background:var(--surface-2);color:var(--crit)}
+.dlg input[type=date],.dlg input[type=text]{width:100%;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:5px;padding:7px 9px;font-size:13.5px}
+.dlg input[type=date]{font-family:var(--mono);font-size:13px}
+.dlg input:focus{background:var(--surface);border-color:var(--accent)}
+.dlg .auto{font-size:11.5px;color:var(--ink-2);background:var(--surface-2);border-radius:5px;padding:7px 9px;line-height:1.45}
+.dlg .auto b{font-family:var(--mono);font-weight:500}
+.dlg .warnline{font-size:11.5px;color:var(--warn);min-height:1px}
+.dlg .txt{font-size:13px;color:var(--ink-2);line-height:1.5}
+.dlg .dlgbtns{display:flex;gap:7px;flex-wrap:wrap;margin-top:2px}
+.dlg .dlgbtns .btn{flex:1;text-align:center;padding:7px 11px}
 
 /* ---------- print ---------- */
 @media print{
   @page{size:A4 landscape;margin:9mm}
   body{background:#fff;font-size:8.5pt}
-  .topbar,.rail,nav.tabs,.exportbar,.metabar,.rowbtns,.detailhead .spacer,.btn,.callegend,.pop,.popmask,.regions,
+  .topbar,.rail,nav.tabs,.exportbar,.metabar,.rowbtns,.detailhead .spacer,.btn,.callegend,.dlg,.dlgback,.regions,
   .taskform,.taskbar,.planbox{display:none !important}
   td.cell.manual{outline:1px solid #000;outline-offset:-1px;font-weight:700}
   .layout{display:block;padding:0}
@@ -541,8 +552,8 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
   </section>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<div class="popmask" id="popMask" hidden></div>
-<div class="pop" id="pop" hidden role="dialog" aria-label="Termin manuell setzen"></div>
+<div class="dlgback" id="dlgBack" hidden></div>
+<div class="dlg" id="dlg" hidden role="dialog" aria-modal="true" aria-labelledby="dlgTitel"></div>
 
 <script>
 "use strict";
@@ -875,7 +886,6 @@ var Ablage = {
   planAbo: null,
   beiPlaenen: function(){}, beiAufgaben: function(){}, beiTeam: function(){},
 
-  /* --- lokaler Speicher --------------------------------------------- */
   _lesen: function(){
     try{
       var r = JSON.parse(localStorage.getItem(STORE) || "null");
@@ -885,10 +895,49 @@ var Ablage = {
   },
   _schreiben: function(d){ try{ localStorage.setItem(STORE, JSON.stringify(d)); }catch(e){} },
 
+  /* Eine Ablagestelle für alle drei Sorten: Pfad in der Datenbank,
+     Fach im lokalen Speicher. */
+  _pfad: function(art, planId){
+    return art === "aufgaben" ? "plaene/" + planId + "/aufgaben" : art;   /* "plaene" | "team" */
+  },
+  sichern: function(art, satz, planId){
+    if (this.db){
+      var body = Object.assign({}, satz); delete body.id;
+      return this.db.doc(this._pfad(art, planId) + "/" + satz.id).set(body).catch(dbFehler);
+    }
+    var d = this._lesen();
+    if (art === "aufgaben"){
+      d.aufgaben = d.aufgaben || {};
+      d.aufgaben[planId] = d.aufgaben[planId] || {};
+      d.aufgaben[planId][satz.id] = satz;
+    } else d[art][satz.id] = satz;
+    this._schreiben(d);
+    return Promise.resolve();
+  },
+  loeschen: function(art, id, planId){
+    if (this.db) return this.db.doc(this._pfad(art, planId) + "/" + id).delete().catch(dbFehler);
+    var d = this._lesen();
+    if (art === "aufgaben"){ if (d.aufgaben && d.aufgaben[planId]) delete d.aufgaben[planId][id]; }
+    else delete d[art][id];
+    this._schreiben(d);
+    return Promise.resolve();
+  },
+  planSichern: function(plan){ plan.geaendertAm = nowISO(); return this.sichern("plaene", plan); },
+  planLoeschen: function(id){
+    var self = this;
+    if (this.db){
+      return this.db.collection("plaene/" + id + "/aufgaben").get().then(function(snap){
+        return Promise.all(snap.docs.map(function(t){ return self.loeschen("aufgaben", t.id, id); }));
+      }).then(function(){ return self.loeschen("plaene", id); }).catch(dbFehler);
+    }
+    var d = this._lesen(); delete d.plaene[id]; if (d.aufgaben) delete d.aufgaben[id];
+    this._schreiben(d);
+    return Promise.resolve();
+  },
+
   /* --- Start -------------------------------------------------------- */
   start: function(fertig){
-    var self = this;
-    var lokalGeladen = false;
+    var self = this, lokalGeladen = false, beantwortet = false;
     function lokalStarten(){
       if (lokalGeladen) return;
       lokalGeladen = true;
@@ -905,10 +954,9 @@ var Ablage = {
           }
         }catch(e){}
       }
-      self._melden(d);
+      plaene = werte(d.plaene); team = werte(d.team);
       fertig();
     }
-    var beantwortet = false;
     try{
       if (window.claude && typeof window.claude.use === "function"){
         window.claude.use("db").then(function(db){
@@ -917,14 +965,8 @@ var Ablage = {
           self.db = db; self.modus = "geteilt";
           var offen = 2;
           function evtl(){ if (--offen === 0) fertig(); }
-          db.collection("plaene").onSnapshot(function(snap){
-            plaene = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
-            self.beiPlaenen(); evtl();
-          }, function(){ self.beiPlaenen(); evtl(); });
-          db.collection("team").onSnapshot(function(snap){
-            team = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
-            self.beiTeam(); evtl();
-          }, function(){ self.beiTeam(); evtl(); });
+          self._abo(db, "plaene", function(list){ plaene = list; }, self.beiPlaenen, evtl);
+          self._abo(db, "team",   function(list){ team = list; },   self.beiTeam,   evtl);
         }, function(){ beantwortet = true; lokalStarten(); });
         setTimeout(function(){ if (!beantwortet) lokalStarten(); }, 10500);
         return;
@@ -932,82 +974,39 @@ var Ablage = {
     }catch(e){}
     lokalStarten();
   },
-  _melden: function(d){
-    plaene = Object.keys(d.plaene).map(function(k){ return d.plaene[k]; });
-    team = Object.keys(d.team || {}).map(function(k){ return d.team[k]; });
-    this.beiPlaenen(); this.beiTeam();
+  /* Ein Abo, das den eigenen Schreib-Widerhall nicht als Änderung meldet */
+  _abo: function(db, pfad, setzen, melden, einmal){
+    var letzter = null, ersteLieferung = true;
+    return db.collection(pfad).onSnapshot(function(snap){
+      var list = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      var jetzt = JSON.stringify(list);
+      var gleich = jetzt === letzter;
+      letzter = jetzt;
+      setzen(list);
+      if (ersteLieferung){ ersteLieferung = false; if (einmal) einmal(); return; }
+      if (!gleich) melden();
+    }, function(){ if (ersteLieferung){ ersteLieferung = false; if (einmal) einmal(); } });
   },
 
-  /* --- Pläne -------------------------------------------------------- */
-  planSichern: function(plan){
-    plan.geaendertAm = nowISO();
-    if (this.db){
-      var body = Object.assign({}, plan); delete body.id;
-      return this.db.doc("plaene/" + plan.id).set(body).catch(function(e){ dbFehler(e); });
-    }
-    var d = this._lesen(); d.plaene[plan.id] = plan; this._schreiben(d); this._melden(d);
-    return Promise.resolve();
-  },
-  planLoeschen: function(id){
-    var self = this;
-    if (this.db){
-      return this.db.collection("plaene/" + id + "/aufgaben").get().then(function(snap){
-        return Promise.all(snap.docs.map(function(t){ return self.db.doc("plaene/" + id + "/aufgaben/" + t.id).delete(); }));
-      }).then(function(){ return self.db.doc("plaene/" + id).delete(); }).catch(function(e){ dbFehler(e); });
-    }
-    var d = this._lesen(); delete d.plaene[id]; delete d.aufgaben[id]; this._schreiben(d); this._melden(d);
-    return Promise.resolve();
-  },
-
-  /* --- Aufgaben ----------------------------------------------------- */
+  /* --- Aufgaben des offenen Plans ------------------------------------ */
   aufgabenOeffnen: function(planId){
     var self = this;
     if (this.planAbo){ this.planAbo(); this.planAbo = null; }
     if (this.db){
-      this.planAbo = this.db.collection("plaene/" + planId + "/aufgaben").onSnapshot(function(snap){
-        aufgaben = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
-        self.beiAufgaben();
-      }, function(){ aufgaben = []; self.beiAufgaben(); });
+      this.planAbo = this._abo(this.db, "plaene/" + planId + "/aufgaben",
+        function(list){ aufgaben = list; }, function(){ self.beiAufgaben(); }, function(){ self.beiAufgaben(); });
       return;
     }
     var d = this._lesen();
-    aufgaben = Object.keys((d.aufgaben || {})[planId] || {}).map(function(k){ return d.aufgaben[planId][k]; });
+    aufgaben = werte((d.aufgaben || {})[planId] || {});
     this.beiAufgaben();
   },
-  aufgabeSichern: function(planId, t){
-    if (this.db){
-      var body = Object.assign({}, t); delete body.id;
-      return this.db.doc("plaene/" + planId + "/aufgaben/" + t.id).set(body).catch(function(e){ dbFehler(e); });
-    }
-    var d = this._lesen();
-    d.aufgaben = d.aufgaben || {}; d.aufgaben[planId] = d.aufgaben[planId] || {};
-    d.aufgaben[planId][t.id] = t;
-    this._schreiben(d); this.aufgabenOeffnen(planId);
-    return Promise.resolve();
-  },
-  aufgabeLoeschen: function(planId, id){
-    if (this.db) return this.db.doc("plaene/" + planId + "/aufgaben/" + id).delete().catch(function(e){ dbFehler(e); });
-    var d = this._lesen();
-    if (d.aufgaben && d.aufgaben[planId]) delete d.aufgaben[planId][id];
-    this._schreiben(d); this.aufgabenOeffnen(planId);
-    return Promise.resolve();
-  },
-
-  /* --- Team --------------------------------------------------------- */
-  teamSichern: function(m){
-    if (this.db){
-      var body = Object.assign({}, m); delete body.id;
-      return this.db.doc("team/" + m.id).set(body).catch(function(e){ dbFehler(e); });
-    }
-    var d = this._lesen(); d.team = d.team || {}; d.team[m.id] = m; this._schreiben(d); this._melden(d);
-    return Promise.resolve();
-  },
-  teamLoeschen: function(id){
-    if (this.db) return this.db.doc("team/" + id).delete().catch(function(e){ dbFehler(e); });
-    var d = this._lesen(); if (d.team) delete d.team[id]; this._schreiben(d); this._melden(d);
-    return Promise.resolve();
-  }
+  aufgabeSichern: function(planId, t){ return this.sichern("aufgaben", t, planId); },
+  aufgabeLoeschen: function(planId, id){ return this.loeschen("aufgaben", id, planId); },
+  teamSichern: function(m){ return this.sichern("team", m); },
+  teamLoeschen: function(id){ return this.loeschen("team", id); }
 };
+function werte(o){ return Object.keys(o || {}).map(function(k){ return o[k]; }); }
 function dbFehler(e){
   var c = e && e.code;
   if (c === "quota_exceeded") toast("Speicher voll – bitte alte Pläne löschen");
@@ -1316,51 +1315,109 @@ function renderOverrides(){
     }).join("")+'</div><div class="rowbtns"><button type="button" class="btn sm ghost" id="clearAllOv">Alle auf Automatik</button></div></div></section>';
 }
 
-/* ---------- Termin manuell setzen ---------------------------------------- */
-var popCtx = null;
-function openPop(issueId, stepNr, anchorEl){
+/* ---------- Ein Fenster für alles ----------------------------------------
+   Termin setzen, nachfragen, bestätigen. Mittig, mit abgedunkeltem Grund,
+   schließt über Abbrechen, das Kreuz, Escape oder einen Klick daneben.
+   Eigener Dialog statt confirm()/prompt(), weil die in eingebetteten
+   Seiten blockiert sein können.
+   ------------------------------------------------------------------------- */
+var Dialog = {
+  offen: false,
+  _ok: null,
+  zeige: function(inhalt, aktionen, beimOeffnen){
+    var d = el("dlg");
+    d.innerHTML = '<button type="button" class="zu" data-dlg="ab" title="Schließen" aria-label="Schließen">&times;</button>'+
+      inhalt + '<div class="dlgbtns">' + aktionen.map(function(a){
+        return '<button type="button" class="btn sm'+(a.art ? " "+a.art : "")+'" data-dlg="'+a.k+'">'+esc(a.label)+'</button>';
+      }).join("") + '</div>';
+    d.hidden = false; el("dlgBack").hidden = false; this.offen = true;
+    if (beimOeffnen) beimOeffnen(d);
+  },
+  schliesse: function(){
+    if (!this.offen) return;
+    this.offen = false; this._ok = null;
+    el("dlg").hidden = true; el("dlgBack").hidden = true;
+  }
+};
+el("dlgBack").addEventListener("click", function(){ Dialog.schliesse(); });
+document.addEventListener("keydown", function(e){
+  if (e.key === "Escape" && Dialog.offen) Dialog.schliesse();
+});
+el("dlg").addEventListener("click", function(e){
+  var b = e.target.closest("[data-dlg]");
+  if (!b) return;
+  var k = b.dataset.dlg, fn = Dialog._ok;
+  if (k === "ab"){ Dialog.schliesse(); return; }
+  Dialog.schliesse();
+  if (fn) fn(k);
+});
+el("dlg").addEventListener("keydown", function(e){
+  if (e.key !== "Enter") return;
+  var b = el("dlg").querySelector('[data-dlg="ok"]');
+  if (b) b.click();
+});
+
+/* Text erfragen */
+function frage(titel, vorgabe, beschriftung, weiter){
+  Dialog._ok = function(k){ if (k === "ok"){ var v = (frage._feld || "").trim(); if (v) weiter(v); } };
+  Dialog.zeige('<h3 id="dlgTitel">'+esc(titel)+'</h3>'+
+    (beschriftung ? '<div class="txt">'+esc(beschriftung)+'</div>' : "")+
+    '<input type="text" id="dlgText" value="'+esc(vorgabe || "")+'" aria-label="'+esc(titel)+'">',
+    [{k:"ok", label:"Übernehmen", art:"primary"}, {k:"ab", label:"Abbrechen", art:"ghost"}],
+    function(d){
+      var i = d.querySelector("#dlgText");
+      i.addEventListener("input", function(){ frage._feld = i.value; });
+      frage._feld = i.value; i.focus(); i.select();
+    });
+}
+/* Rückfrage stellen */
+function bestaetige(titel, text, label, weiter){
+  Dialog._ok = function(k){ if (k === "ok") weiter(); };
+  Dialog.zeige('<h3 id="dlgTitel">'+esc(titel)+'</h3><div class="txt">'+esc(text)+'</div>',
+    [{k:"ok", label:label || "Ja", art:"primary"}, {k:"ab", label:"Abbrechen", art:"ghost"}]);
+}
+/* Termin eines Schritts von Hand setzen */
+function openPop(issueId, stepNr){
+  if (istGesperrt()){ toast("Der Plan ist freigegeben – zum Ändern erst entsperren"); return; }
   var x = model.issues.filter(function(i){ return i.id === issueId; })[0];
   if (!x) return;
   var r = x.byNr.get(stepNr), auto = x.autoByNr.get(stepNr);
   if (!r) return;
-  popCtx = {issue:x, nr:stepNr};
-  var pop = el("pop");
-  pop.innerHTML =
+  var key = x.id + ":" + stepNr, feld = iso(r.date);
+  var aktionen = [{k:"ok", label:"Übernehmen", art:"primary"}];
+  if (r.manual) aktionen.push({k:"auto", label:"Automatik"});
+  aktionen.push({k:"ab", label:"Abbrechen", art:"ghost"});
+
+  Dialog._ok = function(k){
+    if (k === "auto"){ delete state.overrides[key]; render(); toast("Wieder automatisch"); return; }
+    if (k !== "ok") return;
+    if (!feld){ toast("Bitte ein Datum wählen"); return; }
+    if (auto && iso(auto.date) === feld) delete state.overrides[key];
+    else state.overrides[key] = feld;
+    render();
+    toast("Termin gesetzt – abhängige Schritte neu gerechnet");
+  };
+  Dialog.zeige(
     '<span class="who">'+esc(x.name)+'</span>'+
-    '<h3>'+stepNr+' · '+esc(r.step.label)+'</h3>'+
-    '<input type="date" id="popDate" value="'+iso(r.date)+'" aria-label="Termin">'+
+    '<h3 id="dlgTitel">'+stepNr+' · '+esc(r.step.label)+'</h3>'+
+    '<input type="date" id="dlgDatum" value="'+feld+'" aria-label="Termin">'+
     '<div class="auto">Automatisch: <b>'+(auto ? wd(auto.date)+" "+fmt(auto.date) : "–")+'</b>'+
       (r.step.wd ? ' · Ziel-Wochentag '+WD_LONG[r.step.wd-1] : ' · flexibler Arbeitstag')+'</div>'+
-    '<div class="warnline" id="popWarn"></div>'+
-    '<div class="popbtns">'+
-      '<button type="button" class="btn sm primary" data-pop="apply">Übernehmen</button>'+
-      (r.manual ? '<button type="button" class="btn sm" data-pop="clear">Automatik</button>' : "")+
-      '<button type="button" class="btn sm ghost" data-pop="close">Abbrechen</button>'+
-    '</div>';
-  pop.hidden = false; el("popMask").hidden = false;
-  var box = pop.getBoundingClientRect(), rect = anchorEl.getBoundingClientRect();
-  var top = Math.min(rect.bottom + 6, window.innerHeight - box.height - 10);
-  var left = Math.min(Math.max(8, rect.left), window.innerWidth - box.width - 10);
-  pop.style.top = Math.max(8, top) + "px";
-  pop.style.left = left + "px";
-  var inp = el("popDate");
-  inp.focus();
-  inp.addEventListener("input", popCheck);
-  popCheck();
-}
-function popCheck(){
-  var inp = el("popDate"), w = el("popWarn");
-  if (!inp || !w) return;
-  if (!inp.value){ w.textContent = ""; return; }
-  var d = parseISO(inp.value), msgs = [];
-  if (isFreeDay(d, model.hol.set)) msgs.push("Wochenende oder Feiertag");
-  var st = popCtx && popCtx.issue.byNr.get(popCtx.nr);
-  if (st && st.step.wd && dow(d) !== st.step.wd) msgs.push("nicht "+WD_LONG[st.step.wd-1]);
-  w.textContent = msgs.length ? "Hinweis: " + msgs.join(", ") + "." : "";
-}
-function closePop(){
-  popCtx = null;
-  el("pop").hidden = true; el("popMask").hidden = true;
+    '<div class="warnline" id="dlgWarn"></div>',
+    aktionen,
+    function(d){
+      var i = d.querySelector("#dlgDatum"), w = d.querySelector("#dlgWarn");
+      function pruefe(){
+        feld = i.value;
+        if (!feld){ w.textContent = ""; return; }
+        var dt = parseISO(feld), msg = [];
+        if (isFreeDay(dt, model.hol.set)) msg.push("Wochenende oder Feiertag");
+        if (r.step.wd && dow(dt) !== r.step.wd) msg.push("nicht " + WD_LONG[r.step.wd-1]);
+        w.textContent = msg.length ? "Hinweis: " + msg.join(", ") + "." : "";
+      }
+      i.addEventListener("input", pruefe);
+      pruefe(); i.focus();
+    });
 }
 
 /* ---------- Kopfzeile mit Kennzahlen ------------------------------------- */
@@ -1395,6 +1452,7 @@ function renderPanel(){
   else if (v === "pruefung") html = viewFindings();
   else if (v === "regeln")   html = viewRules();
   else                       html = viewExport();
+  Dialog.schliesse();
   el("panel").innerHTML = html;
   if (state.view === "export") buildExport();
   if (state.view === "aufgaben") fuellePersonen();
@@ -1420,46 +1478,48 @@ function cellHTML(r, issue){
 function viewPlan(){
   var is = model.issues;
   if (!is.length) return card("Terminplan", '<div class="empty">Noch keine Ausgabe angelegt.</div>');
-  var head =
-    '<div class="printhead"><div class="mag">Berliner Wirtschaft</div>'+
-    '<h2>Produktionsplan '+esc(is[0].name)+" bis "+esc(is[is.length-1].name)+' '+state.year+'</h2>'+
-    '<div class="sub">Magazin der IHK Berlin · Stand '+fmt(D(new Date().getFullYear(), new Date().getMonth()+1, new Date().getDate()))+'</div></div>';
-  var body;
-  if (state.orientation === "steps"){
-    var rows = "", lastPhase = null;
-    model.steps.forEach(function(s){
-      var ph = phaseOf(s);
-      if (ph.key !== lastPhase){
-        rows += '<tr class="phaserow" style="--ph:'+ph.css+'"><th class="rowhead"><span class="phaselabel">'+esc(ph.label)+
-                '</span></th><td colspan="'+is.length+'"></td></tr>';
-        lastPhase = ph.key;
-      }
-      rows += '<tr'+(s.anchor === 0 ? ' class="milestone"' : "")+' style="--ph:'+ph.css+'">'+
-        '<th class="rowhead"><div class="steprow"><span class="stepnr">'+s.nr+'</span>'+
-        '<span class="stepname">'+esc(s.label)+'</span>'+
-        '<span class="wdbadge'+(s.wd ? " fix" : "")+'">'+(s.wd ? WD_SHORT[s.wd-1] : "flex")+'</span></div></th>'+
-        is.map(function(x){ var r = x.byNr.get(s.nr); return r ? cellHTML(r, x) : '<td class="cell">–</td>'; }).join("")+
-      '</tr>';
-    });
-    body = '<table class="plan"><thead><tr><th class="corner">Produktionsschritt</th>'+
-      is.map(function(x){ return '<th>'+esc(x.name)+'<span class="sub">'+wd(x.etag)+" "+fmtShort(x.etag)+'</span></th>'; }).join("")+
-      '</tr></thead><tbody>'+rows+'</tbody></table>';
-  } else {
-    body = '<table class="plan wide"><thead><tr><th class="corner">Ausgabe</th>'+
-      model.steps.map(function(s){
-        return '<th class="stepcol" style="--ph:'+phaseOf(s).css+'"><span class="stepnr">'+s.nr+'</span> '+esc(s.label)+
-               '<span class="sub">'+(s.wd ? WD_SHORT[s.wd-1] : "flex")+'</span></th>';
-      }).join("")+'</tr></thead><tbody>'+
-      is.map(function(x){
-        return '<tr style="--ph:var(--ph-2)"><th class="rowhead"><div class="steprow"><span class="stepname">'+esc(x.name)+
-          '</span></div></th>'+
-          model.steps.map(function(s){ var r = x.byNr.get(s.nr); return r ? cellHTML(r, x) : '<td class="cell">–</td>'; }).join("")+
-        '</tr>';
-      }).join("")+'</tbody></table>';
-  }
+  var head = '<div class="printhead"><div class="mag">Berliner Wirtschaft</div>'+
+    '<h2>'+esc(planMeta ? planMeta.titel : "Produktionsplan")+' · '+esc(is[0].name)+" bis "+esc(is[is.length-1].name)+'</h2>'+
+    '<div class="sub">Magazin der IHK Berlin · Stand '+fmt(heute())+'</div></div>';
+
+  /* Zeilen und Spalten tauschen die Rollen, der Zelleninhalt bleibt derselbe. */
+  var alsZeilen = state.orientation === "steps";
+  var zeilen = alsZeilen ? model.steps : is;
+  var spalten = alsZeilen ? is : model.steps;
+  var kopf = alsZeilen
+    ? is.map(function(x){ return '<th>'+esc(x.name)+'<span class="sub">'+wd(x.etag)+" "+fmtShort(x.etag)+'</span></th>'; })
+    : model.steps.map(function(st){
+        return '<th class="stepcol" style="--ph:'+phaseOf(st).css+'"><span class="stepnr">'+st.nr+'</span> '+esc(st.label)+
+               '<span class="sub">'+(st.wd ? WD_SHORT[st.wd-1] : "flex")+'</span></th>'; });
+
+  var koerper = "", letztePhase = null;
+  zeilen.forEach(function(z){
+    var ph = alsZeilen ? phaseOf(z) : PHASES[1];
+    if (alsZeilen && ph.key !== letztePhase){
+      koerper += '<tr class="phaserow" style="--ph:'+ph.css+'"><th class="rowhead"><span class="phaselabel">'+
+                 esc(ph.label)+'</span></th><td colspan="'+spalten.length+'"></td></tr>';
+      letztePhase = ph.key;
+    }
+    var titel = alsZeilen
+      ? '<span class="stepnr">'+z.nr+'</span><span class="stepname">'+esc(z.label)+'</span>'+
+        '<span class="wdbadge'+(z.wd ? " fix" : "")+'">'+(z.wd ? WD_SHORT[z.wd-1] : "flex")+'</span>'
+      : '<span class="stepname">'+esc(z.name)+'</span>';
+    koerper += '<tr'+(alsZeilen && z.anchor === 0 ? ' class="milestone"' : "")+' style="--ph:'+ph.css+'">'+
+      '<th class="rowhead"><div class="steprow">'+titel+'</div></th>'+
+      spalten.map(function(sp){
+        var x = alsZeilen ? sp : z, st = alsZeilen ? z : sp;
+        var r = x.byNr.get(st.nr);
+        return r ? cellHTML(r, x) : '<td class="cell">–</td>';
+      }).join("")+'</tr>';
+  });
+
+  var body = '<table class="plan'+(alsZeilen ? "" : " wide")+'"><thead><tr>'+
+    '<th class="corner">'+(alsZeilen ? "Produktionsschritt" : "Ausgabe")+'</th>'+kopf.join("")+
+    '</tr></thead><tbody>'+koerper+'</tbody></table>';
+
   var tools =
-    '<button type="button" class="btn sm" data-act="orient" data-v="steps" aria-pressed="'+(state.orientation === "steps")+'">Schritte als Zeilen</button>'+
-    '<button type="button" class="btn sm" data-act="orient" data-v="issues" aria-pressed="'+(state.orientation === "issues")+'">Ausgaben als Zeilen</button>';
+    '<button type="button" class="btn sm" data-act="orient" data-v="steps" aria-pressed="'+alsZeilen+'">Schritte als Zeilen</button>'+
+    '<button type="button" class="btn sm" data-act="orient" data-v="issues" aria-pressed="'+(!alsZeilen)+'">Ausgaben als Zeilen</button>';
   return card("Terminplan " + state.year, head + '<div class="tablewrap">'+body+'</div>', tools);
 }
 
@@ -1708,14 +1768,13 @@ function viewAufgaben(){
   var issueOpts = '<option value="">alle Ausgaben</option>' + model.issues.map(function(x){
     return '<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>';
   }).join("");
-  var abtOpts = abt.length
-    ? abt.map(function(a){ return '<option value="'+esc(a.id)+'">'+esc(a.name)+'</option>'; }).join("")
-    : '<option value="">– erst Abteilung anlegen –</option>';
+  var abtOpts = abt.map(function(a){ return '<option value="'+esc(a.id)+'">'+esc(a.name)+'</option>'; }).join("") +
+    '<option value="__neu">+ Neue Abteilung …</option>';
 
   var form = '<div class="taskform">'+
     '<input type="text" id="tTitel" placeholder="Was ist zu tun?" aria-label="Aufgabe">'+
     '<select id="tAbt" aria-label="Abteilung">'+abtOpts+'</select>'+
-    '<select id="tPers" aria-label="Person"><option value="">Person (optional)</option></select>'+
+    '<select id="tPers" aria-label="Person"></select>'+
     '<select id="tSchritt" aria-label="Produktionsschritt">'+stepOpts+'</select>'+
     '<select id="tAusgabe" aria-label="Ausgabe">'+issueOpts+'</select>'+
     '<input type="date" id="tDatum" aria-label="Fällig am">'+
@@ -1739,10 +1798,12 @@ function teamCard(){
   var abt = abteilungen();
   var body = abt.length || personen().length
     ? '<div class="teamlist">'+abt.map(function(a){
-        return '<div class="teamgroup"><div class="tg"><b>'+esc(a.name)+'</b>'+
+        return '<div class="teamgroup"><div class="tg">'+
+          '<input type="text" value="'+esc(a.name)+'" data-rename="'+esc(a.id)+'" aria-label="Name der Abteilung">'+
           '<button type="button" class="x" data-teamdel="'+esc(a.id)+'" title="Abteilung entfernen" aria-label="Abteilung entfernen">&times;</button></div>'+
           personen(a.id).map(function(pp){
-            return '<div class="tp">'+esc(pp.name)+
+            return '<div class="tp">'+
+              '<input type="text" value="'+esc(pp.name)+'" data-rename="'+esc(pp.id)+'" aria-label="Name der Person">'+
               '<button type="button" class="x" data-teamdel="'+esc(pp.id)+'" title="Person entfernen" aria-label="Person entfernen">&times;</button></div>';
           }).join("")+
           '<div class="tadd"><input type="text" data-pers-for="'+esc(a.id)+'" placeholder="Person hinzufügen …" aria-label="Person in '+esc(a.name)+'"></div>'+
@@ -2029,11 +2090,14 @@ el("printBtn").addEventListener("click", function(){
   setTimeout(function(){ window.print(); }, 60);
 });
 el("resetAll").addEventListener("click", function(){
-  if (!window.confirm("Eingaben, Feiertage und Regelwerk auf den Auslieferungszustand zurücksetzen?")) return;
-  state = defaultState(state.year);
-  el("yearInput").value = state.year;
-  undoSnapshot = null;
-  render();
+  bestaetige("Plan zurücksetzen",
+    "Erscheinungstermine, Feiertage, Regelwerk und manuelle Termine dieses Plans gehen auf den Auslieferungszustand zurück. Die Aufgaben bleiben erhalten.",
+    "Zurücksetzen", function(){
+      state = defaultState(state.year);
+      el("yearInput").value = state.year;
+      undoSnapshot = null;
+      render();
+    });
 });
 
 /* Manuelle Termine: Rail-Karte */
@@ -2043,32 +2107,6 @@ el("ovCard").addEventListener("click", function(e){
   if (!k) return;
   delete state.overrides[k];
   render();
-});
-
-/* Manuelle Termine: Popover */
-el("popMask").addEventListener("click", closePop);
-document.addEventListener("keydown", function(e){
-  if (e.key === "Escape" && popCtx) closePop();
-});
-el("pop").addEventListener("click", function(e){
-  var b = e.target.closest("[data-pop]");
-  if (!b || !popCtx) return;
-  var a = b.dataset.pop, key = popCtx.issue.id + ":" + popCtx.nr;
-  if (a === "apply"){
-    var v = el("popDate").value;
-    if (!v){ toast("Bitte ein Datum wählen"); return; }
-    var autoRow = popCtx.issue.autoByNr.get(popCtx.nr);
-    if (autoRow && iso(autoRow.date) === v) delete state.overrides[key];
-    else state.overrides[key] = v;
-    closePop(); render();
-    toast("Termin gesetzt – abhängige Schritte neu gerechnet");
-  } else if (a === "clear"){
-    delete state.overrides[key];
-    closePop(); render();
-    toast("Wieder automatisch");
-  } else {
-    closePop();
-  }
 });
 
 /* Plan-Karte in der Seitenspalte */
@@ -2088,41 +2126,44 @@ el("planCard").addEventListener("input", function(e){
 function planAktion(a, v){
   if (a === "planOpen"){ planOeffnen(v); toast("Plan geöffnet"); }
   else if (a === "planNew"){
-    planAnlegen(defaultState(state ? state.year : 2027), "Neuer Plan " + (state ? state.year : 2027), state ? state.year : 2027)
-      .then(function(pl){ planOeffnen(pl.id); toast("Neuer Plan angelegt"); });
+    var j = state ? state.year : 2027;
+    planAnlegen(defaultState(j), "Neuer Plan " + j, j).then(function(pl){
+      planOeffnen(pl.id); toast("Neuer Plan angelegt");
+    });
   }
   else if (a === "planCopy"){
     var q = plaene.filter(function(x){ return x.id === v; })[0];
     if (!q) return;
-    var kopieAufgaben = q.id === (planMeta && planMeta.id) ? aufgaben.slice() : [];
+    var kopie = q.id === (planMeta && planMeta.id) ? aufgaben.slice() : [];
     planAnlegen(JSON.parse(JSON.stringify(q.inhalt)), q.titel + " (Kopie)", q.jahr).then(function(pl){
-      kopieAufgaben.forEach(function(t){
-        var n = Object.assign({}, t, {id:uid("t"), erledigt:false, erledigtAm:""});
-        Ablage.aufgabeSichern(pl.id, n);
+      kopie.forEach(function(t){
+        Ablage.aufgabeSichern(pl.id, Object.assign({}, t, {id:uid("t"), erledigt:false, erledigtAm:""}));
       });
       planOeffnen(pl.id);
-      toast(kopieAufgaben.length ? "Plan mit Aufgaben dupliziert" : "Plan dupliziert");
+      toast(kopie.length ? "Plan mit Aufgaben dupliziert" : "Plan dupliziert");
     });
   }
   else if (a === "planDel"){
     var pd = plaene.filter(function(x){ return x.id === v; })[0];
     if (!pd) return;
-    if (!window.confirm("Plan „" + pd.titel + "“ mit allen Aufgaben löschen?")) return;
-    plaene = plaene.filter(function(x){ return x.id !== v; });
-    Ablage.planLoeschen(v).then(function(){
-      if (planMeta && planMeta.id === v){
-        planMeta = null; aufgaben = [];
-        if (plaene.length) planOeffnen(plaene[0].id);
-        else planAnlegen(defaultState(2027), "Produktionsplan 2027", 2027).then(function(pl){ planOeffnen(pl.id); });
-      } else render();
+    bestaetige("Plan löschen", "„" + pd.titel + "“ wird mit allen Aufgaben entfernt.", "Löschen", function(){
+      plaene = plaene.filter(function(x){ return x.id !== v; });
+      Ablage.planLoeschen(v).then(function(){
+        if (planMeta && planMeta.id === v){
+          planMeta = null; aufgaben = [];
+          if (plaene.length) planOeffnen(plaene[0].id);
+          else planAnlegen(defaultState(2027), "Produktionsplan 2027", 2027).then(function(pl){ planOeffnen(pl.id); });
+        } else render();
+      });
+      toast("Plan gelöscht");
     });
-    toast("Plan gelöscht");
   }
   else if (a === "freigeben"){
-    if (aufgaben.some(function(t){ return !t.erledigt; }) &&
-        !window.confirm("Es sind noch Aufgaben offen. Plan trotzdem freigeben?")) return;
-    planStatus("fertig");
-    toast("Plan freigegeben");
+    var offen = aufgaben.filter(function(t){ return !t.erledigt; }).length;
+    if (!offen){ planStatus("fertig"); toast("Plan freigegeben"); return; }
+    bestaetige("Plan freigeben", "Es sind noch " + offen + " Aufgaben offen. Trotzdem freigeben?", "Freigeben", function(){
+      planStatus("fertig"); toast("Plan freigegeben");
+    });
   }
   else if (a === "entsperren"){ planStatus("entwurf"); toast("Plan wieder in Arbeit"); }
   else if (a === "teamSeed"){
@@ -2155,15 +2196,20 @@ el("panel").addEventListener("click", function(e){
   if (mdel){
     var m = mitglied(mdel);
     if (!m) return;
-    if (m.art === "abteilung" && !window.confirm("Abteilung „"+m.name+"“ und ihre Personen entfernen?")) return;
-    var weg = [mdel].concat(team.filter(function(x){ return x.abteilungId === mdel; }).map(function(x){ return x.id; }));
-    team = team.filter(function(x){ return weg.indexOf(x.id) < 0; });
-    weg.forEach(function(idx){ Ablage.teamLoeschen(idx); });
-    render();
+    var entfernen = function(){
+      var weg = [mdel].concat(team.filter(function(x){ return x.abteilungId === mdel; }).map(function(x){ return x.id; }));
+      team = team.filter(function(x){ return weg.indexOf(x.id) < 0; });
+      weg.forEach(function(w){ Ablage.teamLoeschen(w); });
+      render();
+    };
+    if (m.art === "abteilung" && personen(mdel).length)
+      bestaetige("Abteilung entfernen", "„"+m.name+"“ wird mit "+personen(mdel).length+" Personen entfernt.",
+                 "Entfernen", entfernen);
+    else entfernen();
     return;
   }
   var t = e.target.closest("[data-issue][data-step]");
-  if (t && t.dataset.issue){ openPop(t.dataset.issue, +t.dataset.step, t); return; }
+  if (t && t.dataset.issue){ openPop(t.dataset.issue, +t.dataset.step); return; }
   var b = e.target.closest("[data-act]");
   if (!b) return;
   var a = b.dataset.act;
@@ -2184,6 +2230,14 @@ el("panel").addEventListener("click", function(e){
   else if (a === "download") saveFile(exportPayload());
 });
 el("panel").addEventListener("change", function(e){
+  var rn = e.target.dataset.rename;
+  if (rn){
+    var mr = mitglied(rn), neu = e.target.value.trim();
+    if (!mr) return;
+    if (!neu){ e.target.value = mr.name; return; }
+    mr.name = neu; Ablage.teamSichern(mr); renderPanel();
+    return;
+  }
   var done = e.target.dataset.tdone;
   if (done && planMeta){
     var t = aufgaben.filter(function(x){ return x.id === done; })[0];
@@ -2194,7 +2248,32 @@ el("panel").addEventListener("change", function(e){
     render(false);
     return;
   }
-  if (e.target.id === "tAbt"){ fuellePersonen(); return; }
+  if (e.target.id === "tAbt"){
+    if (e.target.value === "__neu"){
+      e.target.value = "";
+      frage("Neue Abteilung", "", "Zum Beispiel Redaktion, Herstellung oder Vertrieb.", function(n){
+        var m = teamAnlegen(n, "abteilung");
+        render();
+        var sel = el("tAbt"); if (sel) sel.value = m.id;
+        fuellePersonen();
+      });
+      return;
+    }
+    fuellePersonen(); return;
+  }
+  if (e.target.id === "tPers"){
+    if (e.target.value === "__neu"){
+      var abtId = el("tAbt").value, abtM = mitglied(abtId);
+      e.target.value = "";
+      frage("Neue Person", "", "Wird der Abteilung „" + (abtM ? abtM.name : "–") + "“ zugeordnet.", function(n){
+        var m = teamAnlegen(n, "person", abtId);
+        render();
+        var sa = el("tAbt"); if (sa) sa.value = abtId;
+        fuellePersonen(m.id);
+      });
+    }
+    return;
+  }
   if (e.target.id === "tSchritt" || e.target.id === "tAusgabe"){ setzeFaellig(); return; }
   if (e.target.id === "issueSel"){ state.selected = +e.target.value; renderPanel(); save(); return; }
   var f = e.target.dataset.r, tr = e.target.closest("tr[data-nr]");
@@ -2223,12 +2302,15 @@ el("panel").addEventListener("keydown", function(e){
   }
 });
 /* Personenauswahl an die gewählte Abteilung koppeln */
-function fuellePersonen(){
+function fuellePersonen(behalte){
   var sel = el("tPers"), abtSel = el("tAbt");
   if (!sel || !abtSel) return;
-  var list = personen(abtSel.value);
+  var gueltig = abtSel.value && abtSel.value !== "__neu";
   sel.innerHTML = '<option value="">Person (optional)</option>' +
-    list.map(function(m){ return '<option value="'+esc(m.id)+'">'+esc(m.name)+'</option>'; }).join("");
+    personen(abtSel.value).map(function(m){
+      return '<option value="'+esc(m.id)+'"'+(m.id === behalte ? " selected" : "")+'>'+esc(m.name)+'</option>';
+    }).join("") +
+    (gueltig ? '<option value="__neu">+ Neue Person …</option>' : "");
 }
 /* Fälligkeit aus dem gewählten Produktionsschritt übernehmen */
 function setzeFaellig(){

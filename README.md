@@ -76,8 +76,10 @@ Vorlage für das nächste; die Aufgaben werden mitkopiert und auf offen
 zurückgesetzt.
 
 Im Reiter **Aufgaben** wird festgehalten, was für einen Plan zu erledigen ist.
-Jede Aufgabe gehört zu einer Abteilung und wahlweise zu einer Person; beides
-wird unter *Abteilungen & Personen* gepflegt. Eine Aufgabe lässt sich an einen
+Jede Aufgabe gehört zu einer Abteilung und wahlweise zu einer Person. Beide
+Auswahlfelder legen über ihren letzten Eintrag *+ Neue …* direkt einen neuen
+Eintrag an; umbenennen und entfernen lassen sich Abteilungen und Personen
+unter *Abteilungen & Personen*. Eine Aufgabe lässt sich an einen
 Produktionsschritt und eine Ausgabe koppeln – dann übernimmt sie deren
 berechneten Termin als Fälligkeit und wandert mit, wenn sich der Plan
 verschiebt. Überfällige Aufgaben sind rot markiert.
@@ -103,10 +105,15 @@ Team unter `team/<id>` ab.
 
 Einzelne Termine lassen sich pro Ausgabe von Hand setzen – für Urlaubszeiten,
 Feiertagsbrücken oder Sonderfälle. Ein Klick auf eine Zelle im Terminplan oder
-auf eine Zeile in der Ausgaben-Ansicht öffnet die Eingabe; sie zeigt den
+auf eine Zeile in der Ausgaben-Ansicht öffnet ein Fenster; es zeigt den
 automatischen Termin zum Vergleich und warnt, wenn das gewählte Datum auf ein
 Wochenende, einen Feiertag oder den falschen Wochentag fällt – ohne es zu
-verhindern, denn die Entscheidung trifft die Redaktion.
+verhindern, denn die Entscheidung trifft die Redaktion. Das Fenster schließt
+über *Übernehmen*, *Abbrechen*, das Kreuz, die Escape-Taste oder einen Klick
+daneben.
+
+Dasselbe Fenster stellt auch Rückfragen und erfragt Namen. Es ersetzt
+`confirm()` und `prompt()`, die in eingebetteten Seiten blockiert sein können.
 
 Ein fester Termin wird unverändert übernommen. **Alle Schritte, die ihn als
 Anker haben, rechnen von dort aus weiter** – in der Rückwärtskette sind das die
