@@ -1015,12 +1015,21 @@ function dbFehler(e){
   else toast("Konnte nicht gespeichert werden");
 }
 
-/* Speichern mit kurzer Verzögerung, damit Tippen nicht jeden Tastendruck schreibt */
-var sichernTimer = null, sichernOffen = false;
+/* Speichern mit kurzer Verzögerung, damit Tippen nicht jeden Tastendruck
+   schreibt – und nur, wenn sich wirklich etwas geändert hat. Sonst schreibt
+   jeder Neuaufbau, die Datenbank meldet die Änderung zurück, das löst den
+   nächsten Neuaufbau aus: eine Endlosschleife. */
+var sichernTimer = null, sichernOffen = false, standGesichert = "";
+function planStand(){
+  return planMeta ? JSON.stringify([planMeta.inhalt, planMeta.titel, planMeta.status]) : "";
+}
+function standMerken(){ standGesichert = planStand(); }
 function save(){
   if (!planMeta) return;
   planMeta.inhalt = planInhalt();
   planMeta.jahr = state.year;
+  if (planStand() === standGesichert) return;
+  standMerken();
   sichernOffen = true; zeigeSpeicherstand();
   clearTimeout(sichernTimer);
   sichernTimer = setTimeout(function(){
@@ -1334,10 +1343,11 @@ var Dialog = {
     if (beimOeffnen) beimOeffnen(d);
   },
   schliesse: function(){
-    if (!this.offen) return;
     this.offen = false; this._ok = null;
     el("dlg").hidden = true; el("dlgBack").hidden = true;
-  }
+    if (Dialog._nachholen){ Dialog._nachholen = false; render(false); }
+  },
+  _nachholen: false
 };
 el("dlgBack").addEventListener("click", function(){ Dialog.schliesse(); });
 document.addEventListener("keydown", function(e){
@@ -1452,7 +1462,6 @@ function renderPanel(){
   else if (v === "pruefung") html = viewFindings();
   else if (v === "regeln")   html = viewRules();
   else                       html = viewExport();
-  Dialog.schliesse();
   el("panel").innerHTML = html;
   if (state.view === "export") buildExport();
   if (state.view === "aufgaben") fuellePersonen();
@@ -2071,6 +2080,7 @@ el("resetHol").addEventListener("click", function(){
 el("tabs").addEventListener("click", function(e){
   var b = e.target.closest("button[data-view]");
   if (!b) return;
+  Dialog.schliesse();
   state.view = b.dataset.view;
   Array.prototype.forEach.call(this.querySelectorAll("button"), function(x){
     x.setAttribute("aria-selected", String(x.dataset.view === state.view));
@@ -2358,6 +2368,7 @@ function planOeffnen(id){
   el("yearInput").value = state.year;
   Ablage.aufgabenOeffnen(pl.id);
   try{ localStorage.setItem(LAST_KEY, pl.id); }catch(e){}
+  planMeta.inhalt = planInhalt(); standMerken();
   render();
 }
 function planAnlegen(inhalt, titel, jahr){
@@ -2374,6 +2385,7 @@ function planStatus(status){
   if (status === "fertig") planMeta.freigegebenAm = nowISO();
   else delete planMeta.freigegebenAm;
   Ablage.planSichern(planMeta);
+  standMerken();
   render();
 }
 /* Sind alle Aufgaben erledigt, gilt der Plan als freigegeben und liegt im Archiv. */
@@ -2414,19 +2426,32 @@ function teamAnlegen(name, art, abteilungId){
 }
 
 /* Start */
+/* Neuaufbau nach einer Rückmeldung der Ablage – aber nicht, während jemand
+   in einem Fenster oder einem Eingabefeld arbeitet. */
+function neuAufbauen(){
+  if (!model) return;
+  if (Dialog.offen){ Dialog._nachholen = true; return; }
+  var a = document.activeElement;
+  if (a && el("panel").contains(a) && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)){
+    Dialog._nachholen = true;
+    setTimeout(function(){ if (Dialog._nachholen && !Dialog.offen){ Dialog._nachholen = false; render(false); } }, 4000);
+    return;
+  }
+  render(false);
+}
 Ablage.beiPlaenen = function(){
   if (planMeta){
     var akt = plaene.filter(function(x){ return x.id === planMeta.id; })[0];
     if (akt && akt !== planMeta){
       planMeta = akt;
-      if (!sichernOffen) state = normState(akt.inhalt, akt.jahr);
+      if (!sichernOffen){ state = normState(akt.inhalt, akt.jahr); standMerken(); }
     }
-    if (!akt){ planMeta = null; }
+    if (!akt) planMeta = null;
   }
-  if (model) render(false);
+  neuAufbauen();
 };
-Ablage.beiAufgaben = function(){ if (model){ pruefeFreigabe(); render(false); } };
-Ablage.beiTeam    = function(){ if (model) render(false); };
+Ablage.beiAufgaben = function(){ if (model){ pruefeFreigabe(); neuAufbauen(); } };
+Ablage.beiTeam    = function(){ neuAufbauen(); };
 
 Ablage.start(function(){
   var letzte = null;
