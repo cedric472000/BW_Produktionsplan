@@ -20,6 +20,28 @@ Danach `index.html` im Browser öffnen – kein Server, kein Build-Werkzeug,
 keine Abhängigkeiten. Die Datei läuft auch von einem Netzlaufwerk oder als
 GitHub Page. Alle Eingaben werden im Browser (localStorage) gespeichert.
 
+## Als Webseite veröffentlichen (GitHub Pages)
+
+`index.html` liegt im Wurzelverzeichnis und ist vollständig eigenständig –
+GitHub Pages kann das Repository ohne Bauschritt ausliefern.
+
+1. Im Repository **Settings → Pages** öffnen
+2. Unter *Build and deployment* → *Source* **Deploy from a branch** wählen
+3. Branch auswählen, Ordner `/ (root)`, **Save**
+4. Nach ein bis zwei Minuten ist die Seite unter
+   `https://<benutzer>.github.io/<repository>/` erreichbar
+
+Die leere Datei `.nojekyll` schaltet die Jekyll-Verarbeitung ab, damit die
+Dateien unverändert ausgeliefert werden.
+
+**Wichtig zur Datenhaltung:** Auf GitHub Pages gibt es keine geteilte Ablage.
+Jede Besucherin und jeder Besucher arbeitet in der eigenen Browser-Kopie;
+Pläne, Aufgaben und Team werden nicht zwischen Rechnern abgeglichen. Für die
+gemeinsame Arbeit im Team ist die veröffentlichte Artifact-Fassung mit
+geteilter Datenbank gedacht. Nach einer Änderung an `src/app.html` immer
+`python3 build.py` laufen lassen und `index.html` mit committen – Pages
+liefert genau diese Datei aus.
+
 ## Aufbau
 
 | Datei | Inhalt |
