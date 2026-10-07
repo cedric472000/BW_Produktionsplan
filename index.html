@@ -1912,6 +1912,10 @@ var Xlsx = (function(){
     if (c.v === null || c.v === undefined || c.v === "") return st ? '<c r="' + ref + '"' + st + '/>' : "";
     if (c.v instanceof Date) return '<c r="' + ref + '"' + st + '><v>' + Math.round((c.v - NULLTAG) / MS) + '</v></c>';
     if (typeof c.v === "number") return '<c r="' + ref + '"' + st + '><v>' + c.v + '</v></c>';
+    if (Array.isArray(c.v)) return '<c r="' + ref + '"' + st + ' t="inlineStr"><is>' + c.v.map(function(t){
+        return '<r><rPr><rFont val="Arial"/><family val="2"/>' + (c.fett ? '<b/>' : "") +
+          '<color rgb="FF' + (t.c || "000000") + '"/><sz val="10"/></rPr><t xml:space="preserve">' + x(t.t) + '</t></r>';
+      }).join("") + '</is></c>';
     return '<c r="' + ref + '"' + st + ' t="inlineStr"><is><t xml:space="preserve">' + x(c.v) + '</t></is></c>';
   }
   function blatt(b){
@@ -1935,46 +1939,73 @@ var Xlsx = (function(){
       '<pageSetup paperSize="9" orientation="' + (b.quer ? "landscape" : "portrait") + '" fitToWidth="1" fitToHeight="0"/>' +
       '</worksheet>';
   }
-  /* Formatvorlagen – die Nummern stehen in S */
+  /* Formatvorlagen nach Namen; ihre Nummer in der Datei steht in S */
   var schrift = function(f){
     return '<font>' + (f.b ? '<b/>' : "") + (f.i ? '<i/>' : "") + '<sz val="' + (f.sz || 10) + '"/>' +
       (f.c ? '<color rgb="FF' + f.c + '"/>' : "") + '<name val="Arial"/><family val="2"/></font>';
   };
-  var FONTS = [{}, {b:1, c:"FFFFFF"}, {b:1}, {b:1, c:"003087"}, {b:1, c:"B3202B"}, {b:1, sz:15, c:"003087"}, {i:1, sz:9, c:"74839A"}, {b:1, sz:9, c:"44546B"}];
-  var FILLS = ["003087", "E2EAF6", "FBE6E7", "E7ECF4", "FAEBD3"];   /* ab Index 2 */
-  /*            numFmt font fill border  Ausrichtung                       */
-  var XF = [
-    [0,   0, 0, 0, ""],                                                /* 0  Standard        */
-    [0,   1, 2, 1, '<alignment vertical="center" wrapText="1"/>'],     /* 1  Kopf            */
-    [164, 0, 0, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 2  Datum           */
-    [164, 3, 3, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 3  Datum manuell   */
-    [0,   0, 0, 1, '<alignment vertical="center" wrapText="1"/>'],     /* 4  Text            */
-    [0,   2, 0, 1, '<alignment vertical="center" wrapText="1"/>'],     /* 5  Text fett       */
-    [164, 4, 4, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 6  Datum E-Tag     */
-    [0,   7, 5, 1, '<alignment vertical="center"/>'],                  /* 7  Phase           */
-    [1,   0, 0, 1, '<alignment horizontal="center" vertical="center"/>'], /* 8  Zahl          */
-    [0,   5, 0, 0, ""],                                                /* 9  Titel           */
-    [0,   6, 0, 0, ""],                                                /* 10 Unterzeile      */
-    [165, 0, 0, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 11 Datum lang      */
-    [164, 0, 6, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 12 Datum verschoben */
-    [0,   4, 4, 1, '<alignment vertical="center" wrapText="1"/>'],     /* 13 Text E-Tag      */
-    [164, 1, 2, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 14 Datum im Kopf   */
-    [165, 3, 3, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 15 Datum lang manuell */
-    [0,   3, 3, 1, '<alignment horizontal="center" vertical="center"/>']  /* 16 Haken         */
+  var FONTS = {normal:{}, kopfWeiss:{b:1, c:"FFFFFF"}, fett:{b:1}, blauFett:{b:1, c:"003087"}, rotFett:{b:1, c:"B3202B"},
+               titel:{b:1, sz:15, c:"003087"}, unter:{i:1, sz:9, c:"74839A"}, phase:{b:1, sz:9, c:"44546B"},
+               datumBlau:{c:"2F5597"}, lila:{c:"7030A0"}, titelHell:{b:1, sz:14, c:"0070C0"},
+               anzKopf:{b:1, sz:9, c:"2E75B6"}, dunkelFett:{b:1, c:"1F2937"}, dunkel:{c:"1F2937"}};
+  var FILLS = {keine:null, raster:null, ihkBlau:"003087", manuell:"E2EAF6", etag:"FBE6E7", phase:"E7ECF4",
+               verschoben:"FAEBD3", grau:"F2F2F2", orange:"FFC000"};
+  var BORDERS = {keine:null, hell:["D3DBE6", "left right top bottom"], schwarz:["000000", "left right top bottom"],
+                 linie:["D9D9D9", "bottom"]};
+  var FORMATE = {standard:0, zahl:1, tagKurz:164, datum:165, datumLang:166};
+  var MITTE = '<alignment horizontal="center" vertical="center" wrapText="1"/>',
+      LINKS = '<alignment horizontal="left" vertical="center"/>',
+      UMBRUCH = '<alignment vertical="center" wrapText="1"/>';
+  /*  Name            Zahlenformat  Schrift      Füllung      Rahmen    Ausrichtung */
+  var VORLAGEN = [
+    ["standard",      "standard",  "normal",    "keine",     "keine",   ""],
+    ["kopf",          "standard",  "kopfWeiss", "ihkBlau",   "hell",    UMBRUCH],
+    ["dat",           "tagKurz",   "normal",    "keine",     "hell",    LINKS],
+    ["datMan",        "tagKurz",   "blauFett",  "manuell",   "hell",    LINKS],
+    ["datVer",        "tagKurz",   "normal",    "verschoben","hell",    LINKS],
+    ["datE",          "tagKurz",   "rotFett",   "etag",      "hell",    LINKS],
+    ["datKopf",       "tagKurz",   "kopfWeiss", "ihkBlau",   "hell",    LINKS],
+    ["txt",           "standard",  "normal",    "keine",     "hell",    UMBRUCH],
+    ["txtE",          "standard",  "rotFett",   "etag",      "hell",    UMBRUCH],
+    ["phase",         "standard",  "phase",     "phase",     "hell",    '<alignment vertical="center"/>'],
+    ["zahl",          "zahl",      "normal",    "keine",     "hell",    '<alignment horizontal="center" vertical="center"/>'],
+    ["titel",         "standard",  "titel",     "keine",     "keine",   ""],
+    ["unter",         "standard",  "unter",     "keine",     "keine",   ""],
+    ["titelLinks",    "standard",  "titelHell", "keine",     "keine",   '<alignment horizontal="left" vertical="center"/>'],
+    ["titelMitte",    "standard",  "titelHell", "keine",     "keine",   '<alignment horizontal="center" vertical="center"/>'],
+    ["titelRechts",   "standard",  "titelHell", "keine",     "keine",   '<alignment horizontal="right" vertical="center"/>'],
+    ["redKopf",       "standard",  "fett",      "keine",     "schwarz", MITTE],
+    ["redAusgabe",    "standard",  "lila",      "grau",      "schwarz", MITTE],
+    ["redDat",        "datumLang", "datumBlau", "keine",     "schwarz", MITTE],
+    ["redDatMan",     "datumLang", "datumBlau", "orange",    "schwarz", MITTE],
+    ["anzKopf",       "standard",  "anzKopf",   "keine",     "linie",   '<alignment horizontal="left" vertical="bottom" wrapText="1"/>'],
+    ["anzAusgabe",    "standard",  "dunkelFett","keine",     "linie",   LINKS],
+    ["anzDat",        "datum",     "dunkel",    "keine",     "linie",   LINKS],
+    ["anzDatMan",     "datum",     "dunkel",    "orange",    "linie",   LINKS]
   ];
+  function index(o){ var m = {}; Object.keys(o).forEach(function(k, i){ m[k] = i; }); return m; }
+  var FI = index(FONTS), LI = index(FILLS), BI = index(BORDERS), S = {};
+  VORLAGEN.forEach(function(v, i){ S[v[0]] = i; });
   var STYLES = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
     '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
-    '<numFmts count="2"><numFmt numFmtId="164" formatCode="[$-407]ddd dd.mm.yy"/><numFmt numFmtId="165" formatCode="dd.mm.yyyy"/></numFmts>' +
-    '<fonts count="' + FONTS.length + '">' + FONTS.map(schrift).join("") + '</fonts>' +
-    '<fills count="' + (FILLS.length + 2) + '"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>' +
-      FILLS.map(function(c){ return '<fill><patternFill patternType="solid"><fgColor rgb="FF' + c + '"/><bgColor indexed="64"/></patternFill></fill>'; }).join("") + '</fills>' +
-    '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border>' +
-      '<border>' + ["left","right","top","bottom"].map(function(k){ return '<' + k + ' style="thin"><color rgb="FFD3DBE6"/></' + k + '>'; }).join("") + '<diagonal/></border></borders>' +
+    '<numFmts count="3"><numFmt numFmtId="164" formatCode="[$-407]ddd dd.mm.yy"/><numFmt numFmtId="165" formatCode="dd.mm.yyyy"/>' +
+      '<numFmt numFmtId="166" formatCode="' + x('[$-407]dd". "mmmm yyyy" ("ddd".)"') + '"/></numFmts>' +
+    '<fonts count="' + Object.keys(FONTS).length + '">' +
+      Object.keys(FONTS).map(function(k){ return schrift(FONTS[k]); }).join("") + '</fonts>' +
+    '<fills count="' + Object.keys(FILLS).length + '"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>' +
+      Object.keys(FILLS).slice(2).map(function(k){ return '<fill><patternFill patternType="solid"><fgColor rgb="FF' + FILLS[k] + '"/><bgColor indexed="64"/></patternFill></fill>'; }).join("") + '</fills>' +
+    '<borders count="' + Object.keys(BORDERS).length + '">' + Object.keys(BORDERS).map(function(k){
+      var b = BORDERS[k];
+      return '<border>' + ["left","right","top","bottom"].map(function(seite){
+        return b && b[1].indexOf(seite) >= 0 ? '<' + seite + ' style="thin"><color rgb="FF' + b[0] + '"/></' + seite + '>' : '<' + seite + '/>';
+      }).join("") + '<diagonal/></border>';
+    }).join("") + '</borders>' +
     '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
-    '<cellXfs count="' + XF.length + '">' + XF.map(function(f){
-      return '<xf numFmtId="' + f[0] + '" fontId="' + f[1] + '" fillId="' + f[2] + '" borderId="' + f[3] + '" xfId="0"' +
-        (f[0] ? ' applyNumberFormat="1"' : "") + (f[1] ? ' applyFont="1"' : "") + (f[2] ? ' applyFill="1"' : "") +
-        (f[3] ? ' applyBorder="1"' : "") + (f[4] ? ' applyAlignment="1">' + f[4] + '</xf>' : '/>');
+    '<cellXfs count="' + VORLAGEN.length + '">' + VORLAGEN.map(function(v){
+      var nf = FORMATE[v[1]], f = FI[v[2]], l = LI[v[3]], r = BI[v[4]];
+      return '<xf numFmtId="' + nf + '" fontId="' + f + '" fillId="' + l + '" borderId="' + r + '" xfId="0"' +
+        (nf ? ' applyNumberFormat="1"' : "") + (f ? ' applyFont="1"' : "") + (l ? ' applyFill="1"' : "") +
+        (r ? ' applyBorder="1"' : "") + (v[5] ? ' applyAlignment="1">' + v[5] + '</xf>' : '/>');
     }).join("") + '</cellXfs>' +
     '<cellStyles count="1"><cellStyle name="Standard" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
 
@@ -2009,28 +2040,64 @@ var Xlsx = (function(){
     blaetter.forEach(function(b, i){ dateien.push({name:"xl/worksheets/sheet" + (i + 1) + ".xml", xml:blatt(b)}); });
     return zip(dateien);
   }
-  return {mappe:mappe, spalte:spalte};
+  return {mappe:mappe, spalte:spalte, S:S};
 })();
 
-/* Arbeitsmappe des offenen Plans: Terminplan, Terminliste, Aufgaben, Feiertage */
+/* Arbeitsmappe des offenen Plans: Terminplan, Anzeigenplan, Redaktionsplan */
+var ANZEIGENPLAN = [
+  {nr:24, kopf:"Erscheinungstermin"},
+  {nr:7,  kopf:"Anzeigenschluss"},
+  {nr:9,  kopf:"Druckunterlagenschluss"},
+  {nr:14, kopf:"Anlieferungstermin Beilagen/ Einhefter"},
+  {nr:3,  kopf:"Anzeigenschluss Advertorials"}
+];
+var REDAKTIONSPLAN = [
+  {nr:4,  kopf:"Anmeldung Fachabteilungen (Fr.)"},
+  {nr:5,  kopf:"Kleine Redaktionskonferenz (Mo.)"},
+  {nr:6,  kopf:"Große Redaktionskonferenz (Mi.)"},
+  {nr:8,  kopf:"Redaktionsschluss"},
+  {nr:10, kopf:"Auflagenmeldung von der IHK und dpv bis 10.00 Uhr (Mittwoch)"},
+  {nr:12, kopf:"Start der Seitenfreigabe"},
+  {nr:15, kopf:[{t:"Layout-Imprimatur Endabstimmung mit IHK "}, {t:"Donnerstag bis 18.00 Uhr", c:"C00000"},
+                {t:" und Ende Bildbearbeitung"}]},
+  {nr:24, kopf:"E-Tag Berliner Wirtschaft (Mittwoch)"}
+];
+/* Spalten eines Auszugs: nur Schritte, die es im Regelwerk gibt. Wurde ein
+   Schritt umbenannt, steht sein neuer Name im Kopf. */
+function auszugSpalten(defs){
+  return defs.map(function(d){
+    var st = model.steps.filter(function(x){ return x.nr === d.nr; })[0];
+    if (!st) return null;
+    var vorgabe = DEFAULT_STEPS.filter(function(x){ return x.nr === d.nr; })[0];
+    return {nr:d.nr, kopf: vorgabe && st.label === vorgabe.label ? d.kopf : st.label};
+  }).filter(Boolean);
+}
+/* Kopfzeile: Zeitschrift links, Blattname mittig, Stand rechts */
+function titelzeile(n, name){
+  var drittel = Math.floor(n / 3), z = [], merges = [];
+  var links = "Berliner Wirtschaft " + state.year, stand = "Stand " + fmt(heute());
+  if (drittel < 1) return {zeile:[{v:links + " · " + name + " · " + stand, s:Xlsx.S.titelLinks}], merges:[]};
+  for (var i = 0; i < n; i++){
+    var v = i === 0 ? links : i === drittel ? name : i === n - drittel ? stand : "";
+    var st = i < drittel ? "titelLinks" : i < n - drittel ? "titelMitte" : "titelRechts";
+    z.push({v:v, s:Xlsx.S[st]});
+  }
+  var sp = Xlsx.spalte;
+  merges.push("A1:" + sp(drittel - 1) + "1", sp(drittel) + "1:" + sp(n - drittel - 1) + "1", sp(n - drittel) + "1:" + sp(n - 1) + "1");
+  return {zeile:z, merges:merges.filter(function(m){ var t = m.split(":"); return t[0] !== t[1]; })};
+}
 function excelMappe(){
-  var is = model.issues, steps = model.steps;
+  var is = model.issues, steps = model.steps, S = Xlsx.S;
   var titel = planMeta ? planMeta.titel : "Produktionsplan " + state.year;
-  var stand = "Stand " + fmt(heute()) + " · Magazin der IHK Berlin";
-  var S = {kopf:1, dat:2, datMan:3, txt:4, fett:5, datE:6, phase:7, zahl:8, titel:9, unter:10,
-           datL:11, datVer:12, txtE:13, datKopf:14, datLMan:15, haken:16};
 
   /* 1 – Terminplan als Matrix, wie auf dem Bildschirm */
-  var breit = 3 + is.length;
+  var breit = 2 + is.length;
   var plan = [
     [{v:"Berliner Wirtschaft · " + titel, s:S.titel}],
-    [{v:stand + " · blau = manuell gesetzt · gelb = wegen Feiertag, Wochenende oder Ziel-Wochentag verschoben", s:S.unter}],
-    [{v:"Nr", s:S.kopf}, {v:"Produktionsschritt", s:S.kopf}, {v:"Ziel-Wochentag", s:S.kopf}]
-      .concat(is.map(function(x){ return {v:x.name, s:S.kopf}; })),
-    [{v:"", s:S.kopf}, {v:"E-Tag", s:S.kopf}, {v:"", s:S.kopf}]
-      .concat(is.map(function(x){ return {v:x.etag, s:S.datKopf}; }))
+    [{v:"Stand " + fmt(heute()) + " · Magazin der IHK Berlin · blau = manuell gesetzt · gelb = wegen Feiertag, Wochenende oder Ziel-Wochentag verschoben", s:S.unter}],
+    [{v:"Nr", s:S.kopf}, {v:"Produktionsschritt", s:S.kopf}].concat(is.map(function(x){ return {v:x.name, s:S.kopf}; })),
+    [{v:"", s:S.kopf}, {v:"E-Tag", s:S.kopf}].concat(is.map(function(x){ return {v:x.etag, s:S.datKopf}; }))
   ];
-  var verbunden = ["A1:" + Xlsx.spalte(breit - 1) + "1", "A2:" + Xlsx.spalte(breit - 1) + "2"];
   var letztePhase = null;
   steps.forEach(function(st){
     var ph = phaseOf(st);
@@ -2041,81 +2108,41 @@ function excelMappe(){
       plan.push(z);
     }
     var etag = st.anchor === 0;
-    plan.push([{v:st.nr, s:S.zahl}, {v:st.label, s:etag ? S.txtE : S.txt}, {v:wdName(st.wd), s:etag ? S.txtE : S.txt}]
-      .concat(is.map(function(x){
-        var r = x.byNr.get(st.nr);
-        if (!r) return {v:"", s:S.txt};
-        return {v:r.date, s: r.manual ? S.datMan : etag ? S.datE : r.shift ? S.datVer : S.dat};
+    plan.push([{v:st.nr, s:S.zahl}, {v:st.label, s:etag ? S.txtE : S.txt}].concat(is.map(function(x){
+      var r = x.byNr.get(st.nr);
+      if (!r) return {v:"", s:S.txt};
+      return {v:r.date, s: r.manual ? S.datMan : etag ? S.datE : r.shift ? S.datVer : S.dat};
+    })));
+  });
+
+  /* 2 und 3 – Anzeigen- und Redaktionsplan: Ausgaben als Zeilen, ausgewählte Schritte als Spalten */
+  function auszug(name, defs, art){
+    var sp = auszugSpalten(defs), n = sp.length + 1, t = titelzeile(n, name);
+    var anz = art === "anz";
+    var zeilen = [t.zeile, [],
+      [{v:anz ? "AUSGABEN" : "Ausgabe", s:anz ? S.anzKopf : S.redKopf}].concat(sp.map(function(c){
+        var k = anz && typeof c.kopf === "string" ? c.kopf.toUpperCase() : c.kopf;
+        return {v:k, s:anz ? S.anzKopf : S.redKopf, fett:true};
+      }))];
+    is.forEach(function(x){
+      zeilen.push([{v:x.name, s:anz ? S.anzAusgabe : S.redAusgabe}].concat(sp.map(function(c){
+        var r = x.byNr.get(c.nr);
+        if (!r) return {v:"", s:anz ? S.anzDat : S.redDat};
+        return {v:r.date, s:r.manual ? (anz ? S.anzDatMan : S.redDatMan) : (anz ? S.anzDat : S.redDat)};
       })));
-  });
-  var hoehenPlan = {2:30};
-
-  /* 2 – Terminliste: jeder Termin eine Zeile, über alle Ausgaben nach Datum */
-  var alle = [];
-  is.forEach(function(x){ x.rows.forEach(function(r){ alle.push({x:x, r:r}); }); });
-  alle.sort(function(a, b){ return (a.r.date - b.r.date) || (a.x.index - b.x.index) || (a.r.step.nr - b.r.step.nr); });
-  var liste = [
-    [{v:"Terminliste · " + titel, s:S.titel}],
-    [{v:stand + " · Spaltenköpfe filtern nach Ausgabe, Phase oder Herkunft", s:S.unter}],
-    ["Datum","Wochentag","KW","Ausgabe","Nr","Produktionsschritt","Phase","Ziel-Wochentag","Herkunft","Automatisch wäre","E-Tag der Ausgabe"]
-      .map(function(h){ return {v:h, s:S.kopf}; })
-  ];
-  alle.forEach(function(e){
-    var r = e.r, a = e.x.autoByNr.get(r.step.nr);
-    liste.push([
-      {v:r.date, s:r.manual ? S.datLMan : S.datL}, {v:WD_LONG[dow(r.date)-1], s:S.txt}, {v:isoWeek(r.date), s:S.zahl},
-      {v:e.x.name, s:S.txt}, {v:r.step.nr, s:S.zahl}, {v:r.step.label, s:r.step.anchor === 0 ? S.txtE : S.txt},
-      {v:phaseOf(r.step).label, s:S.txt}, {v:wdName(r.step.wd), s:S.txt},
-      {v:r.manual ? "manuell" : r.shift ? "verschoben (" + (r.shift > 0 ? "+" : "") + r.shift + " T)" : "automatisch", s:S.txt},
-      {v:r.manual && a ? a.date : "", s:S.datL}, {v:e.x.etag, s:S.datL}
-    ]);
-  });
-
-  /* 3 – Aufgaben */
-  var auf = [
-    [{v:"Aufgaben · " + titel, s:S.titel}],
-    [{v:stand + " · " + aufgaben.filter(function(t){ return t.erledigt; }).length + " von " + aufgaben.length + " erledigt", s:S.unter}],
-    ["Erledigt","Aufgabe","Abteilung","Person","Fällig","Produktionsschritt","Ausgabe","Erledigt am"].map(function(h){ return {v:h, s:S.kopf}; })
-  ];
-  aufgaben.slice().sort(function(a, b){
-    var na = (mitglied(a.abteilungId) || {name:"~"}).name, nb = (mitglied(b.abteilungId) || {name:"~"}).name;
-    if (na !== nb) return na.localeCompare(nb, "de");
-    var da = aufgabeFaellig(a), db = aufgabeFaellig(b);
-    return (da && db) ? da - db : da ? -1 : db ? 1 : 0;
-  }).forEach(function(t){
-    var st = t.schrittNr ? steps.filter(function(x){ return x.nr === +t.schrittNr; })[0] : null;
-    var au = t.ausgabeId ? is.filter(function(x){ return x.id === t.ausgabeId; })[0] : null;
-    auf.push([
-      {v:t.erledigt ? "✓" : "", s:t.erledigt ? S.haken : S.txt}, {v:t.titel, s:S.txt},
-      {v:(mitglied(t.abteilungId) || {name:""}).name, s:S.txt}, {v:(mitglied(t.personId) || {name:""}).name, s:S.txt},
-      {v:aufgabeFaellig(t) || "", s:S.datL}, {v:st ? st.nr + " · " + st.label : "", s:S.txt},
-      {v:au ? au.name : "", s:S.txt}, {v:t.erledigtAm ? parseISO(t.erledigtAm.slice(0, 10)) : "", s:S.datL}
-    ]);
-  });
-  if (!aufgaben.length) auf.push([{v:"Für diesen Plan sind noch keine Aufgaben angelegt.", s:S.unter}]);
-
-  /* 4 – Feiertage, mit denen gerechnet wurde */
-  var fei = [
-    [{v:"Freie Tage · " + titel, s:S.titel}],
-    [{v:stand + " · nur die Tage, die in die Berechnung eingehen", s:S.unter}],
-    ["Datum","Wochentag","Bezeichnung","Gilt in"].map(function(h){ return {v:h, s:S.kopf}; })
-  ];
-  model.hol.groups.forEach(function(g){
-    g.items.filter(function(h){ return h.active; }).forEach(function(h){
-      var d = parseISO(h.date);
-      fei.push([{v:d, s:S.datL}, {v:WD_LONG[dow(d)-1], s:S.txt}, {v:h.name, s:S.txt},
-                {v:h.custom ? "eigener Eintrag" : statesLabel(h, model.hol.regions), s:S.txt}]);
     });
-  });
+    var hoehen = {0:24, 1:8, 2:anz ? 32 : 48};
+    for (var i = 3; i < zeilen.length; i++) hoehen[i] = anz ? 24 : 30;
+    return {name:name, zeilen:zeilen, breiten:[anz ? 20 : 16].concat(sp.map(function(){ return anz ? 27 : 24; })),
+            fix:[1, 3], verbunden:t.merges, hoehen:hoehen, quer:true, drucktitel:"$3:$3"};
+  }
 
   return Xlsx.mappe(titel, [
-    {name:"Terminplan", zeilen:plan, breiten:[5, 46, 14].concat(is.map(function(){ return 13; })),
-     fix:[3, 4], verbunden:verbunden, hoehen:hoehenPlan, quer:true, drucktitel:"$A:$C,$3:$4"},
-    {name:"Terminliste", zeilen:liste, breiten:[12, 12, 6, 18, 5, 52, 24, 15, 18, 15, 15],
-     fix:[0, 3], filter:"A3:K" + liste.length, verbunden:["A1:K1","A2:K2"], hoehen:{2:30}, quer:true, drucktitel:"$3:$3"},
-    {name:"Aufgaben", zeilen:auf, breiten:[9, 46, 18, 18, 12, 46, 18, 12],
-     fix:[0, 3], filter:aufgaben.length ? "A3:H" + auf.length : "", verbunden:["A1:H1","A2:H2"], hoehen:{2:30}, quer:true, drucktitel:"$3:$3"},
-    {name:"Feiertage", zeilen:fei, breiten:[12, 12, 30, 40], fix:[0, 3], verbunden:["A1:D1","A2:D2"], hoehen:{2:22}, drucktitel:"$3:$3"}
+    {name:"Terminplan", zeilen:plan, breiten:[5, 46].concat(is.map(function(){ return 13; })),
+     fix:[2, 4], verbunden:["A1:" + Xlsx.spalte(breit - 1) + "1", "A2:" + Xlsx.spalte(breit - 1) + "2"],
+     hoehen:{2:30}, quer:true, drucktitel:"$A:$B,$3:$4"},
+    auszug("Anzeigenplan", ANZEIGENPLAN, "anz"),
+    auszug("Redaktionsplan", REDAKTIONSPLAN, "red")
   ]);
 }
 function dateiName(endung){
@@ -2146,18 +2173,15 @@ function viewExport(){
     (exportFormat === "xlsx" ? "" : '<button type="button" class="btn sm" data-act="copy">Kopieren</button>')+
     '<button type="button" class="btn sm primary" data-act="download">Datei sichern</button></div>';
   if (exportFormat === "xlsx"){
-    var termine = model.issues.reduce(function(a, x){ return a + x.rows.length; }, 0);
-    var frei = model.hol.groups.reduce(function(a, g){ return a + g.items.filter(function(h){ return h.active; }).length; }, 0);
     var blaetter = [
-      ["Terminplan", "die Matrix wie auf dem Bildschirm – " + model.steps.length + " Schritte × " + model.issues.length + " Ausgaben, nach Phasen gegliedert, Kopfzeilen fixiert"],
-      ["Terminliste", termine + " Termine über alle Ausgaben nach Datum, mit Filter je Spalte"],
-      ["Aufgaben", aufgaben.length + " Aufgaben nach Abteilung, mit Fälligkeit und Erledigt-Vermerk"],
-      ["Feiertage", frei + " freie Tage, mit denen gerechnet wurde"]
+      ["Terminplan", "die Matrix wie auf dem Bildschirm – " + model.steps.length + " Schritte × " + model.issues.length + " Ausgaben, nach Phasen gegliedert"],
+      ["Anzeigenplan", "je Ausgabe Erscheinungstermin, Anzeigenschluss, Druckunterlagenschluss, Anlieferung Beilagen/Einhefter und Anzeigenschluss Advertorials"],
+      ["Redaktionsplan", "je Ausgabe Anmeldung Fachabteilungen, beide Redaktionskonferenzen, Redaktionsschluss, Auflagenmeldung, Seitenfreigabe, Layout-Imprimatur und E-Tag"]
     ];
     return card("Export", bar + '<div class="xlsxinfo"><div class="xlsxkopf">'+esc(dateiName("xlsx"))+'</div>'+
       '<ol>'+blaetter.map(function(b){ return '<li><b>'+b[0]+'</b>'+esc(b[1])+'</li>'; }).join("")+'</ol></div>'+
-      '<div class="exphint">Alle Datumsangaben sind echte Excel-Daten – sortieren, filtern und weiterrechnen funktioniert direkt. '+
-      'Manuell gesetzte Termine sind blau, verschobene gelb hinterlegt; zum Drucken ist jedes Blatt auf Seitenbreite eingestellt.</div>');
+      '<div class="exphint">Alle Datumsangaben sind echte Excel-Daten – sortieren und weiterrechnen funktioniert direkt. '+
+      'Manuell gesetzte Termine sind im Terminplan blau, im Anzeigen- und Redaktionsplan orange hinterlegt; zum Drucken ist jedes Blatt auf Seitenbreite eingestellt.</div>');
   }
   return card("Export", bar + '<textarea id="exportText" spellcheck="false" aria-label="Exportdaten"></textarea>'+
     '<div class="exphint">CSV mit Semikolon und BOM – öffnet sich in Excel direkt in Spalten. '+

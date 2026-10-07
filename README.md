@@ -205,20 +205,23 @@ Reihenfolge und ungewöhnliche Vorlaufzeiten.
 ## Export
 
 **Excel (.xlsx)** – über *Excel-Datei* in der Seitenspalte oder im Reiter
-*Export*. Eine Arbeitsmappe mit vier Blättern:
+*Export*. Eine Arbeitsmappe mit drei Blättern:
 
 | Blatt | Inhalt |
 |---|---|
 | Terminplan | die Matrix wie auf dem Bildschirm, nach Phasen gegliedert; manuelle Termine blau, verschobene gelb, E-Tag rot hinterlegt |
-| Terminliste | jeder Termin eine Zeile, über alle Ausgaben nach Datum sortiert, mit Filter je Spalte |
-| Aufgaben | nach Abteilung, mit Person, Fälligkeit und Erledigt-Vermerk |
-| Feiertage | die freien Tage, mit denen gerechnet wurde |
+| Anzeigenplan | je Ausgabe Erscheinungstermin, Anzeigenschluss, Druckunterlagenschluss, Anlieferungstermin Beilagen/Einhefter und Anzeigenschluss Advertorials (Schritte 24, 7, 9, 14, 3) |
+| Redaktionsplan | je Ausgabe Anmeldung Fachabteilungen, Kleine und Große Redaktionskonferenz, Redaktionsschluss, Auflagenmeldung, Start der Seitenfreigabe, Layout-Imprimatur und E-Tag (Schritte 4, 5, 6, 8, 10, 12, 15, 24) |
 
-Alle Datumsangaben sind echte Excel-Daten, sortieren und filtern funktioniert
-direkt. Kopfzeilen sind fixiert und wiederholen sich beim Drucken; jedes Blatt
-ist auf Seitenbreite eingestellt. Die Datei wird ohne Fremdbibliothek in der
-Seite selbst erzeugt (`Xlsx` in `src/app.html`), funktioniert also auch ohne
-Internetverbindung.
+Im Anzeigen- und Redaktionsplan sind manuell gesetzte Termine orange
+hinterlegt. Die Spalten beider Pläne stehen in `ANZEIGENPLAN` und
+`REDAKTIONSPLAN` in `src/app.html`; wird ein Schritt im Regelwerk umbenannt,
+übernimmt der Spaltenkopf den neuen Namen.
+
+Alle Datumsangaben sind echte Excel-Daten. Kopfzeilen sind fixiert und
+wiederholen sich beim Drucken; jedes Blatt ist auf Seitenbreite eingestellt.
+Die Datei wird ohne Fremdbibliothek in der Seite selbst erzeugt (`Xlsx` in
+`src/app.html`), funktioniert also auch ohne Internetverbindung.
 
 Daneben: CSV-Matrix und CSV-Terminliste (Semikolon + BOM), `.ics` mit jedem
 Termin als ganztägiger Kalendereintrag, JSON-Konfiguration zum Sichern und
