@@ -387,6 +387,59 @@ body.gesperrt td.cell.click:hover{outline:0;background:inherit}
 .teamgroup .tadd input{width:100%;background:none;border:0;font-size:11.5px;padding:2px 2px;color:var(--ink)}
 .teamgroup .tadd input::placeholder{color:var(--ink-3)}
 
+.keinzugang{min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.kz{max-width:440px;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:6px;
+  box-shadow:var(--shadow);padding:26px 28px}
+.kzlbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.kz h2{font-size:22px;margin:6px 0 8px}
+.kz p{margin:0;color:var(--ink-2);font-size:13.5px;line-height:1.55}
+.stat.rolle{background:var(--surface-3);color:var(--ink-2)}
+.note.warn{background:var(--warn-soft);border-left-color:var(--warn);color:var(--warn)}
+.pltitel{font-family:var(--serif);font-size:14px;font-weight:600;padding:2px 0}
+body.nurlesen td.cell{cursor:default}
+.task .who.login::after{content:" · Login";font-weight:500;opacity:.75}
+.task .frei{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ok);background:var(--ok-soft);border-radius:3px;padding:1px 6px}
+.task .antwort{display:block;font-size:11.5px;color:var(--accent);margin-top:3px}
+.task.mein{background:var(--accent-soft)}
+.task .eigen{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;align-items:center}
+.task .eigen input[type=text]{flex:1;min-width:180px;background:var(--surface);border:1px solid var(--line-2);border-radius:4px;padding:4px 8px;font-size:12px}
+.task .eigen label{font-size:11.5px;color:var(--ink-2);display:flex;gap:6px;align-items:center}
+.task .eigen input[type=date]{background:var(--surface);border:1px solid var(--line-2);border-radius:4px;padding:3px 6px;font-family:var(--mono);font-size:12px}
+.tfrei{grid-column:1/-1;font-size:12px;color:var(--ink-2);display:flex;gap:7px;align-items:center}
+.tfrei input{accent-color:var(--accent);margin:0}
+.zhinweis{padding:14px 18px;border-bottom:1px solid var(--line);background:var(--surface-2);font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.zhinweis > b{display:block;color:var(--ink);font-size:13px;margin-bottom:4px}
+.zhinweis ol{margin:4px 0 10px;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.zhinweis dl{display:grid;grid-template-columns:max-content 1fr;gap:3px 14px;margin:0}
+.zhinweis dt{font-weight:700;color:var(--ink)}
+.zhinweis dd{margin:0}
+.zsuche{padding:14px 18px 6px;position:relative}
+.zsuche input{width:100%;background:var(--surface-2);border:1px solid var(--line-2);border-radius:5px;padding:8px 10px;font-size:13.5px}
+.zsuche input:focus{background:var(--surface);border-color:var(--accent)}
+.ztreffer{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.ztr{display:grid;grid-template-columns:26px minmax(0,1fr) minmax(0,1.3fr) auto;gap:10px;align-items:center;text-align:left;
+  background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:6px 10px;cursor:pointer;font-size:12.5px}
+.ztr:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+.ztr:disabled{opacity:.55;cursor:default}
+.ztr img{width:26px;height:26px;border-radius:50%}
+.ztr span{color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ztr em{font-style:normal;font-size:11px;color:var(--accent);font-weight:600}
+.zleer{font-size:12px;color:var(--ink-3);padding:6px 2px}
+.zliste{padding:8px 18px 16px;display:flex;flex-direction:column}
+.zrow{display:grid;grid-template-columns:30px minmax(0,1fr) 190px 170px 24px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.zrow:last-child{border-bottom:0}
+.zrow.ich{grid-template-columns:30px minmax(0,1fr)}
+@media (max-width:760px){.zrow{grid-template-columns:30px minmax(0,1fr) 24px}.zrow select{grid-column:2/3}}
+.zav{display:inline-block;flex:none;width:30px;height:30px;border-radius:50%;background:var(--surface-3)}
+.zwer{display:flex;flex-direction:column;min-width:0}
+.zwer b{font-size:13px;font-weight:600}
+.zwer span{font-size:11.5px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.zrow select{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:4px 6px;font-size:12px;min-width:0}
+.zrow .x{background:none;border:0;color:var(--ink-3);cursor:pointer;font-size:16px;line-height:1;border-radius:3px}
+.zrow .x:hover{color:var(--crit);background:var(--crit-soft)}
+.teamgroup .tp .lp{flex:1;padding:2px 5px;font-size:12px}
+.teamgroup .tp .tag{margin-left:auto}
+
 /* ---------- Länderauswahl ---------- */
 .regions{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:11px}
 .regions .rlab{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-right:2px}
@@ -496,9 +549,17 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
     <button type="button" role="tab" data-view="pruefung" aria-selected="false">Prüfung<span class="cnt zero" id="warnCount">0</span></button>
     <button type="button" role="tab" data-view="regeln" aria-selected="false">Regelwerk</button>
     <button type="button" role="tab" data-view="export" aria-selected="false">Export</button>
+    <button type="button" role="tab" data-view="zugriff" aria-selected="false" id="tabZugriff" hidden>Zugriff</button>
   </nav>
 </header>
 
+<section class="keinzugang" id="keinZugang" hidden>
+  <div class="kz">
+    <div class="kzlbl">Berliner Wirtschaft · Produktionsplan</div>
+    <h2 id="kzTitel">Kein Zugriff</h2>
+    <p id="kzText">Diese Seite ist nur für freigeschaltete Personen. Bitte wende dich an die Person, die dir den Link geschickt hat.</p>
+  </div>
+</section>
 <main class="layout">
   <aside class="rail">
     <div id="planCard"></div>
@@ -830,6 +891,9 @@ var planMeta = null;              /* Kopfdaten des offenen Plans */
 var plaene = [];                  /* alle Pläne (Kopfdaten + Inhalt) */
 var aufgaben = [];                /* Aufgaben des offenen Plans */
 var team = [];                    /* Abteilungen und Personen */
+var zugriff = [];                 /* Zugriffsliste: {id (Konto), rolle, abteilungId} */
+var rueckmeldungen = {};          /* je Konto: was die Person an ihren Aufgaben geändert hat */
+var Rechte = {bereit:false, api:null, id:null, owner:false, kannEdit:false};
 
 function uid(prefix){ return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 function nowISO(){ return new Date().toISOString(); }
@@ -916,7 +980,7 @@ var Ablage = {
       d.aufgaben = d.aufgaben || {};
       d.aufgaben[planId] = d.aufgaben[planId] || {};
       d.aufgaben[planId][satz.id] = satz;
-    } else d[art][satz.id] = satz;
+    } else { d[art] = d[art] || {}; d[art][satz.id] = satz; }
     this._schreiben(d);
     return Promise.resolve();
   },
@@ -924,7 +988,7 @@ var Ablage = {
     if (this.db) return this.db.doc(this._pfad(art, planId) + "/" + id).delete().catch(dbFehler);
     var d = this._lesen();
     if (art === "aufgaben"){ if (d.aufgaben && d.aufgaben[planId]) delete d.aufgaben[planId][id]; }
-    else delete d[art][id];
+    else if (d[art]) delete d[art][id];
     this._schreiben(d);
     return Promise.resolve();
   },
@@ -969,10 +1033,24 @@ var Ablage = {
           beantwortet = true;
           if (!db){ lokalStarten(); return; }
           self.db = db; self.modus = "geteilt";
-          var offen = 2;
+          var offen = 5;
           function evtl(){ if (--offen === 0) fertig(); }
-          self._abo(db, "plaene", function(list){ plaene = list; }, self.beiPlaenen, evtl);
-          self._abo(db, "team",   function(list){ team = list; },   self.beiTeam,   evtl);
+          self._abo(db, "plaene",    function(list){ plaene = list; }, self.beiPlaenen, evtl);
+          self._abo(db, "team",      function(list){ team = list; },   self.beiTeam,   evtl);
+          self._abo(db, "zugriff",   function(list){ zugriff = list; }, function(){ self.beiTeam(); }, evtl);
+          self._abo(db, "freigaben", function(list){
+            rueckmeldungen = {};
+            list.forEach(function(d){ rueckmeldungen[d.id] = d; });
+          }, function(){ self.beiAufgaben(); }, evtl);
+          /* Wer schaut zu? Die Plattform liefert eine geprüfte Kennung. */
+          window.claude.use("user").then(function(u){
+            Rechte.api = u;
+            if (!u){ Rechte.bereit = true; evtl(); return; }
+            u.me().then(function(m){
+              Rechte.id = m.id; Rechte.owner = !!m.isOwner; Rechte.kannEdit = !!m.canEdit;
+              Rechte.bereit = true; evtl();
+            }, function(){ Rechte.bereit = true; evtl(); });
+          }, function(){ Rechte.bereit = true; evtl(); });
         }, function(){ beantwortet = true; lokalStarten(); });
         setTimeout(function(){ if (!beantwortet) lokalStarten(); }, 10500);
         return;
@@ -1021,6 +1099,86 @@ function dbFehler(e){
   else toast("Konnte nicht gespeichert werden");
 }
 
+/* =========================================================================
+   Rechte
+   Wer die Seite öffnen kann, legt das Teilen-Menü fest (Login über claude.ai).
+   Die Rolle steht in der Zugriffsliste. Durchgesetzt wird sie von den Regeln
+   der Datenbank: Schreiben nur mit Bearbeiten-Freigabe; mit Ansehen-Freigabe
+   darf jede Person nur ihr eigenes Dokument unter freigaben/ schreiben, und
+   daraus übernimmt die Seite nur Änderungen an Aufgaben, die dieser Person
+   zugewiesen sind.
+   ========================================================================= */
+var ROLLEN = {admin:"Admin", beobachter:"Beobachter", zugewiesen:"Zugewiesene Aufgaben"};
+function geteilt(){ return Ablage.modus === "geteilt"; }
+function eintragVon(id){ return zugriff.filter(function(z){ return z.id === id; })[0] || null; }
+function meineRolle(){
+  if (!geteilt()) return "admin";               /* Datei-Fassung: ein Rechner, eine Person */
+  if (Rechte.owner) return "admin";
+  var z = Rechte.id ? eintragVon(Rechte.id) : null;
+  return z && ROLLEN[z.rolle] ? z.rolle : null;
+}
+function istAdmin(){ return meineRolle() === "admin" && (!geteilt() || Rechte.owner || Rechte.kannEdit); }
+function darfPlanAendern(){ return istAdmin() && !istGesperrt(); }
+function loginId(personId){ return String(personId || "").indexOf("u:") === 0 ? personId.slice(2) : null; }
+function istMeineAufgabe(t){
+  return geteilt() && !!Rechte.id && loginId(t.personId) === Rechte.id &&
+         meineRolle() === "zugewiesen" && !istGesperrt();
+}
+/* Was die zuständige Person selbst an der Aufgabe geändert hat */
+function rueckmeldung(t){
+  if (istGesperrt()) return null;               /* freigegeben: der Stand ist im Plan festgeschrieben */
+  var u = loginId(t.personId), z = u ? eintragVon(u) : null;
+  if (!z || z.rolle !== "zugewiesen") return null;
+  var d = rueckmeldungen[u];
+  return d && d.aufgaben && d.aufgaben[t.id] || null;
+}
+function erledigt(t){
+  var e = rueckmeldung(t);
+  if (e && typeof e.erledigt === "boolean" && String(e.stand || "") > String(t.erledigtStand || "")) return e.erledigt;
+  return !!t.erledigt;
+}
+/* Manuelle Termine des Plans plus die, die zuständige Personen setzen durften */
+function wirksameUeberschreibungen(){
+  var o = Object.assign({}, state.overrides);
+  aufgaben.forEach(function(t){
+    if (!t.terminFreigegeben || !t.schrittNr || !t.ausgabeId) return;
+    var e = rueckmeldung(t);
+    if (e && e.datum) o[t.ausgabeId + ":" + t.schrittNr] = e.datum;
+  });
+  return o;
+}
+function rueckmeldungSetzen(t, feld, wert){
+  if (!istMeineAufgabe(t)) return;
+  var alt = rueckmeldungen[Rechte.id] || {aufgaben:{}};
+  var doc = {id:Rechte.id, aufgaben:Object.assign({}, alt.aufgaben)};
+  var e = Object.assign({}, doc.aufgaben[t.id] || {}, {plan:planMeta.id});
+  e[feld] = wert;
+  if (feld === "erledigt") e.stand = nowISO();
+  doc.aufgaben[t.id] = e;
+  rueckmeldungen[Rechte.id] = doc;
+  Ablage.sichern("freigaben", doc);
+  render(false);
+}
+/* Namen und Mailadressen kommen live aus dem Verzeichnis, gespeichert werden nur Kennungen */
+var profile = {}, profileLaufen = false;
+function avatar(url){ return url ? '<img class="zav" src="'+esc(url)+'" alt="">' : '<span class="zav"></span>'; }
+function profilVon(id){ return profile[id] || {name:"", email:null, avatarUrl:""}; }
+function profileLaden(){
+  if (!Rechte.api || profileLaufen) return;
+  var ids = zugriff.map(function(z){ return z.id; });
+  if (Rechte.id) ids.push(Rechte.id);
+  var fehlen = ids.filter(function(id){ return !profile[id]; });
+  if (!fehlen.length) return;
+  profileLaufen = true;
+  Rechte.api.profiles(ids).then(function(ps){
+    profileLaufen = false;
+    var neu = false;
+    Object.keys(ps).forEach(function(id){ if (!profile[id] || profile[id].name !== ps[id].name) neu = true; profile[id] = ps[id]; });
+    if (neu) neuAufbauen();
+  }, function(){ profileLaufen = false; });
+}
+function personName(id){ var p = profilVon(id); return p.name || p.email || "Person ohne Namen"; }
+
 /* Speichern mit kurzer Verzögerung, damit Tippen nicht jeden Tastendruck
    schreibt – und nur, wenn sich wirklich etwas geändert hat. Sonst schreibt
    jeder Neuaufbau, die Datenbank meldet die Änderung zurück, das löst den
@@ -1031,7 +1189,7 @@ function planStand(){
 }
 function standMerken(){ standGesichert = planStand(); }
 function save(){
-  if (!planMeta) return;
+  if (!planMeta || !istAdmin()) return;
   planMeta.inhalt = planInhalt();
   planMeta.jahr = state.year;
   if (planStand() === standGesichert) return;
@@ -1073,13 +1231,14 @@ function buildModel(){
   var hol = holidayModel();
   var steps = state.steps.slice().sort(function(a,b){ return a.nr - b.nr; });
   var findings = [], issues = [], error = null;
+  var ov = wirksameUeberschreibungen();
 
   state.issues.forEach(function(inp, idx){
     var raw = parseISO(inp.raw);
     var corrected = isFreeDay(raw, hol.set) ? workday(addDays(raw,1), -1, hol.set) : raw;
     var fix = {}, hasFix = false;
     steps.forEach(function(st){
-      var v = state.overrides[inp.id + ":" + st.nr];
+      var v = ov[inp.id + ":" + st.nr];
       if (v){ fix[st.nr] = v; hasFix = true; }
     });
     var rows, autoRows = null;
@@ -1186,7 +1345,24 @@ function phaseOf(s){ return PH[s.phase] || PHASES[0]; }
 
 var model = null;
 
+function zugangPruefen(){
+  var ohne = geteilt() && !meineRolle();
+  el("keinZugang").hidden = !ohne;
+  document.querySelector("main.layout").hidden = ohne;
+  el("tabs").hidden = ohne;
+  if (ohne){
+    el("kzTitel").textContent = Rechte.api ? "Kein Zugriff" : "Anmeldung nicht möglich";
+    el("kzText").textContent = Rechte.api
+      ? "Diese Seite ist nur für freigeschaltete Personen. Bitte wende dich an die Person, die dir den Link geschickt hat."
+      : "Deine Anmeldung konnte nicht geprüft werden. Bitte lade die Seite neu.";
+  }
+  el("tabZugriff").hidden = !(geteilt() && istAdmin());
+  if (state.view === "zugriff" && el("tabZugriff").hidden) state.view = "plan";
+  return !ohne;
+}
 function render(withRail){
+  profileLaden();
+  if (!zugangPruefen()) return;
   model = buildModel();
   if (withRail !== false){ renderIssues(); renderHolidays(); }
   renderOverrides();
@@ -1195,7 +1371,7 @@ function render(withRail){
   renderPanel();
   var n = model.findings.filter(function(f){ return f.sev !== "info"; }).length;
   var c = el("warnCount"); c.textContent = n; c.className = "cnt" + (n ? "" : " zero");
-  var offen = aufgaben.filter(function(t){ return !t.erledigt; }).length;
+  var offen = aufgaben.filter(function(t){ return !erledigt(t); }).length;
   var tc = el("taskCount"); tc.textContent = offen; tc.className = "cnt" + (offen ? "" : " zero");
   el("issueCount").textContent = state.issues.length + (state.issues.length === 1 ? " Heft" : " Hefte");
   el("holCount").textContent = model.hol.set.size + " Tage";
@@ -1205,7 +1381,7 @@ function render(withRail){
 
 /* Ein freigegebener Plan wird nicht mehr verändert, bis er entsperrt wird. */
 function sperreAnwenden(){
-  var aus = istGesperrt();
+  var aus = istGesperrt() || !istAdmin();
   document.body.classList.toggle("gesperrt", aus);
   /* Gesperrt sind die Eingaben des Plans. Planverwaltung, Drucken und
      Aufgaben bleiben erreichbar. */
@@ -1214,6 +1390,8 @@ function sperreAnwenden(){
             "#holName, #holDate, #addHol, #excelMode, #resetHol," +
             "#ovCard button, #yearInput, #yearMinus, #yearPlus, #resetAll";
   Array.prototype.forEach.call(document.querySelectorAll(sel), function(x){ x.disabled = aus; });
+  document.body.classList.toggle("nurlesen", !istAdmin());
+  el("resetAll").hidden = !istAdmin();
 }
 function zeigeSpeicherstand(){
   var b = el("planBox");
@@ -1223,24 +1401,33 @@ function zeigeSpeicherstand(){
 }
 function renderPlanCard(){
   if (!planMeta){ el("planCard").innerHTML = ""; el("planBox").innerHTML = ""; return; }
-  var fertig = aufgaben.filter(function(t){ return t.erledigt; }).length;
+  var fertig = aufgaben.filter(erledigt).length;
+  var rolle = meineRolle();
   el("planBox").innerHTML =
     '<span class="pl">'+esc(planMeta.titel)+'</span>'+statusChip(planMeta)+
-    '<span class="sv">'+(sichernOffen ? "speichert …" : "gespeichert")+'</span>';
+    (geteilt() && rolle ? '<span class="stat rolle">'+ROLLEN[rolle]+'</span>' : "")+
+    (istAdmin() ? '<span class="sv">'+(sichernOffen ? "speichert …" : "gespeichert")+'</span>' : "");
   el("planCard").innerHTML = '<section class="card plancard"><header><h2>Plan</h2>'+
     '<span class="hint">'+(Ablage.modus === "geteilt" ? "geteilt" : "lokal")+'</span></header><div class="body">'+
-    '<input type="text" id="planTitel" value="'+esc(planMeta.titel)+'" aria-label="Bezeichnung des Plans">'+
+    (istAdmin() ? '<input type="text" id="planTitel" value="'+esc(planMeta.titel)+'" aria-label="Bezeichnung des Plans">'
+                : '<div class="pltitel">'+esc(planMeta.titel)+'</div>')+
     '<div class="planstat">'+statusChip(planMeta)+
       (aufgaben.length ? '<span class="tsum">Aufgaben '+fertig+'/'+aufgaben.length+'</span>'
                        : '<span class="tsum">noch keine Aufgaben</span>')+'</div>'+
+    (meineRolle() === "admin" && !istAdmin()
+      ? '<div class="note warn"><span>Du bist als Admin eingetragen, im Teilen-Menü aber nur zum Ansehen freigegeben. Bitte die Besitzerin oder den Besitzer der Seite um „Bearbeiten“.</span></div>' : "")+
+    (geteilt() && !istAdmin() && meineRolle() !== "admin"
+      ? '<div class="note"><span>'+(meineRolle() === "zugewiesen"
+          ? "Du kannst alles ansehen und deine eigenen Aufgaben im Reiter Aufgaben bearbeiten."
+          : "Du kannst alles ansehen, aber nichts ändern.")+'</span></div>' : "")+
     (istGesperrt()
       ? '<div class="note"><span>Freigegeben – die Eingaben sind gesperrt.</span>'+
-        '<button type="button" data-act="entsperren">Entsperren</button></div>'
+        (istAdmin() ? '<button type="button" data-act="entsperren">Entsperren</button>' : "")+'</div>'
       : '')+
-    '<div class="rowbtns">'+
+    (istAdmin() ? '<div class="rowbtns">'+
       '<button type="button" class="btn sm" data-act="planNew">+ Neuer Plan</button>'+
       '<button type="button" class="btn sm ghost" data-act="planCopy" data-v="'+esc(planMeta.id)+'">Duplizieren</button>'+
-    '</div></div></section>';
+    '</div>' : "")+'</div></section>';
 }
 
 /* ---------- Rail: Erscheinungstermine ------------------------------------ */
@@ -1394,6 +1581,7 @@ function bestaetige(titel, text, label, weiter){
 }
 /* Termin eines Schritts von Hand setzen */
 function openPop(issueId, stepNr){
+  if (!istAdmin()){ toast("Termine ändern dürfen nur Admins"); return; }
   if (istGesperrt()){ toast("Der Plan ist freigegeben – zum Ändern erst entsperren"); return; }
   var x = model.issues.filter(function(i){ return i.id === issueId; })[0];
   if (!x) return;
@@ -1462,6 +1650,7 @@ function renderPanel(){
   if (model.broken && v !== "regeln") v = "pruefung";
   if      (v === "plaene")   html = viewPlaene();
   else if (v === "aufgaben") html = viewAufgaben();
+  else if (v === "zugriff")  html = istAdmin() && geteilt() ? viewZugriff() : viewPlan();
   else if (v === "plan")     html = viewPlan();
   else if (v === "ausgabe")  html = viewIssue();
   else if (v === "kalender") html = viewCalendar();
@@ -1475,7 +1664,7 @@ function renderPanel(){
 
 /* ---------- Ansicht: Terminplan ------------------------------------------ */
 function cellHTML(r, issue){
-  var cls = "cell click" + (r.manual ? " manual" : "") + (!r.manual && Math.abs(r.shift) >= 1 ? " shifted" : "");
+  var cls = "cell" + (darfPlanAendern() ? " click" : "") + (r.manual ? " manual" : "") + (!r.manual && Math.abs(r.shift) >= 1 ? " shifted" : "");
   var auto = issue ? issue.autoByNr.get(r.step.nr) : null;
   var title;
   if (r.manual){
@@ -1647,13 +1836,13 @@ function viewRules(){
     var r = sample ? sample.byNr.get(s.nr) : null;
     return '<tr data-nr="'+s.nr+'" style="--ph:'+phaseOf(s).css+'">'+
       '<td class="nr">'+s.nr+'</td>'+
-      '<td><input type="text" data-r="label" value="'+esc(s.label)+'" aria-label="Bezeichnung Schritt '+s.nr+'"></td>'+
-      '<td><select data-r="wd" aria-label="Ziel-Wochentag">'+opts(s.wd)+'</select></td>'+
-      '<td><select data-r="anchor" aria-label="Anker">'+anchors(s.anchor, s.nr)+'</select></td>'+
-      '<td><input type="number" data-r="offset" value="'+s.offset+'" step="1" aria-label="Versatz in Tagen"'+(s.anchor === 0 ? " disabled" : "")+'></td>'+
-      '<td><select data-r="dir" aria-label="Suchrichtung"><option value="-1"'+(s.dir === -1 ? " selected" : "")+'>rückwärts</option>'+
+      '<td><input type="text" data-r="label" value="'+esc(s.label)+'" aria-label="Bezeichnung Schritt '+s.nr+'"'+(darfPlanAendern() ? "" : " disabled")+'></td>'+
+      '<td><select data-r="wd" aria-label="Ziel-Wochentag"'+(darfPlanAendern() ? "" : " disabled")+'>'+opts(s.wd)+'</select></td>'+
+      '<td><select data-r="anchor" aria-label="Anker"'+(darfPlanAendern() ? "" : " disabled")+'>'+anchors(s.anchor, s.nr)+'</select></td>'+
+      '<td><input type="number" data-r="offset" value="'+s.offset+'" step="1" aria-label="Versatz in Tagen"'+(s.anchor === 0 || !darfPlanAendern() ? " disabled" : "")+'></td>'+
+      '<td><select data-r="dir" aria-label="Suchrichtung"'+(darfPlanAendern() ? "" : " disabled")+'><option value="-1"'+(s.dir === -1 ? " selected" : "")+'>rückwärts</option>'+
         '<option value="1"'+(s.dir === 1 ? " selected" : "")+'>vorwärts</option></select></td>'+
-      '<td><select data-r="phase" aria-label="Phase">'+PHASES.map(function(p){
+      '<td><select data-r="phase" aria-label="Phase"'+(darfPlanAendern() ? "" : " disabled")+'>'+PHASES.map(function(p){
         return '<option value="'+p.key+'"'+(s.phase === p.key ? " selected" : "")+'>'+esc(p.label)+'</option>'; }).join("")+'</select></td>'+
       '<td class="res">'+(r ? wd(r.date)+" "+fmtShort(r.date) : "–")+'</td>'+
     '</tr>';
@@ -1666,14 +1855,14 @@ function viewRules(){
       .map(function(h){ return "<th>"+h+"</th>"; }).join("")+
     '</tr></thead><tbody>'+rows+'</tbody></table></div>';
   return card("Regelwerk · " + model.steps.length + " Schritte", head + table,
-    '<button type="button" class="btn sm" data-act="resetRules">Standard wiederherstellen</button>');
+    darfPlanAendern() ? '<button type="button" class="btn sm" data-act="resetRules">Standard wiederherstellen</button>' : "");
 }
 
 /* ---------- Ansicht: Pläne ------------------------------------------------ */
 function planFortschritt(planId){
   var list = planId === (planMeta && planMeta.id) ? aufgaben : null;
   if (!list) return null;
-  var fertig = list.filter(function(t){ return t.erledigt; }).length;
+  var fertig = list.filter(erledigt).length;
   return {gesamt:list.length, fertig:fertig};
 }
 function statusChip(pl){
@@ -1706,11 +1895,11 @@ function viewPlaene(){
       '<div class="pj">'+esc(String(pl.jahr || ""))+'</div>'+
       '<div class="pa">'+
         (offen ? '' : '<button type="button" class="btn sm" data-act="planOpen" data-v="'+esc(pl.id)+'">Öffnen</button>')+
-        '<button type="button" class="btn sm ghost" data-act="planCopy" data-v="'+esc(pl.id)+'">Duplizieren</button>'+
-        '<button type="button" class="btn sm ghost" data-act="planDel" data-v="'+esc(pl.id)+'">Löschen</button>'+
+        (istAdmin() ? '<button type="button" class="btn sm ghost" data-act="planCopy" data-v="'+esc(pl.id)+'">Duplizieren</button>'+
+        '<button type="button" class="btn sm ghost" data-act="planDel" data-v="'+esc(pl.id)+'">Löschen</button>' : "")+
       '</div></div>';
   }).join("");
-  var tools = '<button type="button" class="btn sm primary" data-act="planNew">+ Neuer Plan</button>';
+  var tools = istAdmin() ? '<button type="button" class="btn sm primary" data-act="planNew">+ Neuer Plan</button>' : "";
   return card("Pläne · " + plaene.length, kopf + '<div class="planlist">'+(zeilen || '<div class="empty">Noch kein Plan gespeichert.</div>')+'</div>', tools) +
     '<section class="card"><header><h2>Ablage</h2></header><div class="body"><div class="ablage">'+
     (Ablage.modus === "geteilt"
@@ -1721,10 +1910,22 @@ function viewPlaene(){
 
 /* ---------- Ansicht: Aufgaben --------------------------------------------- */
 function abteilungen(){ return team.filter(function(m){ return m.art === "abteilung"; }); }
-function personen(abtId){
-  return team.filter(function(m){ return m.art === "person" && (!abtId || m.abteilungId === abtId); });
+function loginPersonen(abtId, auchOhne){
+  return zugriff.filter(function(z){
+    return (z.rolle === "zugewiesen" || z.rolle === "admin") &&
+           (!abtId || z.abteilungId === abtId || (auchOhne && !z.abteilungId));
+  }).map(function(z){ return {id:"u:" + z.id, name:personName(z.id), art:"person", abteilungId:z.abteilungId || "", login:true}; });
 }
-function mitglied(id){ return team.filter(function(m){ return m.id === id; })[0] || null; }
+function personen(abtId, mitLogin){
+  var frei = team.filter(function(m){ return m.art === "person" && (!abtId || m.abteilungId === abtId); });
+  return mitLogin ? frei.concat(loginPersonen(abtId, mitLogin === "auchOhne")) : frei;
+}
+function mitglied(id){
+  var u = loginId(id);
+  if (u) return eintragVon(u) ? {id:id, name:personName(u), art:"person", login:true}
+                              : {id:id, name:"nicht mehr freigeschaltet", art:"person", login:true};
+  return team.filter(function(m){ return m.id === id; })[0] || null;
+}
 /* Fälligkeit einer Aufgabe: an einen Produktionsschritt gekoppelt oder frei */
 function aufgabeFaellig(t){
   if (t.schrittNr && t.ausgabeId){
@@ -1736,7 +1937,7 @@ function aufgabeFaellig(t){
 }
 function viewAufgaben(){
   if (!planMeta) return card("Aufgaben", '<div class="empty">Kein Plan geöffnet.</div>');
-  var fertig = aufgaben.filter(function(t){ return t.erledigt; }).length;
+  var fertig = aufgaben.filter(erledigt).length;
   var quote = aufgaben.length ? Math.round(fertig / aufgaben.length * 100) : 0;
 
   var abt = abteilungen();
@@ -1748,12 +1949,12 @@ function viewAufgaben(){
 
   var listen = gruppen.filter(function(g){ return g.list.length; }).map(function(g){
     var sortiert = g.list.slice().sort(function(x, y){
-      if (!!x.erledigt !== !!y.erledigt) return x.erledigt ? 1 : -1;
+      if (erledigt(x) !== erledigt(y)) return erledigt(x) ? 1 : -1;
       var dx = aufgabeFaellig(x), dy = aufgabeFaellig(y);
       if (dx && dy) return dx - dy;
       return dx ? -1 : dy ? 1 : 0;
     });
-    var gf = g.list.filter(function(t){ return t.erledigt; }).length;
+    var gf = g.list.filter(erledigt).length;
     return '<div class="taskgroup"><div class="tghead">'+esc(g.a.name)+
       '<span class="tgcount">'+gf+'/'+g.list.length+'</span></div>'+
       sortiert.map(function(t){
@@ -1761,18 +1962,28 @@ function viewAufgaben(){
         var pers = t.personId ? mitglied(t.personId) : null;
         var schritt = t.schrittNr ? model.steps.filter(function(x){ return x.nr === +t.schrittNr; })[0] : null;
         var ausg = t.ausgabeId ? model.issues.filter(function(i){ return i.id === t.ausgabeId; })[0] : null;
-        var spaet = d && !t.erledigt && d < heute();
-        return '<div class="task'+(t.erledigt ? " done" : "")+'" data-task="'+esc(t.id)+'">'+
-          '<input type="checkbox" data-tdone="'+esc(t.id)+'"'+(t.erledigt ? " checked" : "")+
-            ' aria-label="Aufgabe erledigt"'+(istGesperrt() ? "" : "")+'>'+
+        var fertigT = erledigt(t), mein = istMeineAufgabe(t), rm = rueckmeldung(t);
+        var spaet = d && !fertigT && d < heute();
+        var terminFrei = t.terminFreigegeben && schritt && ausg;
+        return '<div class="task'+(fertigT ? " done" : "")+(mein ? " mein" : "")+'" data-task="'+esc(t.id)+'">'+
+          '<input type="checkbox" data-tdone="'+esc(t.id)+'"'+(fertigT ? " checked" : "")+
+            ' aria-label="Aufgabe erledigt"'+(darfPlanAendern() || mein ? "" : " disabled")+'>'+
           '<div class="tmain"><span class="tt">'+esc(t.titel)+'</span>'+
             '<span class="tmeta">'+
-              (pers ? '<span class="who">'+esc(pers.name)+'</span>' : "")+
+              (pers ? '<span class="who'+(pers.login ? " login" : "")+'">'+esc(pers.name)+'</span>' : "")+
               (schritt ? '<span class="lnk">Schritt '+schritt.nr+' · '+esc(schritt.label.slice(0,38))+(ausg ? " · "+esc(ausg.name) : "")+'</span>' : "")+
+              (terminFrei ? '<span class="frei">Termin freigegeben</span>' : "")+
               (t.notiz ? '<span class="note2">'+esc(t.notiz)+'</span>' : "")+
-            '</span></div>'+
+            '</span>'+
+            ((rm && rm.notiz || t.antwort) && !mein ? '<span class="antwort">Rückmeldung: '+esc(rm && rm.notiz || t.antwort)+'</span>' : "")+
+            (rm && rm.datum && terminFrei && !mein ? '<span class="antwort">Termin von der zuständigen Person gesetzt</span>' : "")+
+            (mein ? '<span class="eigen">'+
+                '<input type="text" data-rnotiz="'+esc(t.id)+'" value="'+esc(rm && rm.notiz || "")+'" placeholder="Rückmeldung an die Admins …" aria-label="Rückmeldung">'+
+                (terminFrei ? '<label>Termin <input type="date" data-rdatum="'+esc(t.id)+'" value="'+(d ? iso(d) : "")+'"></label>' : "")+
+              '</span>' : "")+
+          '</div>'+
           '<span class="tdue'+(spaet ? " late" : "")+'">'+(d ? wd(d)+" "+fmtShort(d) : "–")+'</span>'+
-          '<button type="button" class="x" data-tdel="'+esc(t.id)+'" title="Aufgabe löschen" aria-label="Aufgabe löschen">&times;</button>'+
+          (darfPlanAendern() ? '<button type="button" class="x" data-tdel="'+esc(t.id)+'" title="Aufgabe löschen" aria-label="Aufgabe löschen">&times;</button>' : '<span></span>')+
         '</div>';
       }).join("")+'</div>';
   }).join("");
@@ -1794,23 +2005,35 @@ function viewAufgaben(){
     '<select id="tAusgabe" aria-label="Ausgabe">'+issueOpts+'</select>'+
     '<input type="date" id="tDatum" aria-label="Fällig am">'+
     '<button type="button" class="btn sm primary" id="tAdd">Hinzufügen</button>'+
+    (geteilt() ? '<label class="tfrei"><input type="checkbox" id="tTermin"> Die zuständige Person darf den Termin des Schritts ändern</label>' : "")+
   '</div>';
+  if (!darfPlanAendern()) form = "";
 
   var bar = '<div class="taskbar">'+
     '<div class="prog"><div class="bar"><span style="width:'+quote+'%"></span></div>'+
       '<span class="pt">'+fertig+' von '+aufgaben.length+' erledigt</span></div>'+
-    (aufgaben.length && fertig === aufgaben.length && planMeta.status !== "fertig"
+    (istAdmin() && aufgaben.length && fertig === aufgaben.length && planMeta.status !== "fertig"
       ? '<button type="button" class="btn sm primary" data-act="freigeben">Plan freigeben</button>' : "")+
-    (planMeta.status === "fertig"
+    (istAdmin() && planMeta.status === "fertig"
       ? '<button type="button" class="btn sm" data-act="entsperren">Zur Bearbeitung entsperren</button>' : "")+
   '</div>';
 
   return card("Aufgaben · " + esc(planMeta.titel), bar + form +
-      '<div class="tasklist">'+(listen || '<div class="empty">Noch keine Aufgabe angelegt. Trage oben ein, was für diesen Plan zu erledigen ist – etwa „Themen für die Große Redaktionskonferenz sammeln“ für die Redaktion.</div>')+'</div>') +
+      '<div class="tasklist">'+(listen || '<div class="empty">'+(istAdmin()
+        ? 'Noch keine Aufgabe angelegt. Trage oben ein, was für diesen Plan zu erledigen ist – etwa „Themen für die Große Redaktionskonferenz sammeln“ für die Redaktion.'
+        : 'Für diesen Plan sind noch keine Aufgaben angelegt.')+'</div>')+'</div>') +
     teamCard();
 }
 function teamCard(){
   var abt = abteilungen();
+  if (!istAdmin()){
+    return '<section class="card"><header><h2>Abteilungen &amp; Personen</h2></header><div class="body"><div class="teamlist">'+
+      abt.map(function(a){
+        return '<div class="teamgroup"><div class="tg"><b>'+esc(a.name)+'</b></div>'+
+          personen(a.id, true).map(function(pp){ return '<div class="tp"><span>'+esc(pp.name)+'</span>'+(pp.login ? '<span class="tag">Login</span>' : "")+'</div>'; }).join("")+
+        '</div>';
+      }).join("")+'</div></div></section>';
+  }
   var body = abt.length || personen().length
     ? '<div class="teamlist">'+abt.map(function(a){
         return '<div class="teamgroup"><div class="tg">'+
@@ -1820,6 +2043,9 @@ function teamCard(){
             return '<div class="tp">'+
               '<input type="text" value="'+esc(pp.name)+'" data-rename="'+esc(pp.id)+'" aria-label="Name der Person">'+
               '<button type="button" class="x" data-teamdel="'+esc(pp.id)+'" title="Person entfernen" aria-label="Person entfernen">&times;</button></div>';
+          }).join("")+
+          loginPersonen(a.id).map(function(pp){
+            return '<div class="tp"><span class="lp">'+esc(pp.name)+'</span><span class="tag" title="Rolle und Abteilung im Reiter Zugriff ändern">Login</span></div>';
           }).join("")+
           '<div class="tadd"><input type="text" data-pers-for="'+esc(a.id)+'" placeholder="Person hinzufügen …" aria-label="Person in '+esc(a.name)+'"></div>'+
         '</div>';
@@ -2141,6 +2367,67 @@ function excelDatei(){
   return {name:dateiName("xlsx"), type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", bytes:excelMappe()};
 }
 
+/* ---------- Ansicht: Zugriff --------------------------------------------- */
+function viewZugriff(){
+  var abt = abteilungen();
+  var zeilen = zugriff.slice().sort(function(a, b){ return personName(a.id).localeCompare(personName(b.id), "de"); })
+    .map(function(z){
+      var p = profilVon(z.id);
+      return '<div class="zrow">'+
+        avatar(p.avatarUrl)+
+        '<span class="zwer"><b>'+esc(personName(z.id))+'</b><span>'+esc(p.email || "")+'</span></span>'+
+        '<select data-zrolle="'+esc(z.id)+'" aria-label="Rolle">'+Object.keys(ROLLEN).map(function(k){
+          return '<option value="'+k+'"'+(z.rolle === k ? " selected" : "")+'>'+ROLLEN[k]+'</option>'; }).join("")+'</select>'+
+        '<select data-zabt="'+esc(z.id)+'" aria-label="Abteilung"><option value="">keine Abteilung</option>'+abt.map(function(a){
+          return '<option value="'+esc(a.id)+'"'+(z.abteilungId === a.id ? " selected" : "")+'>'+esc(a.name)+'</option>'; }).join("")+'</select>'+
+        '<button type="button" class="x" data-zweg="'+esc(z.id)+'" title="Zugriff entziehen" aria-label="Zugriff entziehen">&times;</button>'+
+      '</div>';
+    }).join("");
+  var ich = Rechte.owner ? '<div class="zrow ich">'+avatar(profilVon(Rechte.id).avatarUrl)+
+    '<span class="zwer"><b>'+esc(personName(Rechte.id))+'</b><span>Besitzer der Seite – immer Admin</span></span></div>' : "";
+  return card("Zugriff · " + zugriff.length + (zugriff.length === 1 ? " Person" : " Personen"),
+    '<div class="zhinweis"><b>So greifen die Rechte</b>'+
+      '<ol><li>Im <b>Teilen-Menü</b> der Seite gibst du die Personen frei – <b>Admins mit „Bearbeiten“</b>, alle anderen mit <b>„Ansehen“</b>. Wer nicht geteilt ist, kommt gar nicht erst hinein.</li>'+
+      '<li>Hier trägst du dieselben Personen über ihre Mailadresse ein und vergibst die Rolle. Wer geteilt, aber hier nicht eingetragen ist, sieht nur einen Hinweis.</li></ol>'+
+      '<dl><dt>Admin</dt><dd>darf alles: Pläne, Termine, Aufgaben, Team und diese Liste</dd>'+
+      '<dt>Beobachter</dt><dd>sieht alles, ändert nichts</dd>'+
+      '<dt>Zugewiesene Aufgaben</dt><dd>sieht alles und bearbeitet nur die eigenen Aufgaben: abhaken, Rückmeldung schreiben und – wenn bei der Aufgabe freigegeben – den Termin des verknüpften Schritts setzen</dd></dl></div>'+
+    '<div class="zsuche"><input type="search" id="zSuche" placeholder="Mailadresse oder Name eingeben …" aria-label="Person suchen" autocomplete="off">'+
+      '<div class="ztreffer" id="zTreffer"></div></div>'+
+    '<div class="zliste">'+ich+(zeilen || (ich ? "" : '<div class="empty">Noch niemand eingetragen.</div>'))+'</div>');
+}
+var suchNr = 0;
+function zugriffSuchen(q){
+  var box = el("zTreffer");
+  if (!box || !Rechte.api) return;
+  var nr = ++suchNr;
+  if (!q.trim()){ box.innerHTML = ""; return; }
+  Rechte.api.search(q).then(function(hits){
+    if (nr !== suchNr || !el("zTreffer")) return;
+    if (!hits.length){ box.innerHTML = '<div class="zleer">Niemand gefunden. Die Person muss zu eurer Organisation auf claude.ai gehören.</div>'; return; }
+    box.innerHTML = "";
+    hits.forEach(function(h){
+      profile[h.id] = h;
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "ztr"; b.dataset.zneu = h.id;
+      var img = document.createElement("img"); img.src = h.avatarUrl; img.alt = "";
+      var n = document.createElement("b"); n.textContent = h.name;
+      var m = document.createElement("span"); m.textContent = h.email || "";
+      var t = document.createElement("em"); t.textContent = eintragVon(h.id) ? "bereits eingetragen" : (h.isMe ? "du" : "hinzufügen");
+      b.appendChild(img); b.appendChild(n); b.appendChild(m); b.appendChild(t);
+      if (eintragVon(h.id) || h.isMe && Rechte.owner) b.disabled = true;
+      box.appendChild(b);
+    });
+  });
+}
+function zugriffSetzen(id, aenderung){
+  if (!istAdmin()) return;
+  var z = Object.assign({id:id, rolle:"beobachter", abteilungId:""}, eintragVon(id) || {}, aenderung);
+  zugriff = zugriff.filter(function(x){ return x.id !== id; }).concat([z]);
+  Ablage.sichern("zugriff", z);
+  render(false);
+}
+
 /* ---------- Ansicht: Export ---------------------------------------------- */
 var EXPORT_FORMATS = [
   {k:"xlsx",       n:"Excel (.xlsx)"},
@@ -2457,8 +2744,9 @@ el("planCard").addEventListener("input", function(e){
 
 /* Aktionen rund um Pläne, Freigabe und Team */
 function planAktion(a, v){
-  if (a === "planOpen"){ planOeffnen(v); toast("Plan geöffnet"); }
-  else if (a === "planNew"){
+  if (a === "planOpen"){ planOeffnen(v); toast("Plan geöffnet"); return; }
+  if (!istAdmin()){ toast("Das dürfen nur Admins"); return; }
+  if (a === "planNew"){
     var j = state ? state.year : 2027;
     planAnlegen(defaultState(j), "Neuer Plan " + j, j).then(function(pl){
       planOeffnen(pl.id); toast("Neuer Plan angelegt");
@@ -2492,7 +2780,7 @@ function planAktion(a, v){
     });
   }
   else if (a === "freigeben"){
-    var offen = aufgaben.filter(function(t){ return !t.erledigt; }).length;
+    var offen = aufgaben.filter(function(t){ return !erledigt(t); }).length;
     if (!offen){ planStatus("fertig"); toast("Plan freigegeben"); return; }
     bestaetige("Plan freigeben", "Es sind noch " + offen + " Aufgaben offen. Trotzdem freigeben?", "Freigeben", function(){
       planStatus("fertig"); toast("Plan freigegeben");
@@ -2512,6 +2800,24 @@ el("panel").addEventListener("click", function(e){
     planAktion(pb.dataset.act, pb.dataset.v); return;
   }
   if (e.target.id === "tAdd"){ aufgabeAnlegen(); return; }
+  /* Zugriffsliste */
+  var zneu = e.target.closest("[data-zneu]");
+  if (zneu && !zneu.disabled){
+    zugriffSetzen(zneu.dataset.zneu, {});
+    toast("Als Beobachter eingetragen – Rolle bei Bedarf ändern");
+    return;
+  }
+  var zweg = e.target.dataset.zweg;
+  if (zweg){
+    if (!istAdmin()) return;
+    bestaetige("Zugriff entziehen", personName(zweg) + " sieht die Seite danach nur noch den Hinweis „Kein Zugriff“. Im Teilen-Menü bleibt die Person freigegeben, bis du sie dort entfernst.", "Entziehen", function(){
+      zugriff = zugriff.filter(function(z){ return z.id !== zweg; });
+      Ablage.loeschen("zugriff", zweg);
+      render(false);
+    });
+    return;
+  }
+  if (!istAdmin() && (e.target.id === "abtAdd" || e.target.dataset.tdel || e.target.dataset.teamdel)) return;
   if (e.target.id === "abtAdd"){
     var n = el("abtName").value.trim();
     if (!n){ toast("Bitte einen Namen eingeben"); return; }
@@ -2563,7 +2869,17 @@ el("panel").addEventListener("click", function(e){
   else if (a === "download") saveFile(exportPayload());
 });
 el("panel").addEventListener("change", function(e){
+  if (e.target.dataset.zrolle){ zugriffSetzen(e.target.dataset.zrolle, {rolle:e.target.value}); return; }
+  if (e.target.dataset.zabt !== undefined && e.target.dataset.zabt){ zugriffSetzen(e.target.dataset.zabt, {abteilungId:e.target.value}); return; }
+  var eigen = e.target.dataset.rnotiz || e.target.dataset.rdatum;
+  if (eigen){
+    var ta = aufgaben.filter(function(x){ return x.id === eigen; })[0];
+    if (ta) rueckmeldungSetzen(ta, e.target.dataset.rnotiz ? "notiz" : "datum", e.target.value.trim());
+    if (ta && e.target.dataset.rdatum) toast("Termin übernommen – abhängige Schritte neu gerechnet");
+    return;
+  }
   var rn = e.target.dataset.rename;
+  if (rn && !istAdmin()) return;
   if (rn){
     var mr = mitglied(rn), neu = e.target.value.trim();
     if (!mr) return;
@@ -2575,8 +2891,14 @@ el("panel").addEventListener("change", function(e){
   if (done && planMeta){
     var t = aufgaben.filter(function(x){ return x.id === done; })[0];
     if (!t) return;
+    if (!istAdmin()){
+      if (istMeineAufgabe(t)) rueckmeldungSetzen(t, "erledigt", e.target.checked);
+      else { e.target.checked = !e.target.checked; toast("Diese Aufgabe ist dir nicht zugewiesen"); }
+      return;
+    }
     t.erledigt = e.target.checked;
     t.erledigtAm = e.target.checked ? nowISO() : "";
+    t.erledigtStand = nowISO();
     Ablage.aufgabeSichern(planMeta.id, t).then(function(){ pruefeFreigabe(); render(false); });
     render(false);
     return;
@@ -2622,6 +2944,7 @@ el("panel").addEventListener("change", function(e){
 el("panel").addEventListener("keydown", function(e){
   if (e.key !== "Enter") return;
   var abt = e.target.dataset.persFor;
+  if (abt !== undefined && !istAdmin()) return;
   if (abt !== undefined){
     var n = e.target.value.trim();
     if (!n) return;
@@ -2640,8 +2963,8 @@ function fuellePersonen(behalte){
   if (!sel || !abtSel) return;
   var gueltig = abtSel.value && abtSel.value !== "__neu";
   sel.innerHTML = '<option value="">Person (optional)</option>' +
-    personen(abtSel.value).map(function(m){
-      return '<option value="'+esc(m.id)+'"'+(m.id === behalte ? " selected" : "")+'>'+esc(m.name)+'</option>';
+    personen(abtSel.value, "auchOhne").map(function(m){
+      return '<option value="'+esc(m.id)+'"'+(m.id === behalte ? " selected" : "")+'>'+esc(m.name)+(m.login ? " · mit Login" : "")+'</option>';
     }).join("") +
     (gueltig ? '<option value="__neu">+ Neue Person …</option>' : "");
 }
@@ -2656,6 +2979,7 @@ function setzeFaellig(){
 }
 
 el("panel").addEventListener("input", function(e){
+  if (e.target.id === "zSuche"){ zugriffSuchen(e.target.value); return; }
   if (e.target.dataset.r === "label" || e.target.dataset.r === "offset"){
     var tr = e.target.closest("tr[data-nr]"), nr = +tr.dataset.nr;
     var s = state.steps.filter(function(x){ return x.nr === nr; })[0];
@@ -2713,16 +3037,28 @@ function planStatus(status){
 }
 /* Sind alle Aufgaben erledigt, gilt der Plan als freigegeben und liegt im Archiv. */
 function pruefeFreigabe(){
-  if (!planMeta || planMeta.status === "fertig") return;
+  if (!planMeta || planMeta.status === "fertig" || !istAdmin()) return;
   if (!aufgaben.length) return;
-  if (aufgaben.some(function(t){ return !t.erledigt; })) return;
+  if (aufgaben.some(function(t){ return !erledigt(t); })) return;
+  /* Rückmeldungen festschreiben, damit sie den abgelegten Plan nicht mehr verändern */
+  var ov = wirksameUeberschreibungen();
+  aufgaben.forEach(function(t){
+    var e = rueckmeldung(t);
+    if (!e) return;
+    t.erledigt = true;
+    if (e.notiz) t.antwort = e.notiz;
+    Ablage.aufgabeSichern(planMeta.id, t);
+  });
+  state.overrides = ov;
+  planMeta.inhalt = planInhalt();
   planMeta.status = "fertig";
   planMeta.freigegebenAm = nowISO();
   Ablage.planSichern(planMeta);
+  standMerken();
   toast("Alle Aufgaben erledigt – Plan freigegeben und abgelegt");
 }
 function aufgabeAnlegen(){
-  if (!planMeta) return;
+  if (!planMeta || !istAdmin()) return;
   var titel = el("tTitel").value.trim();
   if (!titel){ toast("Bitte die Aufgabe benennen"); return; }
   var t = {
@@ -2732,6 +3068,7 @@ function aufgabeAnlegen(){
     schrittNr: el("tSchritt").value ? +el("tSchritt").value : 0,
     ausgabeId: el("tAusgabe").value || "",
     faellig: el("tDatum").value || "",
+    terminFreigegeben: !!(el("tTermin") && el("tTermin").checked),
     erledigt: false, erstelltAm: nowISO()
   };
   aufgaben.push(t);

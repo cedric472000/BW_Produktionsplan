@@ -123,6 +123,53 @@ Seite funktioniert also in jedem Fall vollständig. Die geteilte Ablage legt
 Pläne unter `plaene/<id>`, Aufgaben unter `plaene/<id>/aufgaben/<id>` und das
 Team unter `team/<id>` ab.
 
+## Zugriff und Rollen
+
+Abgesichert ist nur die veröffentlichte Artifact-Fassung. Den Zugang selbst regelt
+das **Teilen-Menü** von claude.ai: Wer dort nicht freigegeben ist, kann die
+Seite nicht öffnen. Die Anmeldung läuft über das claude.ai-Konto, also über die
+Mailadresse.
+
+Im Reiter **Zugriff** (nur für Admins) trägt man die freigegebenen Personen über
+die Suche nach Name oder Mailadresse ein und vergibt die Rolle:
+
+| Rolle | Freigabe im Teilen-Menü | darf |
+|---|---|---|
+| Admin | Bearbeiten | alles: Pläne, Termine, Regelwerk, Aufgaben, Team, Zugriffsliste |
+| Beobachter | Ansehen | alles ansehen und exportieren, nichts ändern |
+| Zugewiesene Aufgaben | Ansehen | wie Beobachter, dazu bei den eigenen Aufgaben: abhaken, Rückmeldung schreiben und – wenn bei der Aufgabe „Die zuständige Person darf den Termin des Schritts ändern“ gesetzt ist – den Termin des verknüpften Schritts setzen |
+
+Die Besitzerin oder der Besitzer der Seite ist immer Admin. Geteilte, aber nicht
+eingetragene Personen sehen nur einen Hinweis „Kein Zugriff“. Ist jemand als
+Admin eingetragen, aber nur mit *Ansehen* geteilt, bleibt die Seite für diese
+Person schreibgeschützt und zeigt einen Hinweis.
+
+Durchgesetzt werden die Rechte von den Regeln der Datenbank, nicht nur von der
+Oberfläche:
+
+```json
+{"db":{"rules":[
+  {"path":"",                "read":"interact", "write":"admin"},
+  {"path":"freigaben",       "read":"interact", "write":"admin"},
+  {"path":"freigaben/{self}",                    "write":"interact"}
+]}, "user":{"scopes":["profile","email"]}, "downloads":true}
+```
+
+Schreiben darf also nur, wer *Bearbeiten* hat. Alle anderen dürfen nur ihr
+eigenes Dokument `freigaben/<kennung>` schreiben, und daraus übernimmt die
+Seite nur Einträge zu Aufgaben, die dieser Person zugewiesen sind und deren
+Rolle *Zugewiesene Aufgaben* ist. Die Zugriffsliste unter `zugriff/<kennung>`
+speichert nur die Kennung, die Rolle und die Abteilung. Namen und Mailadressen
+kommen bei jedem Aufruf frisch aus dem Verzeichnis. Wird ein Plan freigegeben,
+schreibt die Seite Haken, Termine und Rückmeldungen der zuständigen Personen in
+den Plan fest. Spätere Änderungen an ihren Dokumenten wirken dann nicht mehr.
+
+Der Hinweis „Kein Zugriff“ ist eine Sperre der Oberfläche: Wer im Teilen-Menü
+freigegeben ist, kann die Daten technisch lesen. Wer nichts sehen soll, wird
+im Teilen-Menü gar nicht erst freigegeben. Die Datei- und die GitHub-Pages-Fassung
+haben keine Anmeldung. Dort arbeitet jede Person als Admin in ihrem eigenen
+Browserspeicher.
+
 ## Manuelle Termine
 
 Einzelne Termine lassen sich pro Ausgabe von Hand setzen – für Urlaubszeiten,
