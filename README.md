@@ -152,15 +152,17 @@ Oberfläche:
   {"path":"",                "read":"interact", "write":"admin"},
   {"path":"freigaben",       "read":"interact", "write":"admin"},
   {"path":"freigaben/{self}",                    "write":"interact"}
-]}, "user":{"scopes":["profile","email"]}, "downloads":true}
+]}, "user":{"scopes":["profile"]}, "downloads":true}
 ```
 
 Schreiben darf also nur, wer *Bearbeiten* hat. Alle anderen dürfen nur ihr
 eigenes Dokument `freigaben/<kennung>` schreiben, und daraus übernimmt die
 Seite nur Einträge zu Aufgaben, die dieser Person zugewiesen sind und deren
 Rolle *Zugewiesene Aufgaben* ist. Die Zugriffsliste unter `zugriff/<kennung>`
-speichert nur die Kennung, die Rolle und die Abteilung. Namen und Mailadressen
-kommen bei jedem Aufruf frisch aus dem Verzeichnis. Wird ein Plan freigegeben,
+speichert nur die Kennung, die Rolle und die Abteilung. Namen kommen bei jedem
+Aufruf frisch aus dem Verzeichnis. Die Suche findet Personen auch über die
+Mailadresse. Angezeigt wird die Adresse nur, wenn die Organisation den Bereich
+`email` freigibt; derzeit ist er nicht verfügbar. Wird ein Plan freigegeben,
 schreibt die Seite Haken, Termine und Rückmeldungen der zuständigen Personen in
 den Plan fest. Spätere Änderungen an ihren Dokumenten wirken dann nicht mehr.
 
