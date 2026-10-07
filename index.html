@@ -301,6 +301,11 @@ tr.phaserow th.rowhead{padding:0}
   padding:9px 18px;border-radius:20px;font-size:13px;z-index:99;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .18s}
 .toast.show{opacity:1}
 
+.xlsxinfo{padding:16px 18px}
+.xlsxkopf{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);margin-bottom:10px}
+.xlsxinfo ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
+.xlsxinfo li b{color:var(--ink);font-weight:600;margin-right:7px}
+
 /* ---------- Plan: Kopfleiste und Seitenkarte ---------- */
 .planbox{display:flex;align-items:center;gap:8px;padding:0 18px;border-right:1px solid var(--line);min-width:0}
 .planbox .pl{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}
@@ -553,7 +558,8 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
       <header><h2>Daten</h2></header>
       <div class="body">
         <div class="rowbtns" style="margin-top:0">
-          <button type="button" class="btn sm" id="printBtn">Plan drucken</button>
+          <button type="button" class="btn sm" id="printBtn">Drucken / PDF</button>
+          <button type="button" class="btn sm" id="xlsxBtn">Excel-Datei</button>
           <button type="button" class="btn sm ghost" id="resetAll">Alles zurücksetzen</button>
         </div>
       </div>
@@ -1848,22 +1854,311 @@ function heute(){
   return D(n.getFullYear(), n.getMonth()+1, n.getDate());
 }
 
+/* ---------- Excel-Datei (.xlsx) ohne Fremdbibliothek -----------------------
+   Eine .xlsx ist ein ZIP-Archiv aus XML-Dateien. Geschrieben wird
+   unkomprimiert – für einige hundert Zellen reicht das, und die Seite bleibt
+   ohne Internetverbindung voll funktionsfähig. Datumswerte werden als echte
+   Excel-Daten abgelegt, damit sich danach sortieren und filtern lässt.
+   ------------------------------------------------------------------------- */
+var Xlsx = (function(){
+  var CRC = [];
+  for (var n = 0; n < 256; n++){
+    var c = n;
+    for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+    CRC[n] = c >>> 0;
+  }
+  function crc32(b){
+    var c = 0xFFFFFFFF;
+    for (var i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+  function zip(dateien){
+    var enc = new TextEncoder(), teile = [], verz = [], pos = 0;
+    dateien.forEach(function(f){
+      var name = enc.encode(f.name), d = enc.encode(f.xml), crc = crc32(d);
+      var h = new DataView(new ArrayBuffer(30));
+      h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true);
+      h.setUint16(12, 0x21, true);                                   /* 01.01.1980 */
+      h.setUint32(14, crc, true); h.setUint32(18, d.length, true); h.setUint32(22, d.length, true);
+      h.setUint16(26, name.length, true);
+      teile.push(new Uint8Array(h.buffer), name, d);
+      var z = new DataView(new ArrayBuffer(46));
+      z.setUint32(0, 0x02014b50, true); z.setUint16(4, 20, true); z.setUint16(6, 20, true);
+      z.setUint16(8, 0x0800, true); z.setUint16(14, 0x21, true);
+      z.setUint32(16, crc, true); z.setUint32(20, d.length, true); z.setUint32(24, d.length, true);
+      z.setUint16(28, name.length, true); z.setUint32(42, pos, true);
+      verz.push(new Uint8Array(z.buffer), name);
+      pos += 30 + name.length + d.length;
+    });
+    var groesse = verz.reduce(function(a, b){ return a + b.length; }, 0);
+    var e = new DataView(new ArrayBuffer(22));
+    e.setUint32(0, 0x06054b50, true); e.setUint16(8, dateien.length, true); e.setUint16(10, dateien.length, true);
+    e.setUint32(12, groesse, true); e.setUint32(16, pos, true);
+    var alle = teile.concat(verz, [new Uint8Array(e.buffer)]);
+    var out = new Uint8Array(alle.reduce(function(a, b){ return a + b.length; }, 0)), o = 0;
+    alle.forEach(function(a){ out.set(a, o); o += a.length; });
+    return out;
+  }
+  function x(t){
+    return String(t).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function spalte(i){ var s = ""; i++; while (i > 0){ var m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; }
+  var NULLTAG = Date.UTC(1899, 11, 30);
+  function zelle(ref, c){
+    if (c === null || c === undefined || c === "") return "";
+    if (typeof c !== "object" || c instanceof Date) c = {v:c};
+    var st = c.s ? ' s="' + c.s + '"' : "";
+    if (c.v === null || c.v === undefined || c.v === "") return st ? '<c r="' + ref + '"' + st + '/>' : "";
+    if (c.v instanceof Date) return '<c r="' + ref + '"' + st + '><v>' + Math.round((c.v - NULLTAG) / MS) + '</v></c>';
+    if (typeof c.v === "number") return '<c r="' + ref + '"' + st + '><v>' + c.v + '</v></c>';
+    return '<c r="' + ref + '"' + st + ' t="inlineStr"><is><t xml:space="preserve">' + x(c.v) + '</t></is></c>';
+  }
+  function blatt(b){
+    var zeilen = b.zeilen.map(function(z, i){
+      var h = b.hoehen && b.hoehen[i] ? ' ht="' + b.hoehen[i] + '" customHeight="1"' : "";
+      return '<row r="' + (i + 1) + '"' + h + '>' + z.map(function(c, j){ return zelle(spalte(j) + (i + 1), c); }).join("") + '</row>';
+    }).join("");
+    var fix = b.fix ? '<pane' + (b.fix[0] ? ' xSplit="' + b.fix[0] + '"' : "") + (b.fix[1] ? ' ySplit="' + b.fix[1] + '"' : "") +
+      ' topLeftCell="' + spalte(b.fix[0]) + (b.fix[1] + 1) + '" activePane="' + (b.fix[0] && b.fix[1] ? "bottomRight" : b.fix[1] ? "bottomLeft" : "topRight") +
+      '" state="frozen"/>' : "";
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
+      '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>' +
+      '<sheetViews><sheetView workbookViewId="0" zoomScale="100">' + fix + '</sheetView></sheetViews>' +
+      '<sheetFormatPr defaultRowHeight="15"/>' +
+      '<cols>' + b.breiten.map(function(w, i){ return '<col min="' + (i + 1) + '" max="' + (i + 1) + '" width="' + w + '" customWidth="1"/>'; }).join("") + '</cols>' +
+      '<sheetData>' + zeilen + '</sheetData>' +
+      (b.filter ? '<autoFilter ref="' + b.filter + '"/>' : "") +
+      (b.verbunden && b.verbunden.length ? '<mergeCells count="' + b.verbunden.length + '">' + b.verbunden.map(function(m){ return '<mergeCell ref="' + m + '"/>'; }).join("") + '</mergeCells>' : "") +
+      '<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/>' +
+      '<pageSetup paperSize="9" orientation="' + (b.quer ? "landscape" : "portrait") + '" fitToWidth="1" fitToHeight="0"/>' +
+      '</worksheet>';
+  }
+  /* Formatvorlagen – die Nummern stehen in S */
+  var schrift = function(f){
+    return '<font>' + (f.b ? '<b/>' : "") + (f.i ? '<i/>' : "") + '<sz val="' + (f.sz || 10) + '"/>' +
+      (f.c ? '<color rgb="FF' + f.c + '"/>' : "") + '<name val="Arial"/><family val="2"/></font>';
+  };
+  var FONTS = [{}, {b:1, c:"FFFFFF"}, {b:1}, {b:1, c:"003087"}, {b:1, c:"B3202B"}, {b:1, sz:15, c:"003087"}, {i:1, sz:9, c:"74839A"}, {b:1, sz:9, c:"44546B"}];
+  var FILLS = ["003087", "E2EAF6", "FBE6E7", "E7ECF4", "FAEBD3"];   /* ab Index 2 */
+  /*            numFmt font fill border  Ausrichtung                       */
+  var XF = [
+    [0,   0, 0, 0, ""],                                                /* 0  Standard        */
+    [0,   1, 2, 1, '<alignment vertical="center" wrapText="1"/>'],     /* 1  Kopf            */
+    [164, 0, 0, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 2  Datum           */
+    [164, 3, 3, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 3  Datum manuell   */
+    [0,   0, 0, 1, '<alignment vertical="center" wrapText="1"/>'],     /* 4  Text            */
+    [0,   2, 0, 1, '<alignment vertical="center" wrapText="1"/>'],     /* 5  Text fett       */
+    [164, 4, 4, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 6  Datum E-Tag     */
+    [0,   7, 5, 1, '<alignment vertical="center"/>'],                  /* 7  Phase           */
+    [1,   0, 0, 1, '<alignment horizontal="center" vertical="center"/>'], /* 8  Zahl          */
+    [0,   5, 0, 0, ""],                                                /* 9  Titel           */
+    [0,   6, 0, 0, ""],                                                /* 10 Unterzeile      */
+    [165, 0, 0, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 11 Datum lang      */
+    [164, 0, 6, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 12 Datum verschoben */
+    [0,   4, 4, 1, '<alignment vertical="center" wrapText="1"/>'],     /* 13 Text E-Tag      */
+    [164, 1, 2, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 14 Datum im Kopf   */
+    [165, 3, 3, 1, '<alignment horizontal="left" vertical="center"/>'],                  /* 15 Datum lang manuell */
+    [0,   3, 3, 1, '<alignment horizontal="center" vertical="center"/>']  /* 16 Haken         */
+  ];
+  var STYLES = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+    '<numFmts count="2"><numFmt numFmtId="164" formatCode="[$-407]ddd dd.mm.yy"/><numFmt numFmtId="165" formatCode="dd.mm.yyyy"/></numFmts>' +
+    '<fonts count="' + FONTS.length + '">' + FONTS.map(schrift).join("") + '</fonts>' +
+    '<fills count="' + (FILLS.length + 2) + '"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>' +
+      FILLS.map(function(c){ return '<fill><patternFill patternType="solid"><fgColor rgb="FF' + c + '"/><bgColor indexed="64"/></patternFill></fill>'; }).join("") + '</fills>' +
+    '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border>' +
+      '<border>' + ["left","right","top","bottom"].map(function(k){ return '<' + k + ' style="thin"><color rgb="FFD3DBE6"/></' + k + '>'; }).join("") + '<diagonal/></border></borders>' +
+    '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
+    '<cellXfs count="' + XF.length + '">' + XF.map(function(f){
+      return '<xf numFmtId="' + f[0] + '" fontId="' + f[1] + '" fillId="' + f[2] + '" borderId="' + f[3] + '" xfId="0"' +
+        (f[0] ? ' applyNumberFormat="1"' : "") + (f[1] ? ' applyFont="1"' : "") + (f[2] ? ' applyFill="1"' : "") +
+        (f[3] ? ' applyBorder="1"' : "") + (f[4] ? ' applyAlignment="1">' + f[4] + '</xf>' : '/>');
+    }).join("") + '</cellXfs>' +
+    '<cellStyles count="1"><cellStyle name="Standard" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+
+  function mappe(titel, blaetter){
+    var ns = "http://schemas.openxmlformats.org/";
+    var dateien = [
+      {name:"[Content_Types].xml", xml:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="' + ns + 'package/2006/content-types">' +
+        '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>' +
+        '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+        blaetter.map(function(b, i){ return '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'; }).join("") +
+        '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' +
+        '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>'},
+      {name:"_rels/.rels", xml:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="' + ns + 'package/2006/relationships">' +
+        '<Relationship Id="rId1" Type="' + ns + 'officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' +
+        '<Relationship Id="rId2" Type="' + ns + 'package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>'},
+      {name:"docProps/core.xml", xml:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="' + ns + 'package/2006/metadata/core-properties" ' +
+        'xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
+        '<dc:title>' + x(titel) + '</dc:title><dc:creator>Produktionsplan Berliner Wirtschaft</dc:creator>' +
+        '<dcterms:created xsi:type="dcterms:W3CDTF">' + new Date().toISOString().split(".")[0] + 'Z</dcterms:created></cp:coreProperties>'},
+      {name:"xl/workbook.xml", xml:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="' + ns + 'spreadsheetml/2006/main" xmlns:r="' + ns + 'officeDocument/2006/relationships">' +
+        '<bookViews><workbookView/></bookViews><sheets>' +
+        blaetter.map(function(b, i){ return '<sheet name="' + x(b.name) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>'; }).join("") +
+        '</sheets>' + (blaetter.some(function(b){ return b.drucktitel; }) ? '<definedNames>' + blaetter.map(function(b, i){
+          return b.drucktitel ? '<definedName name="_xlnm.Print_Titles" localSheetId="' + i + '">' +
+            b.drucktitel.split(",").map(function(t){ return "'" + x(b.name) + "'!" + t; }).join(",") + '</definedName>' : "";
+        }).join("") + '</definedNames>' : "") + '</workbook>'},
+      {name:"xl/_rels/workbook.xml.rels", xml:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="' + ns + 'package/2006/relationships">' +
+        blaetter.map(function(b, i){ return '<Relationship Id="rId' + (i + 1) + '" Type="' + ns + 'officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (i + 1) + '.xml"/>'; }).join("") +
+        '<Relationship Id="rId' + (blaetter.length + 1) + '" Type="' + ns + 'officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},
+      {name:"xl/styles.xml", xml:STYLES}
+    ];
+    blaetter.forEach(function(b, i){ dateien.push({name:"xl/worksheets/sheet" + (i + 1) + ".xml", xml:blatt(b)}); });
+    return zip(dateien);
+  }
+  return {mappe:mappe, spalte:spalte};
+})();
+
+/* Arbeitsmappe des offenen Plans: Terminplan, Terminliste, Aufgaben, Feiertage */
+function excelMappe(){
+  var is = model.issues, steps = model.steps;
+  var titel = planMeta ? planMeta.titel : "Produktionsplan " + state.year;
+  var stand = "Stand " + fmt(heute()) + " · Magazin der IHK Berlin";
+  var S = {kopf:1, dat:2, datMan:3, txt:4, fett:5, datE:6, phase:7, zahl:8, titel:9, unter:10,
+           datL:11, datVer:12, txtE:13, datKopf:14, datLMan:15, haken:16};
+
+  /* 1 – Terminplan als Matrix, wie auf dem Bildschirm */
+  var breit = 3 + is.length;
+  var plan = [
+    [{v:"Berliner Wirtschaft · " + titel, s:S.titel}],
+    [{v:stand + " · blau = manuell gesetzt · gelb = wegen Feiertag, Wochenende oder Ziel-Wochentag verschoben", s:S.unter}],
+    [{v:"Nr", s:S.kopf}, {v:"Produktionsschritt", s:S.kopf}, {v:"Ziel-Wochentag", s:S.kopf}]
+      .concat(is.map(function(x){ return {v:x.name, s:S.kopf}; })),
+    [{v:"", s:S.kopf}, {v:"E-Tag", s:S.kopf}, {v:"", s:S.kopf}]
+      .concat(is.map(function(x){ return {v:x.etag, s:S.datKopf}; }))
+  ];
+  var verbunden = ["A1:" + Xlsx.spalte(breit - 1) + "1", "A2:" + Xlsx.spalte(breit - 1) + "2"];
+  var letztePhase = null;
+  steps.forEach(function(st){
+    var ph = phaseOf(st);
+    if (ph.key !== letztePhase){
+      letztePhase = ph.key;
+      var z = [{v:"", s:S.phase}, {v:ph.label.toUpperCase(), s:S.phase}];
+      for (var i = 2; i < breit; i++) z.push({v:"", s:S.phase});
+      plan.push(z);
+    }
+    var etag = st.anchor === 0;
+    plan.push([{v:st.nr, s:S.zahl}, {v:st.label, s:etag ? S.txtE : S.txt}, {v:wdName(st.wd), s:etag ? S.txtE : S.txt}]
+      .concat(is.map(function(x){
+        var r = x.byNr.get(st.nr);
+        if (!r) return {v:"", s:S.txt};
+        return {v:r.date, s: r.manual ? S.datMan : etag ? S.datE : r.shift ? S.datVer : S.dat};
+      })));
+  });
+  var hoehenPlan = {2:30};
+
+  /* 2 – Terminliste: jeder Termin eine Zeile, über alle Ausgaben nach Datum */
+  var alle = [];
+  is.forEach(function(x){ x.rows.forEach(function(r){ alle.push({x:x, r:r}); }); });
+  alle.sort(function(a, b){ return (a.r.date - b.r.date) || (a.x.index - b.x.index) || (a.r.step.nr - b.r.step.nr); });
+  var liste = [
+    [{v:"Terminliste · " + titel, s:S.titel}],
+    [{v:stand + " · Spaltenköpfe filtern nach Ausgabe, Phase oder Herkunft", s:S.unter}],
+    ["Datum","Wochentag","KW","Ausgabe","Nr","Produktionsschritt","Phase","Ziel-Wochentag","Herkunft","Automatisch wäre","E-Tag der Ausgabe"]
+      .map(function(h){ return {v:h, s:S.kopf}; })
+  ];
+  alle.forEach(function(e){
+    var r = e.r, a = e.x.autoByNr.get(r.step.nr);
+    liste.push([
+      {v:r.date, s:r.manual ? S.datLMan : S.datL}, {v:WD_LONG[dow(r.date)-1], s:S.txt}, {v:isoWeek(r.date), s:S.zahl},
+      {v:e.x.name, s:S.txt}, {v:r.step.nr, s:S.zahl}, {v:r.step.label, s:r.step.anchor === 0 ? S.txtE : S.txt},
+      {v:phaseOf(r.step).label, s:S.txt}, {v:wdName(r.step.wd), s:S.txt},
+      {v:r.manual ? "manuell" : r.shift ? "verschoben (" + (r.shift > 0 ? "+" : "") + r.shift + " T)" : "automatisch", s:S.txt},
+      {v:r.manual && a ? a.date : "", s:S.datL}, {v:e.x.etag, s:S.datL}
+    ]);
+  });
+
+  /* 3 – Aufgaben */
+  var auf = [
+    [{v:"Aufgaben · " + titel, s:S.titel}],
+    [{v:stand + " · " + aufgaben.filter(function(t){ return t.erledigt; }).length + " von " + aufgaben.length + " erledigt", s:S.unter}],
+    ["Erledigt","Aufgabe","Abteilung","Person","Fällig","Produktionsschritt","Ausgabe","Erledigt am"].map(function(h){ return {v:h, s:S.kopf}; })
+  ];
+  aufgaben.slice().sort(function(a, b){
+    var na = (mitglied(a.abteilungId) || {name:"~"}).name, nb = (mitglied(b.abteilungId) || {name:"~"}).name;
+    if (na !== nb) return na.localeCompare(nb, "de");
+    var da = aufgabeFaellig(a), db = aufgabeFaellig(b);
+    return (da && db) ? da - db : da ? -1 : db ? 1 : 0;
+  }).forEach(function(t){
+    var st = t.schrittNr ? steps.filter(function(x){ return x.nr === +t.schrittNr; })[0] : null;
+    var au = t.ausgabeId ? is.filter(function(x){ return x.id === t.ausgabeId; })[0] : null;
+    auf.push([
+      {v:t.erledigt ? "✓" : "", s:t.erledigt ? S.haken : S.txt}, {v:t.titel, s:S.txt},
+      {v:(mitglied(t.abteilungId) || {name:""}).name, s:S.txt}, {v:(mitglied(t.personId) || {name:""}).name, s:S.txt},
+      {v:aufgabeFaellig(t) || "", s:S.datL}, {v:st ? st.nr + " · " + st.label : "", s:S.txt},
+      {v:au ? au.name : "", s:S.txt}, {v:t.erledigtAm ? parseISO(t.erledigtAm.slice(0, 10)) : "", s:S.datL}
+    ]);
+  });
+  if (!aufgaben.length) auf.push([{v:"Für diesen Plan sind noch keine Aufgaben angelegt.", s:S.unter}]);
+
+  /* 4 – Feiertage, mit denen gerechnet wurde */
+  var fei = [
+    [{v:"Freie Tage · " + titel, s:S.titel}],
+    [{v:stand + " · nur die Tage, die in die Berechnung eingehen", s:S.unter}],
+    ["Datum","Wochentag","Bezeichnung","Gilt in"].map(function(h){ return {v:h, s:S.kopf}; })
+  ];
+  model.hol.groups.forEach(function(g){
+    g.items.filter(function(h){ return h.active; }).forEach(function(h){
+      var d = parseISO(h.date);
+      fei.push([{v:d, s:S.datL}, {v:WD_LONG[dow(d)-1], s:S.txt}, {v:h.name, s:S.txt},
+                {v:h.custom ? "eigener Eintrag" : statesLabel(h, model.hol.regions), s:S.txt}]);
+    });
+  });
+
+  return Xlsx.mappe(titel, [
+    {name:"Terminplan", zeilen:plan, breiten:[5, 46, 14].concat(is.map(function(){ return 13; })),
+     fix:[3, 4], verbunden:verbunden, hoehen:hoehenPlan, quer:true, drucktitel:"$A:$C,$3:$4"},
+    {name:"Terminliste", zeilen:liste, breiten:[12, 12, 6, 18, 5, 52, 24, 15, 18, 15, 15],
+     fix:[0, 3], filter:"A3:K" + liste.length, verbunden:["A1:K1","A2:K2"], hoehen:{2:30}, quer:true, drucktitel:"$3:$3"},
+    {name:"Aufgaben", zeilen:auf, breiten:[9, 46, 18, 18, 12, 46, 18, 12],
+     fix:[0, 3], filter:aufgaben.length ? "A3:H" + auf.length : "", verbunden:["A1:H1","A2:H2"], hoehen:{2:30}, quer:true, drucktitel:"$3:$3"},
+    {name:"Feiertage", zeilen:fei, breiten:[12, 12, 30, 40], fix:[0, 3], verbunden:["A1:D1","A2:D2"], hoehen:{2:22}, drucktitel:"$3:$3"}
+  ]);
+}
+function dateiName(endung){
+  var t = (planMeta ? planMeta.titel : "produktionsplan-" + state.year).toLowerCase()
+    .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return (t || "produktionsplan") + "." + endung;
+}
+function excelDatei(){
+  return {name:dateiName("xlsx"), type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", bytes:excelMappe()};
+}
+
 /* ---------- Ansicht: Export ---------------------------------------------- */
 var EXPORT_FORMATS = [
+  {k:"xlsx",       n:"Excel (.xlsx)"},
   {k:"csv-matrix", n:"CSV · Matrix"},
   {k:"csv-liste",  n:"CSV · Terminliste"},
   {k:"ics",        n:"Kalender (.ics)"},
   {k:"json",       n:"Konfiguration (.json)"}
 ];
-var exportFormat = "csv-matrix";
+var exportFormat = "xlsx";
 function viewExport(){
   var bar = '<div class="exportbar">'+
     EXPORT_FORMATS.map(function(f){
       return '<button type="button" class="btn sm" data-act="fmt" data-v="'+f.k+'" aria-pressed="'+(exportFormat === f.k)+'">'+f.n+'</button>';
     }).join("")+
     '<span class="spacer"></span>'+
-    '<button type="button" class="btn sm" data-act="copy">Kopieren</button>'+
+    (exportFormat === "xlsx" ? "" : '<button type="button" class="btn sm" data-act="copy">Kopieren</button>')+
     '<button type="button" class="btn sm primary" data-act="download">Datei sichern</button></div>';
+  if (exportFormat === "xlsx"){
+    var termine = model.issues.reduce(function(a, x){ return a + x.rows.length; }, 0);
+    var frei = model.hol.groups.reduce(function(a, g){ return a + g.items.filter(function(h){ return h.active; }).length; }, 0);
+    var blaetter = [
+      ["Terminplan", "die Matrix wie auf dem Bildschirm – " + model.steps.length + " Schritte × " + model.issues.length + " Ausgaben, nach Phasen gegliedert, Kopfzeilen fixiert"],
+      ["Terminliste", termine + " Termine über alle Ausgaben nach Datum, mit Filter je Spalte"],
+      ["Aufgaben", aufgaben.length + " Aufgaben nach Abteilung, mit Fälligkeit und Erledigt-Vermerk"],
+      ["Feiertage", frei + " freie Tage, mit denen gerechnet wurde"]
+    ];
+    return card("Export", bar + '<div class="xlsxinfo"><div class="xlsxkopf">'+esc(dateiName("xlsx"))+'</div>'+
+      '<ol>'+blaetter.map(function(b){ return '<li><b>'+b[0]+'</b>'+esc(b[1])+'</li>'; }).join("")+'</ol></div>'+
+      '<div class="exphint">Alle Datumsangaben sind echte Excel-Daten – sortieren, filtern und weiterrechnen funktioniert direkt. '+
+      'Manuell gesetzte Termine sind blau, verschobene gelb hinterlegt; zum Drucken ist jedes Blatt auf Seitenbreite eingestellt.</div>');
+  }
   return card("Export", bar + '<textarea id="exportText" spellcheck="false" aria-label="Exportdaten"></textarea>'+
     '<div class="exphint">CSV mit Semikolon und BOM – öffnet sich in Excel direkt in Spalten. '+
     'Die .ics-Datei legt jeden Termin als ganztägigen Kalendereintrag an. '+
@@ -1871,6 +2166,7 @@ function viewExport(){
 }
 function exportPayload(){
   var is = model.issues;
+  if (exportFormat === "xlsx") return excelDatei();
   if (exportFormat === "json") return {name:"produktionsplan-"+state.year+".json", type:"application/json", text:JSON.stringify(state, null, 2)};
   if (exportFormat === "ics"){
     var stamp = new Date().toISOString().replace(/[-:]/g,"").split(".")[0]+"Z", lines = [
@@ -1920,25 +2216,27 @@ function exportPayload(){
 }
 function buildExport(){
   var t = el("exportText");
-  if (t) t.value = exportPayload().text;
+  if (t && exportFormat !== "xlsx") t.value = exportPayload().text;
 }
 
 function saveFile(p){
+  var inhalt = p.bytes || p.text;
   if (downloadsApi){
-    downloadsApi.save({filename:p.name, data:p.text}).then(function(){
+    downloadsApi.save({filename:p.name, data:inhalt}).then(function(){
       toast(p.name + " gesichert");
     }, function(err){
       var c = err && err.code;
       if (c === "declined") return;
       if (c === "rejected_extension" || c === "extension_not_enabled")
-        toast("Dieses Format lässt sich hier nicht sichern – bitte „Kopieren“ verwenden");
+        toast(p.bytes ? "Excel-Dateien sind in dieser Ansicht gesperrt – auf GitHub Pages oder in der Datei-Fassung funktioniert es"
+                      : "Dieses Format lässt sich hier nicht sichern – bitte „Kopieren“ verwenden");
       else if (c === "rate_limited") toast("Bitte kurz warten und erneut versuchen");
-      else toast("Sichern nicht möglich – bitte „Kopieren“ verwenden");
+      else toast("Sichern nicht möglich" + (p.bytes ? "" : " – bitte „Kopieren“ verwenden"));
     });
     return;
   }
   try{
-    var blob = new Blob([p.text], {type:p.type + ";charset=utf-8"});
+    var blob = new Blob([inhalt], {type:p.type + (p.bytes ? "" : ";charset=utf-8")});
     var url = URL.createObjectURL(blob), link = document.createElement("a");
     link.href = url; link.download = p.name;
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
@@ -2113,6 +2411,7 @@ el("printBtn").addEventListener("click", function(){
   }
   setTimeout(function(){ window.print(); }, 60);
 });
+el("xlsxBtn").addEventListener("click", function(){ saveFile(excelDatei()); });
 el("resetAll").addEventListener("click", function(){
   bestaetige("Plan zurücksetzen",
     "Erscheinungstermine, Feiertage, Regelwerk und manuelle Termine dieses Plans gehen auf den Auslieferungszustand zurück. Die Aufgaben bleiben erhalten.",

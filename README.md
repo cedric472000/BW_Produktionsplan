@@ -204,6 +204,22 @@ Reihenfolge und ungewöhnliche Vorlaufzeiten.
 
 ## Export
 
-CSV-Matrix und CSV-Terminliste (Semikolon + BOM, öffnen direkt in Excel),
-`.ics` mit jedem Termin als ganztägiger Kalendereintrag, JSON-Konfiguration
-zum Sichern und Weitergeben sowie eine Druckansicht (A4 quer).
+**Excel (.xlsx)** – über *Excel-Datei* in der Seitenspalte oder im Reiter
+*Export*. Eine Arbeitsmappe mit vier Blättern:
+
+| Blatt | Inhalt |
+|---|---|
+| Terminplan | die Matrix wie auf dem Bildschirm, nach Phasen gegliedert; manuelle Termine blau, verschobene gelb, E-Tag rot hinterlegt |
+| Terminliste | jeder Termin eine Zeile, über alle Ausgaben nach Datum sortiert, mit Filter je Spalte |
+| Aufgaben | nach Abteilung, mit Person, Fälligkeit und Erledigt-Vermerk |
+| Feiertage | die freien Tage, mit denen gerechnet wurde |
+
+Alle Datumsangaben sind echte Excel-Daten, sortieren und filtern funktioniert
+direkt. Kopfzeilen sind fixiert und wiederholen sich beim Drucken; jedes Blatt
+ist auf Seitenbreite eingestellt. Die Datei wird ohne Fremdbibliothek in der
+Seite selbst erzeugt (`Xlsx` in `src/app.html`), funktioniert also auch ohne
+Internetverbindung.
+
+Daneben: CSV-Matrix und CSV-Terminliste (Semikolon + BOM), `.ics` mit jedem
+Termin als ganztägiger Kalendereintrag, JSON-Konfiguration zum Sichern und
+Weitergeben sowie *Drucken / PDF* (A4 quer).
