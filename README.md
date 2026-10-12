@@ -16,31 +16,70 @@ Die Seite ersetzt die Excel-Vorlage `BW_2027_Produktionsplan_automatisierungspla
 python3 build.py     # erzeugt index.html aus src/app.html
 ```
 
-Danach `index.html` im Browser öffnen – kein Server, kein Build-Werkzeug,
-keine Abhängigkeiten. Die Datei läuft auch von einem Netzlaufwerk oder als
-GitHub Page. Alle Eingaben werden im Browser (localStorage) gespeichert.
+Die Seite gibt es in drei Fassungen, alle aus derselben Quelle `src/app.html`:
 
-## Als Webseite veröffentlichen (GitHub Pages)
+| Fassung | Anmeldung | Ablage |
+|---|---|---|
+| **Website** (GitHub Pages + Firebase) | Mail und Passwort, nur Personen auf der Zugriffsliste | gemeinsam, live, Rechte auf dem Server |
+| claude.ai-Artifact | claude.ai-Konto, Teilen-Menü | gemeinsam, live |
+| `index.html` als Datei | keine | Browserspeicher dieses Rechners |
 
-`index.html` liegt im Wurzelverzeichnis und ist vollständig eigenständig –
-GitHub Pages kann das Repository ohne Bauschritt ausliefern.
+Ohne `firebase-config.json` ist `index.html` die Datei-Fassung: Doppelklick
+genügt, kein Server, keine Abhängigkeiten.
 
-1. Im Repository **Settings → Pages** öffnen
-2. Unter *Build and deployment* → *Source* **Deploy from a branch** wählen
-3. Branch auswählen, Ordner `/ (root)`, **Save**
-4. Nach ein bis zwei Minuten ist die Seite unter
-   `https://<benutzer>.github.io/<repository>/` erreichbar
+## Website mit Anmeldung einrichten
 
-Die leere Datei `.nojekyll` schaltet die Jekyll-Verarbeitung ab, damit die
-Dateien unverändert ausgeliefert werden.
+Die Website liegt auf GitHub Pages. Anmeldung und gemeinsame Ablage kommen von
+Firebase (Google), im kostenlosen Spark-Tarif, ohne Kreditkarte. Einmalig:
 
-**Wichtig zur Datenhaltung:** Auf GitHub Pages gibt es keine geteilte Ablage.
-Jede Besucherin und jeder Besucher arbeitet in der eigenen Browser-Kopie;
-Pläne, Aufgaben und Team werden nicht zwischen Rechnern abgeglichen. Für die
-gemeinsame Arbeit im Team ist die veröffentlichte Artifact-Fassung mit
-geteilter Datenbank gedacht. Nach einer Änderung an `src/app.html` immer
-`python3 build.py` laufen lassen und `index.html` mit committen – Pages
-liefert genau diese Datei aus.
+**1. Firebase-Projekt**
+1. <https://console.firebase.google.com> → *Projekt hinzufügen*, Name z. B.
+   `bw-produktionsplan`, Google Analytics aus.
+2. *Build → Authentication → Jetzt starten → Sign-in method*: **E-Mail-Adresse/Passwort**
+   aktivieren (nur den oberen Schalter, nicht „E-Mail-Link“) → Speichern.
+3. *Authentication → Einstellungen → Autorisierte Domains*: `cedric472000.github.io`
+   hinzufügen, damit die Links in den Mails auf die Seite zurückführen.
+4. *Authentication → Vorlagen*: Vorlagensprache **Deutsch**. Optional den
+   Absendernamen auf „Produktionsplan Berliner Wirtschaft“ setzen.
+5. *Build → Firestore Database → Datenbank erstellen*: Standort
+   **europe-west3 (Frankfurt)**, im **Produktionsmodus** starten.
+6. *Firestore → Regeln*: den Inhalt von [`firestore.rules`](firestore.rules)
+   vollständig einfügen → **Veröffentlichen**.
+7. *Projekteinstellungen (Zahnrad) → Allgemein → Meine Apps → Web (`</>`)*:
+   App registrieren (ohne Hosting). Die angezeigten Werte von `firebaseConfig`
+   als `firebase-config.json` neben `build.py` ablegen:
+   ```json
+   {"apiKey": "…", "authDomain": "….firebaseapp.com", "projectId": "…",
+    "storageBucket": "…", "messagingSenderId": "…", "appId": "…"}
+   ```
+   Diese Werte sind kein Geheimnis. Sie stehen in jeder Firebase-Website im
+   Quelltext; geschützt wird über die Regeln aus Schritt 6.
+8. `python3 build.py`, `index.html` und `firebase-config.json` committen.
+
+**2. GitHub Pages**
+1. Pages ist bei privaten Repositories nur mit bezahltem GitHub-Tarif möglich.
+   Kostenlos: *Settings → General → Danger Zone → Change visibility → Public*.
+   Im Repository liegen nur Code und Regeln, keine Pläne und keine Personen.
+2. *Settings → Pages → Build and deployment → Deploy from a branch*,
+   Branch `main`, Ordner `/ (root)` → **Save**.
+3. Nach ein bis zwei Minuten läuft die Seite unter
+   <https://cedric472000.github.io/BW_Produktionsplan/>.
+
+**3. Erster Login**
+Die erste Person, die sich nach der Einrichtung mit bestätigter Mailadresse
+anmeldet, wird **Besitzer** (immer Admin). Das also sofort selbst erledigen:
+*Konto anlegen*, Mail bestätigen, *Als Besitzer übernehmen*. Danach im Reiter
+**Zugriff** die Kolleginnen und Kollegen mit Name, Mailadresse und Rolle eintragen
+und ihnen den Link schicken. Den Besitz ändern lässt sich nur in der
+Firebase-Konsole (*Firestore → meta → besitzer*).
+
+**Grenzen des kostenlosen Tarifs:** täglich 50 000 Lese- und 20 000
+Schreibvorgänge, 1 000 Bestätigungs- und 150 Passwort-Mails. Für eine
+Redaktion reicht das weit. Ein Login per Mail-Link ohne Passwort wäre im
+kostenlosen Tarif auf 5 Mails am Tag begrenzt, deshalb Mail und Passwort.
+
+`.nojekyll` schaltet die Jekyll-Verarbeitung von GitHub Pages ab. Nach jeder
+Änderung an `src/app.html`: `python3 build.py` und `index.html` mit committen.
 
 ## Aufbau
 
@@ -49,6 +88,10 @@ liefert genau diese Datei aus.
 | `src/app.html` | Die komplette Anwendung: Styles, Markup, Rechenkern (einzige Quelle) |
 | `build.py` | Verpackt `src/app.html` in ein vollständiges HTML-Dokument |
 | `index.html` | Erzeugt – die auslieferbare Seite |
+| `firebase-config.json` | Zugangsdaten des Firebase-Projekts; fehlt sie, wird die Datei-Fassung gebaut |
+| `firestore.rules` | Zugriffsregeln der Website – hier wird über Rechte entschieden |
+| `vendor/firebase.js` | Firebase-Bibliothek, gebündelt (neu bauen: `cd tools/firebase && npm install && npm run bundle`) |
+| `firebase.json` | für die Firebase-Werkzeuge: Regeln hochladen, Emulator für Tests |
 
 `src/app.html` ist bewusst ohne `<!doctype>`/`<html>`/`<head>`/`<body>` geschrieben,
 damit dieselbe Quelle als eigenständige Seite **und** als eingebettetes Artifact läuft.
@@ -115,34 +158,63 @@ Standardansicht. Über *Entsperren* geht er zurück in Arbeit.
 
 | Umgebung | Ablage |
 |---|---|
-| veröffentlichte Seite (Artifact) | geteilte Datenbank – alle im Team sehen denselben Stand, Änderungen erscheinen live |
-| `index.html` als Datei oder GitHub Page | Browserspeicher des jeweiligen Rechners |
+| Website mit Anmeldung | Firestore (Firebase) – alle im Team sehen denselben Stand, Änderungen erscheinen live |
+| veröffentlichte Seite (Artifact) | geteilte Datenbank in claude.ai, ebenso live |
+| `index.html` als Datei | Browserspeicher des jeweiligen Rechners |
 
-Beide Wege nutzen dieselbe Schnittstelle (`Ablage` in `src/app.html`), die
-Seite funktioniert also in jedem Fall vollständig. Die geteilte Ablage legt
+Alle Wege nutzen dieselbe Schnittstelle (`Ablage` in `src/app.html`), die
+Seite funktioniert also in jedem Fall vollständig. Die Website fällt nie
+stillschweigend auf den Browserspeicher zurück. Die geteilte Ablage legt
 Pläne unter `plaene/<id>`, Aufgaben unter `plaene/<id>/aufgaben/<id>` und das
 Team unter `team/<id>` ab.
 
 ## Zugriff und Rollen
 
-Abgesichert ist nur die veröffentlichte Artifact-Fassung. Den Zugang selbst regelt
-das **Teilen-Menü** von claude.ai: Wer dort nicht freigegeben ist, kann die
-Seite nicht öffnen. Die Anmeldung läuft über das claude.ai-Konto, also über die
-Mailadresse.
+Im Reiter **Zugriff** (nur für Admins) stehen die Personen, die an die Pläne
+dürfen, jeweils mit einer Rolle:
 
-Im Reiter **Zugriff** (nur für Admins) trägt man die freigegebenen Personen über
-die Suche nach Name oder Mailadresse ein und vergibt die Rolle:
+| Rolle | darf |
+|---|---|
+| Admin | alles: Pläne, Termine, Regelwerk, Aufgaben, Team, Zugriffsliste |
+| Beobachter | alles ansehen und exportieren, nichts ändern |
+| Zugewiesene Aufgaben | wie Beobachter, dazu bei den eigenen Aufgaben: abhaken, Rückmeldung schreiben und – wenn bei der Aufgabe „Die zuständige Person darf den Termin des Schritts ändern“ gesetzt ist – den Termin des verknüpften Schritts setzen |
 
-| Rolle | Freigabe im Teilen-Menü | darf |
+Der Besitzer der Seite ist immer Admin. Damit eine Aufgabe als „eigene“ gilt,
+wählt man beim Anlegen die Person mit dem Zusatz „· mit Login“. Wird ein Plan
+freigegeben, schreibt die Seite Haken, Termine und Rückmeldungen der zuständigen
+Personen in den Plan fest. Spätere Änderungen an ihren Rückmeldungen wirken
+dann nicht mehr.
+
+### Website (Firebase)
+
+Anmelden kann sich nur, wer ein Konto mit **bestätigter** Mailadresse hat. Ein
+Konto anlegen kann zwar jede Person – an die Daten kommt aber nur, wer in der
+Zugriffsliste steht. Alle anderen sehen „Noch nicht freigeschaltet“. Die
+Kennung einer Person ist ihre Mailadresse in Kleinbuchstaben.
+
+Entschieden wird auf dem Server, in [`firestore.rules`](firestore.rules):
+
+| Ablage | lesen | schreiben |
 |---|---|---|
-| Admin | Bearbeiten | alles: Pläne, Termine, Regelwerk, Aufgaben, Team, Zugriffsliste |
-| Beobachter | Ansehen | alles ansehen und exportieren, nichts ändern |
-| Zugewiesene Aufgaben | Ansehen | wie Beobachter, dazu bei den eigenen Aufgaben: abhaken, Rückmeldung schreiben und – wenn bei der Aufgabe „Die zuständige Person darf den Termin des Schritts ändern“ gesetzt ist – den Termin des verknüpften Schritts setzen |
+| `meta/besitzer` | alle Angemeldeten | einmalig von der ersten Person, danach niemand |
+| `zugriff/<mail>` | alle auf der Liste, jede Person ihren eigenen Eintrag | Admins (nur Kleinbuchstaben, nur gültige Rollen) |
+| `plaene`, `plaene/<id>/aufgaben`, `team` | alle auf der Liste | Admins |
+| `freigaben/<mail>` | alle auf der Liste | Admins und die Person selbst, wenn ihre Rolle *Zugewiesene Aufgaben* ist |
 
-Die Besitzerin oder der Besitzer der Seite ist immer Admin. Geteilte, aber nicht
-eingetragene Personen sehen nur einen Hinweis „Kein Zugriff“. Ist jemand als
-Admin eingetragen, aber nur mit *Ansehen* geteilt, bleibt die Seite für diese
-Person schreibgeschützt und zeigt einen Hinweis.
+Wer nicht auf der Liste steht oder seine Mail nicht bestätigt hat, bekommt
+vom Server nichts – auch nicht mit den Entwicklerwerkzeugen des Browsers. Wer
+von der Liste genommen wird, verliert den Zugriff sofort. Das Konto bleibt
+bestehen, beim erneuten Eintragen ist die Person sofort wieder drin. Passwörter
+liegen nur bei Firebase und sind für Admins nicht einsehbar. Wer seins vergisst,
+setzt es über *Passwort vergessen* selbst neu.
+
+### claude.ai-Fassung
+
+Hier regelt das **Teilen-Menü** den Zugang: Admins mit *Bearbeiten*, alle
+anderen mit *Ansehen*. Im Reiter Zugriff sucht man die Personen im Verzeichnis
+der Organisation. Ist jemand als Admin eingetragen, aber nur mit *Ansehen*
+geteilt, bleibt die Seite für diese Person schreibgeschützt und zeigt einen
+Hinweis.
 
 Durchgesetzt werden die Rechte von den Regeln der Datenbank, nicht nur von der
 Oberfläche:
@@ -162,15 +234,14 @@ Rolle *Zugewiesene Aufgaben* ist. Die Zugriffsliste unter `zugriff/<kennung>`
 speichert nur die Kennung, die Rolle und die Abteilung. Namen kommen bei jedem
 Aufruf frisch aus dem Verzeichnis. Die Suche findet Personen auch über die
 Mailadresse. Angezeigt wird die Adresse nur, wenn die Organisation den Bereich
-`email` freigibt; derzeit ist er nicht verfügbar. Wird ein Plan freigegeben,
-schreibt die Seite Haken, Termine und Rückmeldungen der zuständigen Personen in
-den Plan fest. Spätere Änderungen an ihren Dokumenten wirken dann nicht mehr.
+`email` freigibt; derzeit ist er nicht verfügbar.
 
-Der Hinweis „Kein Zugriff“ ist eine Sperre der Oberfläche: Wer im Teilen-Menü
-freigegeben ist, kann die Daten technisch lesen. Wer nichts sehen soll, wird
-im Teilen-Menü gar nicht erst freigegeben. Die Datei- und die GitHub-Pages-Fassung
-haben keine Anmeldung. Dort arbeitet jede Person als Admin in ihrem eigenen
-Browserspeicher.
+Der Hinweis „Kein Zugriff“ ist hier nur eine Sperre der Oberfläche: Wer im
+Teilen-Menü freigegeben ist, kann die Daten technisch lesen. Wer nichts sehen
+soll, wird im Teilen-Menü gar nicht erst freigegeben.
+
+Die Datei-Fassung hat keine Anmeldung. Dort arbeitet jede Person als Admin in
+ihrem eigenen Browserspeicher.
 
 ## Manuelle Termine
 

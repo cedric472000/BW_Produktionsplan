@@ -394,6 +394,32 @@ body.gesperrt td.cell.click:hover{outline:0;background:inherit}
 .kz h2{font-size:22px;margin:6px 0 8px}
 .kz p{margin:0;color:var(--ink-2);font-size:13.5px;line-height:1.55}
 .stat.rolle{background:var(--surface-3);color:var(--ink-2)}
+body.anmeldung main.layout,body.anmeldung nav.tabs,body.anmeldung .yearbox,body.anmeldung .planbox,
+body.ohnezugang .yearbox,body.ohnezugang .planbox{display:none !important}
+.anm{width:100%}
+.anm label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--ink-2);margin-top:14px}
+.anm input{background:var(--surface-2);border:1px solid var(--line-2);border-radius:5px;padding:9px 10px;font-size:14px;font-weight:400;color:var(--ink)}
+.anm input:focus{background:var(--surface);border-color:var(--accent);outline:none}
+.anm .btn.primary{width:100%;margin-top:18px;padding:9px 12px;font-size:14px;font-weight:600}
+.anm .btn.primary:disabled{opacity:.6;cursor:progress}
+.anmfehler{margin-top:12px;font-size:12.5px;line-height:1.45;color:var(--crit);background:var(--crit-soft);border-radius:4px;padding:7px 9px}
+.anmfehler.gut{color:var(--ok);background:var(--ok-soft)}
+.anmfehler:empty{display:none}
+.anmlinks{display:flex;justify-content:space-between;gap:6px 14px;flex-wrap:wrap;margin-top:14px}
+.anmlinks:empty{display:none}
+.anmlinks button,.konto .lnk{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font-size:12.5px;
+  text-decoration:underline;text-underline-offset:2px}
+.kzbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.konto{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap;margin-top:12px;padding-top:10px;
+  border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-3)}
+.konto b{color:var(--ink-2);font-weight:600;word-break:break-all}
+.zneu{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) 190px auto;gap:8px;padding:14px 18px 6px}
+.zneu input,.zneu select{background:var(--surface-2);border:1px solid var(--line-2);border-radius:5px;padding:7px 9px;font-size:13px;min-width:0}
+.zneu input:focus{background:var(--surface);border-color:var(--accent);outline:none}
+@media (max-width:760px){.zneu{grid-template-columns:1fr}}
+.zwer input{background:none;border:1px solid transparent;border-radius:4px;padding:1px 4px;margin-left:-5px;font-size:13px;font-weight:600;min-width:0}
+.zwer input:hover{border-color:var(--line-2)}
+.zwer input:focus{border-color:var(--accent);background:var(--surface);outline:none}
 .note.warn{background:var(--warn-soft);border-left-color:var(--warn);color:var(--warn)}
 .pltitel{font-family:var(--serif);font-size:14px;font-weight:600;padding:2px 0}
 body.nurlesen td.cell{cursor:default}
@@ -430,7 +456,7 @@ body.nurlesen td.cell{cursor:default}
 .zrow:last-child{border-bottom:0}
 .zrow.ich{grid-template-columns:30px minmax(0,1fr)}
 @media (max-width:760px){.zrow{grid-template-columns:30px minmax(0,1fr) 24px}.zrow select{grid-column:2/3}}
-.zav{display:inline-block;flex:none;width:30px;height:30px;border-radius:50%;background:var(--surface-3)}
+.zav{display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--ink-2);flex:none;width:30px;height:30px;border-radius:50%;background:var(--surface-3)}
 .zwer{display:flex;flex-direction:column;min-width:0}
 .zwer b{font-size:13px;font-weight:600}
 .zwer span{font-size:11.5px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -553,11 +579,28 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
   </nav>
 </header>
 
+<section class="keinzugang" id="anmeldung" hidden>
+  <form class="kz anm" id="anmForm" novalidate>
+    <div class="kzlbl">Berliner Wirtschaft · Produktionsplan</div>
+    <h2 id="anmTitel">Anmelden</h2>
+    <p id="anmText"></p>
+    <label id="anmMailBox">Mailadresse <input type="email" id="anmMail" autocomplete="username" inputmode="email" spellcheck="false"></label>
+    <label id="anmPwBox">Passwort <input type="password" id="anmPw" autocomplete="current-password"></label>
+    <label id="anmPw2Box">Passwort wiederholen <input type="password" id="anmPw2" autocomplete="new-password"></label>
+    <div class="anmfehler" id="anmFehler" role="alert"></div>
+    <button type="submit" class="btn primary" id="anmOk">Anmelden</button>
+    <div class="anmlinks" id="anmLinks"></div>
+  </form>
+</section>
 <section class="keinzugang" id="keinZugang" hidden>
   <div class="kz">
     <div class="kzlbl">Berliner Wirtschaft · Produktionsplan</div>
     <h2 id="kzTitel">Kein Zugriff</h2>
     <p id="kzText">Diese Seite ist nur für freigeschaltete Personen. Bitte wende dich an die Person, die dir den Link geschickt hat.</p>
+    <div class="kzbtns" id="kzBtns" hidden>
+      <button type="button" class="btn sm primary" data-konto="neu">Neu laden</button>
+      <button type="button" class="btn sm ghost" data-konto="ab">Abmelden</button>
+    </div>
   </div>
 </section>
 <main class="layout">
@@ -1027,30 +1070,24 @@ var Ablage = {
       plaene = werte(d.plaene); team = werte(d.team);
       fertig();
     }
+    /* Website mit Anmeldung: Firebase statt Browserspeicher, nie stillschweigend lokal */
+    if (Konto.aktiv()){ Konto.start(function(db){ self._geteilt(db, fertig); }); return; }
     try{
       if (window.claude && typeof window.claude.use === "function"){
         window.claude.use("db").then(function(db){
           beantwortet = true;
           if (!db){ lokalStarten(); return; }
-          self.db = db; self.modus = "geteilt";
-          var offen = 5;
-          function evtl(){ if (--offen === 0) fertig(); }
-          self._abo(db, "plaene",    function(list){ plaene = list; }, self.beiPlaenen, evtl);
-          self._abo(db, "team",      function(list){ team = list; },   self.beiTeam,   evtl);
-          self._abo(db, "zugriff",   function(list){ zugriff = list; }, function(){ self.beiTeam(); }, evtl);
-          self._abo(db, "freigaben", function(list){
-            rueckmeldungen = {};
-            list.forEach(function(d){ rueckmeldungen[d.id] = d; });
-          }, function(){ self.beiAufgaben(); }, evtl);
-          /* Wer schaut zu? Die Plattform liefert eine geprüfte Kennung. */
-          window.claude.use("user").then(function(u){
-            Rechte.api = u;
-            if (!u){ Rechte.bereit = true; evtl(); return; }
-            u.me().then(function(m){
-              Rechte.id = m.id; Rechte.owner = !!m.isOwner; Rechte.kannEdit = !!m.canEdit;
-              Rechte.bereit = true; evtl();
+          self._geteilt(db, fertig, function(evtl){
+            /* Wer schaut zu? Die Plattform liefert eine geprüfte Kennung. */
+            window.claude.use("user").then(function(u){
+              Rechte.api = u;
+              if (!u){ Rechte.bereit = true; evtl(); return; }
+              u.me().then(function(m){
+                Rechte.id = m.id; Rechte.owner = !!m.isOwner; Rechte.kannEdit = !!m.canEdit;
+                Rechte.bereit = true; evtl();
+              }, function(){ Rechte.bereit = true; evtl(); });
             }, function(){ Rechte.bereit = true; evtl(); });
-          }, function(){ Rechte.bereit = true; evtl(); });
+          });
         }, function(){ beantwortet = true; lokalStarten(); });
         setTimeout(function(){ if (!beantwortet) lokalStarten(); }, 10500);
         return;
@@ -1058,7 +1095,23 @@ var Ablage = {
     }catch(e){}
     lokalStarten();
   },
-  /* Ein Abo, das den eigenen Schreib-Widerhall nicht als Änderung meldet */
+  /* Abos auf alles, was geteilt liegt; fertig() nach der ersten Lieferung von allen */
+  _geteilt: function(db, fertig, rechte){
+    var self = this, offen = rechte ? 5 : 4;
+    this.db = db; this.modus = "geteilt";
+    function evtl(){ if (--offen === 0) fertig(); }
+    this._abo(db, "plaene",    function(list){ plaene = list; }, this.beiPlaenen, evtl);
+    this._abo(db, "team",      function(list){ team = list; },   this.beiTeam,   evtl);
+    this._abo(db, "zugriff",   function(list){ zugriff = list; }, function(){ self.beiTeam(); }, evtl);
+    this._abo(db, "freigaben", function(list){
+      rueckmeldungen = {};
+      list.forEach(function(d){ rueckmeldungen[d.id] = d; });
+    }, function(){ self.beiAufgaben(); }, evtl);
+    if (rechte) rechte(evtl);
+  },
+  /* Ein Abo, das den eigenen Schreib-Widerhall nicht als Änderung meldet.
+     Firestore liefert eigene Schreibvorgänge sofort zurück (hasPendingWrites) –
+     die stehen schon in den Listen der Seite. */
   _abo: function(db, pfad, setzen, melden, einmal){
     var letzter = null, ersteLieferung = true;
     return db.collection(pfad).onSnapshot(function(snap){
@@ -1068,7 +1121,7 @@ var Ablage = {
       letzter = jetzt;
       setzen(list);
       if (ersteLieferung){ ersteLieferung = false; if (einmal) einmal(); return; }
-      if (!gleich) melden();
+      if (!gleich && !(snap.metadata && snap.metadata.hasPendingWrites)) melden();
     }, function(){ if (ersteLieferung){ ersteLieferung = false; if (einmal) einmal(); } });
   },
 
@@ -1092,7 +1145,8 @@ var Ablage = {
 };
 function werte(o){ return Object.keys(o || {}).map(function(k){ return o[k]; }); }
 function dbFehler(e){
-  var c = e && e.code;
+  var c = String(e && e.code || "").replace(/-/g, "_");      /* Firestore: "permission-denied" */
+  if (c === "permission_denied"){ toast("Keine Berechtigung für diese Änderung"); return; }
   if (c === "quota_exceeded") toast("Speicher voll – bitte alte Pläne löschen");
   else if (c === "resource_exhausted") toast("Zu viele Zugriffe – bitte kurz warten");
   else if (c === "revoked" || c === "not_granted") toast("Kein Zugriff auf die geteilte Ablage");
@@ -1161,8 +1215,15 @@ function rueckmeldungSetzen(t, feld, wert){
 }
 /* Namen und Mailadressen kommen live aus dem Verzeichnis, gespeichert werden nur Kennungen */
 var profile = {}, profileLaufen = false;
-function avatar(url){ return url ? '<img class="zav" src="'+esc(url)+'" alt="">' : '<span class="zav"></span>'; }
-function profilVon(id){ return profile[id] || {name:"", email:null, avatarUrl:""}; }
+function avatar(url, name){
+  return url ? '<img class="zav" src="'+esc(url)+'" alt="">'
+             : '<span class="zav" aria-hidden="true">'+esc(String(name || "").trim().charAt(0).toUpperCase())+'</span>';
+}
+function profilVon(id){
+  /* Website: Name aus der Zugriffsliste, die Kennung ist die Mailadresse */
+  if (Konto.drin){ var z = eintragVon(id); return {name:z && z.name || "", email:id, avatarUrl:""}; }
+  return profile[id] || {name:"", email:null, avatarUrl:""};
+}
 function profileLaden(){
   if (!Rechte.api || profileLaufen) return;
   var ids = zugriff.map(function(z){ return z.id; });
@@ -1178,6 +1239,213 @@ function profileLaden(){
   }, function(){ profileLaufen = false; });
 }
 function personName(id){ var p = profilVon(id); return p.name || p.email || "Person ohne Namen"; }
+
+/* =========================================================================
+   Anmeldung der Website-Fassung (Firebase)
+   Konto mit Mailadresse und Passwort; die Adresse muss bestätigt sein.
+   Was eine Person lesen und schreiben darf, entscheiden die Regeln in
+   firestore.rules auf dem Server. Die Kennung einer Person ist ihre
+   Mailadresse in Kleinbuchstaben – unter ihr steht sie in der Zugriffsliste.
+   ========================================================================= */
+var Konto = {
+  F: null, auth: null, fs: null, user: null, mail: "", besitzer: "", drin: false, modus: null,
+  aktiv: function(){
+    return !!window.BW_FIREBASE && /^https?:$/.test(location.protocol) &&
+           !(window.claude && typeof window.claude.use === "function");
+  },
+  start: function(weiter){
+    var self = this;
+    this.weiter = weiter;
+    anmeldungZeigen("laden");
+    import("./vendor/firebase.js").then(function(F){
+      var cfg = window.BW_FIREBASE, app = F.initializeApp(cfg);
+      self.F = F;
+      self.auth = F.initializeAuth(app, {persistence:[F.indexedDBLocalPersistence, F.browserLocalPersistence]});
+      self.auth.languageCode = "de";
+      self.fs = F.initializeFirestore(app, {ignoreUndefinedProperties:true});
+      if (cfg.emulator){                                   /* nur für die Tests */
+        F.connectAuthEmulator(self.auth, cfg.emulator.auth, {disableWarnings:true});
+        F.connectFirestoreEmulator(self.fs, cfg.emulator.host, cfg.emulator.port);
+      }
+      F.onAuthStateChanged(self.auth, function(u){
+        if (self.drin){ if (!u) location.reload(); return; }
+        self.user = u;
+        if (!u) anmeldungZeigen("login");
+        else self.pruefen();
+      });
+    }, function(){ anmeldungZeigen("fehler"); });
+  },
+  /* Bestätigt? Frisch nachfragen – und das Token erneuern, damit der Server es auch weiß */
+  pruefen: function(){
+    var self = this, u = this.user;
+    if (!u) return Promise.resolve();
+    return this.F.reload(u).then(function(){
+      if (!u.emailVerified){ anmeldungZeigen("bestaetigen"); return; }
+      return u.getIdToken(true).then(function(){ return self.eintreten(); });
+    }, function(e){ anmeldungZeigen("fehler", e); });
+  },
+  eintreten: function(){
+    var self = this, F = this.F;
+    this.mail = String(this.user.email || "").toLowerCase();
+    return F.getDoc(F.doc(this.fs, "meta/besitzer")).then(function(snap){
+      if (!snap.exists()){ anmeldungZeigen("einrichten"); return; }
+      if (self.drin) return;
+      self.drin = true;
+      self.besitzer = String(snap.data().email || "");
+      Rechte.id = self.mail; Rechte.owner = self.besitzer === self.mail;
+      Rechte.kannEdit = true; Rechte.bereit = true;     /* die Regeln entscheiden, die Seite zeigt nur an */
+      anmeldungZeigen(null);
+      self.weiter(self.ablage());
+    }, function(e){ anmeldungZeigen("fehler", e); });
+  },
+  einrichten: function(){
+    var self = this;
+    return this.F.setDoc(this.F.doc(this.fs, "meta/besitzer"), {email:this.mail, seit:nowISO()})
+      .then(function(){ return self.eintreten(); });
+  },
+  abmelden: function(){
+    if (!this.F){ location.reload(); return; }
+    this.F.signOut(this.auth).then(function(){ location.reload(); });
+  },
+  /* Ziel der Links in den Mails: zurück auf diese Seite. Ist die Adresse in
+     Firebase nicht als Domain freigegeben, ohne Rücksprung senden. */
+  _mitRueckweg: function(senden){
+    return senden({url:location.origin + location.pathname}).catch(function(e){
+      if (/continue-uri|unauthorized-domain/.test(e && e.code || "")) return senden(undefined);
+      throw e;
+    });
+  },
+  bestaetigungSenden: function(){
+    var u = this.user, F = this.F;
+    return this._mitRueckweg(function(acs){ return F.sendEmailVerification(u, acs); });
+  },
+  passwortLink: function(mail){
+    var a = this.auth, F = this.F;
+    return this._mitRueckweg(function(acs){ return F.sendPasswordResetEmail(a, mail, acs); });
+  },
+  /* Firestore mit derselben kleinen Schnittstelle wie die Datenbank im Artifact */
+  ablage: function(){
+    var F = this.F, fs = this.fs;
+    return {
+      doc: function(p){
+        var r = F.doc(fs, p);
+        return {set:function(b){ return F.setDoc(r, b); }, delete:function(){ return F.deleteDoc(r); }};
+      },
+      collection: function(p){
+        var r = F.collection(fs, p);
+        return {get:function(){ return F.getDocs(r); },
+                onSnapshot:function(ok, err){ return F.onSnapshot(r, ok, err); }};
+      }
+    };
+  }
+};
+var ANM = {
+  laden:       {t:"Einen Moment …", x:"Die Anmeldung wird geladen."},
+  login:       {t:"Anmelden", x:"Nur für freigeschaltete Personen. Melde dich mit deiner Mailadresse und deinem Passwort an.",
+                mail:1, pw:1, ok:"Anmelden", links:[["neu", "Erstes Mal hier? Konto anlegen"], ["vergessen", "Passwort vergessen"]]},
+  neu:         {t:"Konto anlegen", x:"Nimm die Mailadresse, unter der du freigeschaltet wurdest, und wähl ein Passwort mit mindestens 8 Zeichen. Danach bekommst du eine Mail zum Bestätigen.",
+                mail:1, pw:1, pw2:1, ok:"Konto anlegen", links:[["login", "Ich habe schon ein Konto"]]},
+  vergessen:   {t:"Passwort vergessen", x:"Wir schicken dir einen Link, mit dem du ein neues Passwort setzt.",
+                mail:1, ok:"Link senden", links:[["login", "Zurück zur Anmeldung"]]},
+  bestaetigen: {t:"Mailadresse bestätigen", ok:"Ich habe bestätigt – weiter", links:[["nochmal", "Mail noch einmal senden"], ["ab", "Abmelden"]]},
+  einrichten:  {t:"Seite einrichten", ok:"Als Besitzer übernehmen", links:[["ab", "Abmelden"]]},
+  fehler:      {t:"Anmeldung nicht erreichbar", x:"Die Anmeldung konnte nicht geladen werden. Bitte prüf die Internetverbindung und lade die Seite neu.", ok:"Neu laden"}
+};
+function anmeldungZeigen(modus, fehler){
+  Konto.modus = modus;
+  document.body.classList.toggle("anmeldung", !!modus);
+  el("anmeldung").hidden = !modus;
+  if (!modus) return;
+  var m = ANM[modus], mail = Konto.user && Konto.user.email || "";
+  el("anmTitel").textContent = m.t;
+  el("anmText").textContent = m.x ||
+    (modus === "bestaetigen" ? "Wir haben eine Mail an " + mail + " geschickt. Klick auf den Link darin und dann hier auf „Weiter“. Keine Mail da? Schau auch im Spam-Ordner nach."
+                             : "Noch hat niemand diese Seite eingerichtet. Wenn du übernimmst, wirst du (" + mail + ") Besitzer: immer Admin, du vergibst den Zugriff. Ändern lässt sich das danach nur in der Firebase-Konsole.");
+  el("anmMailBox").hidden = !m.mail; el("anmPwBox").hidden = !m.pw; el("anmPw2Box").hidden = !m.pw2;
+  el("anmPw").autocomplete = modus === "neu" ? "new-password" : "current-password";
+  el("anmPw").value = ""; el("anmPw2").value = "";
+  el("anmOk").hidden = !m.ok; el("anmOk").textContent = m.ok || ""; el("anmOk").disabled = false;
+  el("anmLinks").innerHTML = (m.links || []).map(function(l){
+    return '<button type="button" data-anm="'+l[0]+'">'+esc(l[1])+'</button>'; }).join("");
+  anmMeldung(fehler ? anmFehlertext(fehler) : "");
+  var f = m.mail ? (el("anmMail").value ? (m.pw ? el("anmPw") : el("anmOk")) : el("anmMail")) : el("anmOk");
+  if (f && !f.hidden) setTimeout(function(){ try{ f.focus(); }catch(e){} }, 0);
+}
+function anmMeldung(text, gut){
+  var b = el("anmFehler"); b.textContent = text || ""; b.className = "anmfehler" + (gut ? " gut" : "");
+}
+function anmFehlertext(e){
+  var c = e && e.code || "";
+  return ({
+    "auth/invalid-credential":"Mailadresse oder Passwort stimmt nicht.",
+    "auth/wrong-password":"Mailadresse oder Passwort stimmt nicht.",
+    "auth/user-not-found":"Mailadresse oder Passwort stimmt nicht.",
+    "auth/invalid-email":"Bitte eine gültige Mailadresse eingeben.",
+    "auth/missing-email":"Bitte die Mailadresse eingeben.",
+    "auth/missing-password":"Bitte das Passwort eingeben.",
+    "auth/email-already-in-use":"Für diese Adresse gibt es schon ein Konto. Bitte anmelden – oder „Passwort vergessen“.",
+    "auth/weak-password":"Das Passwort ist zu kurz – bitte mindestens 8 Zeichen.",
+    "auth/password-does-not-meet-requirements":"Das Passwort erfüllt die Vorgaben nicht. Bitte länger und mit Zahlen oder Sonderzeichen.",
+    "auth/too-many-requests":"Zu viele Versuche. Bitte in ein paar Minuten noch einmal.",
+    "auth/network-request-failed":"Keine Verbindung. Bitte die Internetverbindung prüfen.",
+    "auth/user-disabled":"Dieses Konto ist gesperrt.",
+    "auth/operation-not-allowed":"Die Anmeldung mit Mail und Passwort ist in Firebase noch nicht eingeschaltet.",
+    "permission-denied":"Das ist nicht erlaubt – vermutlich hat jemand die Seite gerade schon eingerichtet. Bitte neu laden."
+  })[c] || "Das hat nicht geklappt (" + (c || "unbekannter Fehler") + ").";
+}
+el("anmForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  var m = Konto.modus, F = Konto.F, ok = el("anmOk");
+  var mail = el("anmMail").value.trim(), pw = el("anmPw").value;
+  if (m === "fehler"){ location.reload(); return; }
+  if (!F || ok.disabled) return;
+  function fehler(x){ ok.disabled = false; anmMeldung(anmFehlertext(x)); }
+  var lauf;
+  if (m === "login"){
+    lauf = F.signInWithEmailAndPassword(Konto.auth, mail, pw);
+  } else if (m === "neu"){
+    if (pw.length < 8){ anmMeldung("Bitte ein Passwort mit mindestens 8 Zeichen wählen."); return; }
+    if (pw !== el("anmPw2").value){ anmMeldung("Die beiden Passwörter sind nicht gleich."); return; }
+    lauf = F.createUserWithEmailAndPassword(Konto.auth, mail, pw).then(function(c){
+      Konto.user = c.user;
+      return Konto.bestaetigungSenden();
+    });
+  } else if (m === "vergessen"){
+    if (!mail){ anmMeldung("Bitte die Mailadresse eingeben."); return; }
+    lauf = Konto.passwortLink(mail).then(function(){
+      anmeldungZeigen("login");
+      anmMeldung("Falls es zu " + mail + " ein Konto gibt, ist ein Link zum neuen Passwort unterwegs.", true);
+    }, function(x){
+      if (x && x.code === "auth/user-not-found"){ anmeldungZeigen("login"); anmMeldung("Falls es zu " + mail + " ein Konto gibt, ist ein Link zum neuen Passwort unterwegs.", true); return; }
+      throw x;
+    });
+  } else if (m === "bestaetigen"){
+    lauf = Konto.pruefen().then(function(){
+      if (Konto.modus === "bestaetigen") anmMeldung("Noch nicht bestätigt. Bitte erst auf den Link in der Mail klicken.");
+    });
+  } else if (m === "einrichten"){
+    lauf = Konto.einrichten();
+  } else return;
+  ok.disabled = true;
+  lauf.then(function(){ ok.disabled = false; }, fehler);
+});
+el("anmLinks").addEventListener("click", function(e){
+  var k = e.target.dataset.anm;
+  if (!k) return;
+  if (k === "ab"){ Konto.abmelden(); return; }
+  if (k === "nochmal"){
+    Konto.bestaetigungSenden().then(function(){ anmMeldung("Mail ist noch einmal unterwegs.", true); },
+                                   function(x){ anmMeldung(anmFehlertext(x)); });
+    return;
+  }
+  anmeldungZeigen(k);
+});
+document.addEventListener("click", function(e){
+  var k = e.target.closest && e.target.closest("[data-konto]");
+  if (!k) return;
+  if (k.dataset.konto === "ab") Konto.abmelden();
+  else location.reload();
+});
 
 /* Speichern mit kurzer Verzögerung, damit Tippen nicht jeden Tastendruck
    schreibt – und nur, wenn sich wirklich etwas geändert hat. Sonst schreibt
@@ -1350,7 +1618,13 @@ function zugangPruefen(){
   el("keinZugang").hidden = !ohne;
   document.querySelector("main.layout").hidden = ohne;
   el("tabs").hidden = ohne;
-  if (ohne){
+  document.body.classList.toggle("ohnezugang", ohne);
+  el("kzBtns").hidden = !Konto.drin;
+  if (ohne && Konto.drin){
+    el("kzTitel").textContent = "Noch nicht freigeschaltet";
+    el("kzText").textContent = "Du bist als " + Konto.mail + " angemeldet, stehst aber nicht auf der Zugriffsliste. " +
+      "Bitte wende dich an die Redaktion. Sobald du eingetragen bist, lade die Seite neu.";
+  } else if (ohne){
     el("kzTitel").textContent = Rechte.api ? "Kein Zugriff" : "Anmeldung nicht möglich";
     el("kzText").textContent = Rechte.api
       ? "Diese Seite ist nur für freigeschaltete Personen. Bitte wende dich an die Person, die dir den Link geschickt hat."
@@ -1360,11 +1634,23 @@ function zugangPruefen(){
   if (state.view === "zugriff" && el("tabZugriff").hidden) state.view = "plan";
   return !ohne;
 }
+/* Ein Feld, das beim Neuaufbau den Fokus verliert, meldet „change“ – und
+   würde mitten im Neuaufbau den nächsten starten. Der wartet kurz. */
+var rendernLaeuft = false;
 function render(withRail){
+  if (rendernLaeuft){ setTimeout(function(){ render(withRail); }, 0); return; }
+  rendernLaeuft = true;
+  try{ rendernJetzt(withRail); } finally { rendernLaeuft = false; }
+}
+function rendernJetzt(withRail){
   profileLaden();
   if (!zugangPruefen()) return;
   model = buildModel();
-  if (withRail !== false){ renderIssues(); renderHolidays(); }
+  if (withRail !== false){
+    railNeu = false;
+    el("yearInput").value = state.year;
+    renderIssues(); renderHolidays();
+  }
   renderOverrides();
   renderPlanCard();
   renderMeta();
@@ -1427,7 +1713,9 @@ function renderPlanCard(){
     (istAdmin() ? '<div class="rowbtns">'+
       '<button type="button" class="btn sm" data-act="planNew">+ Neuer Plan</button>'+
       '<button type="button" class="btn sm ghost" data-act="planCopy" data-v="'+esc(planMeta.id)+'">Duplizieren</button>'+
-    '</div>' : "")+'</div></section>';
+    '</div>' : "")+
+    (Konto.drin ? '<div class="konto"><span>Angemeldet als <b>'+esc(Konto.mail)+'</b></span>'+
+      '<button type="button" class="lnk" data-konto="ab">Abmelden</button></div>' : "")+'</div></section>';
 }
 
 /* ---------- Rail: Erscheinungstermine ------------------------------------ */
@@ -1538,7 +1826,7 @@ var Dialog = {
   schliesse: function(){
     this.offen = false; this._ok = null;
     el("dlg").hidden = true; el("dlgBack").hidden = true;
-    if (Dialog._nachholen){ Dialog._nachholen = false; render(false); }
+    if (Dialog._nachholen){ Dialog._nachholen = false; neuAufbauen(); }
   },
   _nachholen: false
 };
@@ -2369,31 +2657,44 @@ function excelDatei(){
 
 /* ---------- Ansicht: Zugriff --------------------------------------------- */
 function viewZugriff(){
-  var abt = abteilungen();
+  var abt = abteilungen(), web = Konto.drin;
+  function rollen(wahl){ return Object.keys(ROLLEN).map(function(k){
+    return '<option value="'+k+'"'+(wahl === k ? " selected" : "")+'>'+ROLLEN[k]+'</option>'; }).join(""); }
   var zeilen = zugriff.slice().sort(function(a, b){ return personName(a.id).localeCompare(personName(b.id), "de"); })
     .map(function(z){
       var p = profilVon(z.id);
       return '<div class="zrow">'+
-        avatar(p.avatarUrl)+
-        '<span class="zwer"><b>'+esc(personName(z.id))+'</b><span>'+esc(p.email || "")+'</span></span>'+
-        '<select data-zrolle="'+esc(z.id)+'" aria-label="Rolle">'+Object.keys(ROLLEN).map(function(k){
-          return '<option value="'+k+'"'+(z.rolle === k ? " selected" : "")+'>'+ROLLEN[k]+'</option>'; }).join("")+'</select>'+
+        avatar(p.avatarUrl, personName(z.id))+
+        (web ? '<span class="zwer"><input type="text" data-zname="'+esc(z.id)+'" value="'+esc(z.name || "")+'" placeholder="Name eintragen" aria-label="Name"><span>'+esc(z.id)+'</span></span>'
+             : '<span class="zwer"><b>'+esc(personName(z.id))+'</b><span>'+esc(p.email || "")+'</span></span>')+
+        '<select data-zrolle="'+esc(z.id)+'" aria-label="Rolle">'+rollen(z.rolle)+'</select>'+
         '<select data-zabt="'+esc(z.id)+'" aria-label="Abteilung"><option value="">keine Abteilung</option>'+abt.map(function(a){
           return '<option value="'+esc(a.id)+'"'+(z.abteilungId === a.id ? " selected" : "")+'>'+esc(a.name)+'</option>'; }).join("")+'</select>'+
         '<button type="button" class="x" data-zweg="'+esc(z.id)+'" title="Zugriff entziehen" aria-label="Zugriff entziehen">&times;</button>'+
       '</div>';
     }).join("");
-  var ich = Rechte.owner ? '<div class="zrow ich">'+avatar(profilVon(Rechte.id).avatarUrl)+
-    '<span class="zwer"><b>'+esc(personName(Rechte.id))+'</b><span>Besitzer der Seite – immer Admin</span></span></div>' : "";
+  var ich = web ? '<div class="zrow ich">'+avatar("", Konto.besitzer)+
+      '<span class="zwer"><b>'+esc(Konto.besitzer)+'</b><span>Besitzer der Seite – immer Admin'+(Rechte.owner ? " (du)" : "")+'</span></span></div>'
+    : Rechte.owner ? '<div class="zrow ich">'+avatar(profilVon(Rechte.id).avatarUrl, personName(Rechte.id))+
+      '<span class="zwer"><b>'+esc(personName(Rechte.id))+'</b><span>Besitzer der Seite – immer Admin</span></span></div>' : "";
+  var schritte = web
+    ? '<ol><li>Trag die Person hier mit Name und Mailadresse ein und wähl die Rolle.</li>'+
+      '<li>Schick ihr den Link zu dieser Seite. Beim ersten Mal klickt sie auf <b>„Konto anlegen“</b>, nimmt genau diese Mailadresse, wählt ein Passwort und bestätigt die Mail. Wer nicht auf der Liste steht, kommt nach der Anmeldung nicht weiter.</li></ol>'
+    : '<ol><li>Im <b>Teilen-Menü</b> der Seite gibst du die Personen frei – <b>Admins mit „Bearbeiten“</b>, alle anderen mit <b>„Ansehen“</b>. Wer nicht geteilt ist, kommt gar nicht erst hinein.</li>'+
+      '<li>Hier trägst du dieselben Personen über ihre Mailadresse ein und vergibst die Rolle. Wer geteilt, aber hier nicht eingetragen ist, sieht nur einen Hinweis.</li></ol>';
+  var neu = web
+    ? '<div class="zneu"><input type="text" id="zName" placeholder="Name" aria-label="Name" autocomplete="off">'+
+      '<input type="email" id="zMail" placeholder="Mailadresse" aria-label="Mailadresse" autocomplete="off" spellcheck="false">'+
+      '<select id="zRolle" aria-label="Rolle">'+rollen("beobachter")+'</select>'+
+      '<button type="button" class="btn primary sm" id="zAdd">Hinzufügen</button></div>'
+    : '<div class="zsuche"><input type="search" id="zSuche" placeholder="Mailadresse oder Name eingeben …" aria-label="Person suchen" autocomplete="off">'+
+      '<div class="ztreffer" id="zTreffer"></div></div>';
   return card("Zugriff · " + zugriff.length + (zugriff.length === 1 ? " Person" : " Personen"),
-    '<div class="zhinweis"><b>So greifen die Rechte</b>'+
-      '<ol><li>Im <b>Teilen-Menü</b> der Seite gibst du die Personen frei – <b>Admins mit „Bearbeiten“</b>, alle anderen mit <b>„Ansehen“</b>. Wer nicht geteilt ist, kommt gar nicht erst hinein.</li>'+
-      '<li>Hier trägst du dieselben Personen über ihre Mailadresse ein und vergibst die Rolle. Wer geteilt, aber hier nicht eingetragen ist, sieht nur einen Hinweis.</li></ol>'+
+    '<div class="zhinweis"><b>So greifen die Rechte</b>'+schritte+
       '<dl><dt>Admin</dt><dd>darf alles: Pläne, Termine, Aufgaben, Team und diese Liste</dd>'+
       '<dt>Beobachter</dt><dd>sieht alles, ändert nichts</dd>'+
       '<dt>Zugewiesene Aufgaben</dt><dd>sieht alles und bearbeitet nur die eigenen Aufgaben: abhaken, Rückmeldung schreiben und – wenn bei der Aufgabe freigegeben – den Termin des verknüpften Schritts setzen</dd></dl></div>'+
-    '<div class="zsuche"><input type="search" id="zSuche" placeholder="Mailadresse oder Name eingeben …" aria-label="Person suchen" autocomplete="off">'+
-      '<div class="ztreffer" id="zTreffer"></div></div>'+
+    neu+
     '<div class="zliste">'+ich+(zeilen || (ich ? "" : '<div class="empty">Noch niemand eingetragen.</div>'))+'</div>');
 }
 var suchNr = 0;
@@ -2420,9 +2721,23 @@ function zugriffSuchen(q){
     });
   });
 }
+/* Website: Person mit Mailadresse eintragen */
+function zugriffNeu(){
+  if (!istAdmin() || !el("zMail")) return;
+  var mail = el("zMail").value.trim().toLowerCase(), name = el("zName").value.trim();
+  if (!/^[^\s@\/]+@[^\s@\/]+\.[^\s@\/]+$/.test(mail)){ toast("Bitte eine gültige Mailadresse eingeben"); el("zMail").focus(); return; }
+  if (mail === Konto.besitzer){ toast("Das ist die Adresse des Besitzers – sie ist immer Admin"); return; }
+  if (eintragVon(mail)){ toast("Diese Adresse steht schon in der Liste"); return; }
+  var rolle = el("zRolle").value;
+  zugriffSetzen(mail, {name:name, rolle:rolle});
+  toast((name || mail) + " als " + ROLLEN[rolle] + " eingetragen");
+  var f = el("zName"); if (f) f.focus();
+}
 function zugriffSetzen(id, aenderung){
   if (!istAdmin()) return;
-  var z = Object.assign({id:id, rolle:"beobachter", abteilungId:""}, eintragVon(id) || {}, aenderung);
+  var alt = eintragVon(id);
+  var z = Object.assign({id:id, rolle:"beobachter", abteilungId:""}, alt || {}, aenderung);
+  if (alt && JSON.stringify(z) === JSON.stringify(Object.assign({}, alt))) return;     /* nichts geändert */
   zugriff = zugriff.filter(function(x){ return x.id !== id; }).concat([z]);
   Ablage.sichern("zugriff", z);
   render(false);
@@ -2801,6 +3116,7 @@ el("panel").addEventListener("click", function(e){
   }
   if (e.target.id === "tAdd"){ aufgabeAnlegen(); return; }
   /* Zugriffsliste */
+  if (e.target.id === "zAdd"){ zugriffNeu(); return; }
   var zneu = e.target.closest("[data-zneu]");
   if (zneu && !zneu.disabled){
     zugriffSetzen(zneu.dataset.zneu, {});
@@ -2810,7 +3126,9 @@ el("panel").addEventListener("click", function(e){
   var zweg = e.target.dataset.zweg;
   if (zweg){
     if (!istAdmin()) return;
-    bestaetige("Zugriff entziehen", personName(zweg) + " sieht die Seite danach nur noch den Hinweis „Kein Zugriff“. Im Teilen-Menü bleibt die Person freigegeben, bis du sie dort entfernst.", "Entziehen", function(){
+    bestaetige("Zugriff entziehen", personName(zweg) + (Konto.drin
+        ? " kommt danach nicht mehr an die Pläne. Das Konto bleibt bestehen – wer wieder eingetragen wird, ist sofort wieder drin."
+        : " sieht die Seite danach nur noch den Hinweis „Kein Zugriff“. Im Teilen-Menü bleibt die Person freigegeben, bis du sie dort entfernst."), "Entziehen", function(){
       zugriff = zugriff.filter(function(z){ return z.id !== zweg; });
       Ablage.loeschen("zugriff", zweg);
       render(false);
@@ -2870,6 +3188,7 @@ el("panel").addEventListener("click", function(e){
 });
 el("panel").addEventListener("change", function(e){
   if (e.target.dataset.zrolle){ zugriffSetzen(e.target.dataset.zrolle, {rolle:e.target.value}); return; }
+  if (e.target.dataset.zname){ zugriffSetzen(e.target.dataset.zname, {name:e.target.value.trim()}); return; }
   if (e.target.dataset.zabt !== undefined && e.target.dataset.zabt){ zugriffSetzen(e.target.dataset.zabt, {abteilungId:e.target.value}); return; }
   var eigen = e.target.dataset.rnotiz || e.target.dataset.rdatum;
   if (eigen){
@@ -2952,6 +3271,7 @@ el("panel").addEventListener("keydown", function(e){
     return;
   }
   if (e.target.id === "tTitel"){ aufgabeAnlegen(); }
+  if (e.target.id === "zName" || e.target.id === "zMail"){ zugriffNeu(); return; }
   if (e.target.id === "abtName"){
     var na = e.target.value.trim();
     if (na){ teamAnlegen(na, "abteilung"); render(); }
@@ -3088,32 +3408,38 @@ function teamAnlegen(name, art, abteilungId){
 /* Start */
 /* Neuaufbau nach einer Rückmeldung der Ablage – aber nicht, während jemand
    in einem Fenster oder einem Eingabefeld arbeitet. */
+/* Hat jemand anderes den Plan geändert, müssen auch Jahr, Erscheinungstermine
+   und Feiertage links neu – aber nicht, während man dort gerade tippt. */
+var railNeu = false;
 function neuAufbauen(){
   if (!model) return;
   if (Dialog.offen){ Dialog._nachholen = true; return; }
-  var a = document.activeElement;
-  if (a && el("panel").contains(a) && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)){
+  var a = document.activeElement, tippt = a && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName);
+  if (tippt && el("panel").contains(a)){
     Dialog._nachholen = true;
-    setTimeout(function(){ if (Dialog._nachholen && !Dialog.offen){ Dialog._nachholen = false; render(false); } }, 4000);
+    setTimeout(function(){ if (Dialog._nachholen && !Dialog.offen){ Dialog._nachholen = false; neuAufbauen(); } }, 4000);
     return;
   }
-  render(false);
+  var links = tippt && (document.querySelector(".rail").contains(a) || a.id === "yearInput");
+  render(railNeu && !links ? undefined : false);
 }
 Ablage.beiPlaenen = function(){
   if (planMeta){
     var akt = plaene.filter(function(x){ return x.id === planMeta.id; })[0];
     if (akt && akt !== planMeta){
       planMeta = akt;
-      if (!sichernOffen){ state = normState(akt.inhalt, akt.jahr); standMerken(); }
+      if (!sichernOffen){ state = normState(akt.inhalt, akt.jahr); standMerken(); railNeu = true; }
     }
-    if (!akt) planMeta = null;
+    /* anderswo gelöscht (oder der Ansichtsplatzhalter): nächsten Plan öffnen */
+    if (!akt){ planMeta = null; aufgaben = []; irgendeinPlan(); return; }
   }
   neuAufbauen();
 };
 Ablage.beiAufgaben = function(){ if (model){ pruefeFreigabe(); neuAufbauen(); } };
 Ablage.beiTeam    = function(){ neuAufbauen(); };
 
-Ablage.start(function(){
+/* Welcher Plan beim Öffnen: der zuletzt geöffnete, sonst der zuletzt freigegebene, sonst der jüngste */
+function startPlan(){
   var letzte = null;
   try{ letzte = localStorage.getItem(LAST_KEY); }catch(e){}
   var ziel = plaene.filter(function(x){ return x.id === letzte; })[0];
@@ -3123,8 +3449,19 @@ Ablage.start(function(){
     ziel = fertige[0] || plaene.slice().sort(function(a,b){
       return String(b.geaendertAm||"").localeCompare(String(a.geaendertAm||"")); })[0];
   }
+  return ziel || null;
+}
+function irgendeinPlan(){
+  var ziel = startPlan();
   if (ziel){ planOeffnen(ziel.id); return; }
   state = defaultState(2027);
-  planAnlegen(defaultState(2027), "Produktionsplan 2027", 2027).then(function(pl){ planOeffnen(pl.id); });
-});
+  if (istAdmin()){
+    planAnlegen(defaultState(2027), "Produktionsplan 2027", 2027).then(function(pl){ planOeffnen(pl.id); });
+    return;
+  }
+  /* Ohne Schreibrecht nichts anlegen – ein leerer Plan nur zur Ansicht */
+  plaene.push({id:"ansicht", titel:"Noch kein Plan angelegt", jahr:2027, status:"entwurf", inhalt:defaultState(2027)});
+  planOeffnen("ansicht");
+}
+Ablage.start(irgendeinPlan);
 </script>
