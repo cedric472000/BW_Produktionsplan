@@ -33,6 +33,7 @@ doc = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Produktionsplan fuer das Magazin Berliner Wirtschaft: Rueckwaertsterminierung aller Produktionsschritte aus Jahr und Erscheinungsterminen.">
 <meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 40 40%27%3E%3Crect width=%2740%27 height=%2740%27 rx=%276%27 fill=%27%23003087%27/%3E%3Cpath d=%27M6 31a14 14 0 0 1 28 0%27 fill=%27none%27 stroke=%27%23fff%27 stroke-width=%273.5%27/%3E%3Cpath d=%27M13 31a7 7 0 0 1 14 0%27 fill=%27none%27 stroke=%27%23fff%27 stroke-width=%273.5%27 opacity=%27.55%27/%3E%3C/svg%3E">
 <style>
 :root{color-scheme:light dark}
 body{margin:0;font:14px/1.5 system-ui,sans-serif}
