@@ -290,6 +290,9 @@ tr.phaserow th.rowhead{padding:0}
 .rules .res{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);white-space:nowrap}
 .ruleshead{padding:12px 15px;border-bottom:1px solid var(--line);background:var(--surface-2);font-size:12.5px;color:var(--ink-2)}
 .ruleshead b{color:var(--ink)}
+.ruleshead .weise{display:inline-flex;gap:4px;margin:0 10px 6px 0;vertical-align:middle}
+.rules td.wo{text-align:center}
+.rules td.wo input{accent-color:var(--accent);margin:0}
 
 /* ---------- export ---------- */
 .exportbar{display:flex;gap:8px;padding:12px 15px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center;background:var(--surface-2)}
@@ -820,6 +823,8 @@ function statesTitle(h){
    anchor : Nr. des Schritts, von dem aus gerechnet wird (0 = E-Tag/Wurzel)
    offset : Kalendertage gegenüber dem Anker
    dir    : -1 = bei Konflikt rückwärts suchen, 1 = vorwärts
+   woche  : fester Wochentermin (Konferenzen): bleibt in seiner Kalenderwoche
+            und wandert nicht mit, wenn sich die Produktionskette verschiebt
    ------------------------------------------------------------------------- */
 var PHASES = [
   {key:"a", label:"Anzeigen & Material", css:"var(--ph-1)"},
@@ -831,9 +836,9 @@ var DEFAULT_STEPS = [
   {nr:1,  label:"Umfangsmeldung für Papierbestellung",                                       wd:0, anchor:2,  offset:7,  dir:-1, phase:"a"},
   {nr:2,  label:"Anmeldung Sonderformate, Beihefter, TOC an Herstellung und Redaktion",      wd:0, anchor:3,  offset:-3, dir:-1, phase:"a"},
   {nr:3,  label:"Buchungsschluss und Anlieferung Material Advertorial",                      wd:0, anchor:4,  offset:-4, dir:-1, phase:"a"},
-  {nr:4,  label:"Anmeldung Fachabteilungen",                                                 wd:5, anchor:5,  offset:-3, dir:-1, phase:"b"},
-  {nr:5,  label:"Kleine Redaktionskonferenz",                                                wd:1, anchor:6,  offset:-2, dir:-1, phase:"b"},
-  {nr:6,  label:"Große Redaktionskonferenz",                                                 wd:3, anchor:7,  offset:-8, dir:-1, phase:"b"},
+  {nr:4,  label:"Anmeldung Fachabteilungen",                                                 wd:5, anchor:5,  offset:-3, dir:-1, phase:"b", woche:true},
+  {nr:5,  label:"Kleine Redaktionskonferenz",                                                wd:1, anchor:6,  offset:-2, dir:-1, phase:"b", woche:true},
+  {nr:6,  label:"Große Redaktionskonferenz",                                                 wd:3, anchor:7,  offset:-8, dir:-1, phase:"b", woche:true},
   {nr:7,  label:"Anzeigenschluss und Inhaltsprüfung Beihefter und Beilagen",                 wd:0, anchor:8,  offset:-4, dir:1,  phase:"b"},
   {nr:8,  label:"Redaktionsschluss",                                                         wd:0, anchor:12, offset:-7, dir:-1, phase:"b"},
   {nr:9,  label:"Druckunterlagenschluss und Start Bildbearbeitung",                          wd:3, anchor:11, offset:-5, dir:-1, phase:"c"},
@@ -929,10 +934,13 @@ function arbeitstage(a, b, hol){
    nach der Regel (Ziel-Wochentage würden kleine Änderungen zu Wochensprüngen
    machen), sondern wandert mit: im selben Abstand in Arbeitstagen wie im
    automatischen Plan. Ohne manuelle Termine ist das Ergebnis das der Excel. */
-function computePlan(steps, etag, hol, fix){
+function computePlan(steps, etag, hol, fix, weise){
+  return weise === "excel" ? planExcel(steps, etag, hol, fix) : planArbeitstage(steps, etag, hol, fix);
+}
+function planExcel(steps, etag, hol, fix){
   var byNr = new Map(steps.map(function(s){ return [s.nr, s]; }));
   var done = new Map(), busy = new Set();
-  var auto = fix && Object.keys(fix).length ? computePlan(steps, etag, hol, null) : null;
+  var auto = fix && Object.keys(fix).length ? planExcel(steps, etag, hol, null) : null;
   var autoBy = auto ? new Map(auto.map(function(r){ return [r.step.nr, r]; })) : null;
   function resolve(nr){
     if (done.has(nr)) return done.get(nr);
@@ -958,6 +966,80 @@ function computePlan(steps, etag, hol, fix){
     }
     busy.delete(nr);
     var r = {step:s, basis:basis, date:date, shift:diffDays(basis, date), manual:!!manual, mit:mit};
+    done.set(nr, r);
+    return r;
+  }
+  return steps.map(function(s){ return resolve(s.nr); });
+}
+
+/* Rechenweise „Arbeitstage“ (Standard)
+   1. Normalraster: die Regel der Excel ohne Feiertage – so liegen die Termine
+      in einem Monat ohne Feiertag, mit allen Ziel-Wochentagen.
+   2. Produktionskette: Jeder Schritt hält zu seinem Anker so viele Arbeitstage
+      Abstand wie im Normalraster. Ein Feiertag verkürzt die Zeit also nicht,
+      sondern zieht die Schritte davor um genau einen Arbeitstag vor – statt
+      wie in der Excel auf den Ziel-Wochentag eine Woche früher zu springen.
+   3. Feste Wochentermine (Konferenzen): bleiben in ihrer Kalenderwoche. Fällt
+      der Tag auf einen Feiertag, gilt der Nachbartag in derselben Woche. In
+      der Weihnachtswoche und zwischen den Jahren gibt es keine Konferenz –
+      dann die Woche davor.
+   Ohne Feiertage im Zeitraum ist das Ergebnis dasselbe wie in der Excel. */
+function weihnachtsPause(d){
+  var y = d.getUTCFullYear(), m = d.getUTCMonth();
+  if (m === 0) return d.getUTCDate() === 1;
+  if (m !== 11) return false;
+  var hl = D(y, 12, 24), ab = addDays(hl, 1 - dow(hl));      /* Montag der Woche mit Heiligabend */
+  return +d >= +ab;
+}
+function inDerWoche(d0, dir, hol){
+  var d = d0;
+  for (var w = 0; w < 8; w++){
+    var mo = addDays(d, 1 - dow(d)), fr = addDays(mo, 4);
+    if (!isFreeDay(d, hol) && !weihnachtsPause(d)) return d;
+    for (var k = 1; k < 5; k++){
+      var kand = dir === 1 ? [k, -k] : [-k, k];
+      for (var i = 0; i < 2; i++){
+        var x = addDays(d, kand[i]);
+        if (+x >= +mo && +x <= +fr && !isFreeDay(x, hol) && !weihnachtsPause(x)) return x;
+      }
+    }
+    d = addDays(d, -7);
+  }
+  return d0;
+}
+function planArbeitstage(steps, etag, hol, fix){
+  var leer = new Set();
+  var raster = new Map(planExcel(steps, etag, leer, null).map(function(r){ return [r.step.nr, r]; }));
+  var byNr = new Map(steps.map(function(s){ return [s.nr, s]; }));
+  var done = new Map(), busy = new Set();
+  var auto = fix && Object.keys(fix).length ? planArbeitstage(steps, etag, hol, null) : null;
+  var autoBy = auto ? new Map(auto.map(function(r){ return [r.step.nr, r]; })) : null;
+  function resolve(nr){
+    if (done.has(nr)) return done.get(nr);
+    if (busy.has(nr)) throw new Error("Zirkelbezug: Schritt " + nr + " hängt von sich selbst ab.");
+    var s = byNr.get(nr);
+    if (!s) throw new Error("Schritt " + nr + " ist als Anker angegeben, existiert aber nicht.");
+    busy.add(nr);
+    var manual = fix && fix[s.nr] ? parseISO(fix[s.nr]) : null;
+    var anker = s.anchor === 0 ? null : resolve(s.anchor);
+    var normal = raster.get(nr).date, date;
+    if (manual) date = manual;
+    else if (!anker) date = planTermin(etag, s.wd, hol, s.dir);
+    else if (s.woche && anker.step.woche){
+      /* innerhalb des Konferenzblocks: Versatz und Wochentag wie gehabt, Ausweichen in der Woche */
+      date = inDerWoche(planTermin(addDays(anker.date, s.offset), s.wd, leer, s.dir), s.dir, hol);
+    }
+    else if (s.woche) date = inDerWoche(normal, s.dir, hol);
+    else {
+      var g = arbeitstage(raster.get(s.anchor).date, normal, leer);
+      date = g ? workday(anker.date, g, hol) : (isFreeDay(anker.date, hol) ? planTermin(anker.date, 0, hol, s.dir) : anker.date);
+    }
+    busy.delete(nr);
+    var a = autoBy ? autoBy.get(nr) : null, mit = null;
+    if (!manual && a && anker && (anker.manual || anker.mit) && +a.date !== +date)
+      mit = {von: anker.manual ? anker.step.nr : anker.mit.von, tage: arbeitstage(a.date, date, hol)};
+    var r = {step:s, basis: manual ? manual : normal, date:date, shift: manual ? 0 : diffDays(normal, date),
+             manual:!!manual, mit:mit};
     done.set(nr, r);
     return r;
   }
@@ -993,6 +1075,7 @@ function defaultState(year){
     holOn:  [],      /* zusätzlich aktivierte Vorschläge (ids) */
     holExtra: [],    /* eigene freie Tage {id,name,date} */
     overrides: {},   /* manuelle Termine, Schlüssel "<Heft-Id>:<Schritt-Nr>" */
+    rechenweise: "arbeitstage",   /* oder "excel": Regel genau wie in der Excel */
     view: "plan",
     orientation: "steps",
     selected: 0
@@ -1002,7 +1085,7 @@ function defaultState(year){
 function normState(raw, year){
   var s = raw && typeof raw === "object" ? raw : {};
   var d = defaultState(year || s.year || 2027);
-  ["year","issues","steps","regions","holOff","holOn","holExtra","overrides","view","orientation","selected"]
+  ["year","issues","steps","regions","holOff","holOn","holExtra","overrides","view","orientation","selected","rechenweise"]
     .forEach(function(k){ if (s[k] !== undefined && s[k] !== null) d[k] = s[k]; });
   if (!d.overrides || typeof d.overrides !== "object") d.overrides = {};
   if (!Array.isArray(d.regions)) d.regions = ["BE","HE"];
@@ -1021,12 +1104,17 @@ function normState(raw, year){
   if (!Array.isArray(d.holExtra)) d.holExtra = [];
   if (!Array.isArray(d.issues) || !d.issues.length) d.issues = suggestIssues(d.year);
   if (!Array.isArray(d.steps) || !d.steps.length) d.steps = DEFAULT_STEPS.map(function(x){ return Object.assign({}, x); });
+  /* Pläne von vor den festen Wochenterminen: Kennzeichen aus den Stammdaten */
+  d.steps.forEach(function(st){
+    if (st.woche === undefined){ var v = DEFAULT_STEPS.filter(function(x){ return x.nr === st.nr; })[0]; st.woche = !!(v && v.woche); }
+  });
+  if (d.rechenweise !== "excel") d.rechenweise = "arbeitstage";
   return d;
 }
 function planInhalt(){
   return {year:state.year, issues:state.issues, steps:state.steps, regions:state.regions,
           holOff:state.holOff, holOn:state.holOn, holExtra:state.holExtra, overrides:state.overrides,
-          orientation:state.orientation};
+          orientation:state.orientation, rechenweise:state.rechenweise};
 }
 function istGesperrt(){ return !!planMeta && planMeta.status === "fertig"; }
 
@@ -1553,8 +1641,8 @@ function buildModel(){
     });
     var rows, autoRows = null;
     try{
-      rows = computePlan(steps, corrected, hol.set, fix);
-      autoRows = hasFix ? computePlan(steps, corrected, hol.set, null) : rows;
+      rows = computePlan(steps, corrected, hol.set, fix, state.rechenweise);
+      autoRows = hasFix ? computePlan(steps, corrected, hol.set, null, state.rechenweise) : rows;
     }catch(e){
       error = e.message; rows = []; autoRows = [];
     }
@@ -1607,10 +1695,12 @@ function buildModel(){
               return x.step.nr+" „"+esc(x.step.label)+"“ ("+WD_SHORT[dow(x.date)-1]+" statt "+WD_SHORT[x.step.wd-1]+")"; }).join(", ")+
               " – falls nötig von Hand setzen." : "")});
       }
-      if (!r.manual && Math.abs(r.shift) >= 3){
+      if (!r.manual && Math.abs(r.shift) >= 3 && state.rechenweise === "excel"){
         findings.push({sev:"warn", issue:is.name,
           t:"Schritt "+r.step.nr+" um "+Math.abs(r.shift)+" Tage verschoben",
-          m:"„"+r.step.label+"“: Rechenbasis <b>"+fmt(r.basis)+"</b> &rarr; nächster zulässiger Termin <b>"+fmt(r.date)+"</b>. Ursache: Feiertag, Wochenende oder Ziel-Wochentag."});
+          m: state.rechenweise === "excel"
+            ? "„"+r.step.label+"“: Rechenbasis <b>"+fmt(r.basis)+"</b> &rarr; nächster zulässiger Termin <b>"+fmt(r.date)+"</b>. Ursache: Feiertag, Wochenende oder Ziel-Wochentag."
+            : "„"+r.step.label+"“: im Normalraster <b>"+wd(r.basis)+" "+fmt(r.basis)+"</b> &rarr; wegen Feiertagen <b>"+wd(r.date)+" "+fmt(r.date)+"</b>."});
       }
       var m = r.date.getUTCMonth(), d = r.date.getUTCDate();
       if ((m === 11 && d >= 23) || (m === 0 && d <= 2)){
@@ -1629,6 +1719,16 @@ function buildModel(){
         }
       }
     });
+  });
+  /* Arbeitstage: Feiertage ziehen Termine planmäßig vor – ein Hinweis je Heft statt Warnungen */
+  if (state.rechenweise !== "excel") issues.forEach(function(is){
+    var anders = is.rows.filter(function(r){ return !r.manual && !(r.mit && r.mit.tage) && r.shift; });
+    if (!anders.length) return;
+    findings.push({sev:"info", issue:is.name,
+      t:"Wegen Feiertagen angepasst: " + anders.length + (anders.length === 1 ? " Termin" : " Termine"),
+      m:"Anders als im Normalraster: " + anders.map(function(r){
+        return "Schritt " + r.step.nr + " <b>" + wd(r.date) + " " + fmtShort(r.date) + "</b> statt " + wd(r.basis) + " " + fmtShort(r.basis);
+      }).join(", ") + ". Die Produktionskette hält ihre Arbeitstage, Konferenzen bleiben in ihrer Woche."});
   });
   for (var i = 1; i < issues.length; i++){
     if (issues[i].etag <= issues[i-1].etag){
@@ -1984,11 +2084,11 @@ function openPop(issueId, stepNr){
         if (r.step.wd && dow(dt) !== r.step.wd) msg.push("nicht " + WD_LONG[r.step.wd-1]);
         /* So sähe die Ausgabe mit diesem Termin aus */
         var f = fixFuer(x.id); f[stepNr] = feld;
-        var neu = computePlan(model.steps, x.corrected, model.hol.set, f);
+        var neu = computePlan(model.steps, x.corrected, model.hol.set, f, state.rechenweise);
         var probe = {hasFix:true, autoByNr:x.autoByNr}, by = new Map(neu.map(function(q){ return [q.step.nr, q]; }));
         var mit = neu.filter(function(q){ return q.mit && q.mit.von === stepNr && q.mit.tage; });
         fo.textContent = mit.length
-          ? "Wandert mit: " + mit.length + (mit.length === 1 ? " Schritt" : " Schritte") + ", die darauf aufbauen – " + arbeitstageText(mit[0].mit.tage) + "."
+          ? "Wandert mit: " + mit.length + (mit.length === 1 ? " Schritt, der darauf aufbaut" : " Schritte, die darauf aufbauen") + " – " + arbeitstageText(mit[0].mit.tage) + "."
           : "";
         var anker = r.step.anchor ? by.get(r.step.anchor) : null, falsch = anker ? reihenfolgeFalsch(probe, by.get(stepNr), anker) : 0;
         if (falsch) msg.push((falsch > 0 ? "liegt nach " : "liegt vor ") + "Schritt " + anker.step.nr + " „" + anker.step.label + "“ (" + wd(anker.date) + " " + fmt(anker.date) + ")");
@@ -2051,7 +2151,7 @@ function cellHTML(r, issue){
     title = "Wandert mit Schritt " + mit.von + " – " + arbeitstageText(mit.tage) +
             (auto ? "\nAutomatisch wäre " + fmt(auto.date) : "") + "\nZum manuellen Setzen anklicken";
   } else if (r.shift){
-    title = "Rechenbasis " + fmt(r.basis) + " → " + fmt(r.date) + " (" + WD_LONG[dow(r.date)-1] + ", " +
+    title = (state.rechenweise === "excel" ? "Rechenbasis " : "Ohne Feiertage ") + fmt(r.basis) + " → " + fmt(r.date) + " (" + WD_LONG[dow(r.date)-1] + ", " +
             (r.shift > 0 ? "+" : "") + r.shift + " Tage)\nZum manuellen Setzen anklicken";
   } else {
     title = WD_LONG[dow(r.date)-1] + ", KW " + isoWeek(r.date) + "\nZum manuellen Setzen anklicken";
@@ -2127,7 +2227,7 @@ function viewIssue(){
       ? '<span class="manualnote">Manuell gesetzt'+(auto && +auto.date !== +r.date ? ' · automatisch '+fmt(auto.date) : "")+'</span>'
       : mit ? '<span class="mitnote">Wandert mit Schritt '+mit.von+(von ? ' „'+esc(von.step.label)+'“' : "")+' · '+arbeitstageText(mit.tage)+
               (auto ? ' · automatisch '+fmt(auto.date) : "")+'</span>'
-      : (r.shift ? '<span class="shift">Basis '+fmt(r.basis)+' → verschoben auf '+WD_LONG[dow(r.date)-1]+' ('+(r.shift>0?"+":"")+r.shift+' Tage)</span>' : "");
+      : (r.shift ? '<span class="shift">'+(state.rechenweise === "excel" ? "Basis " : "Ohne Feiertage ")+fmt(r.basis)+' → verschoben auf '+WD_LONG[dow(r.date)-1]+' ('+(r.shift>0?"+":"")+r.shift+' Tage)</span>' : "");
     out += '<div class="tl click'+(r.step.anchor === 0 ? " ms" : "")+(r.manual ? " manual" : "")+(mit ? " mit" : "")+
       '" style="--ph:'+ph.css+'" data-issue="'+esc(x.id)+'" data-step="'+r.step.nr+'" title="Zum Setzen eines eigenen Termins anklicken">'+
       '<span class="d"><span class="wd">'+wd(r.date)+'</span>'+fmt(r.date)+'</span>'+
@@ -2227,14 +2327,26 @@ function viewRules(){
         '<option value="1"'+(s.dir === 1 ? " selected" : "")+'>vorwärts</option></select></td>'+
       '<td><select data-r="phase" aria-label="Phase"'+(darfPlanAendern() ? "" : " disabled")+'>'+PHASES.map(function(p){
         return '<option value="'+p.key+'"'+(s.phase === p.key ? " selected" : "")+'>'+esc(p.label)+'</option>'; }).join("")+'</select></td>'+
+      '<td class="wo"><input type="checkbox" data-r="woche" aria-label="Fester Wochentermin"'+(s.woche ? " checked" : "")+
+        (darfPlanAendern() && state.rechenweise !== "excel" ? "" : " disabled")+'></td>'+
       '<td class="res">'+(r ? wd(r.date)+" "+fmtShort(r.date) : "–")+'</td>'+
     '</tr>';
   }).join("");
-  var head = '<div class="ruleshead">Jeder Schritt rechnet <b>Ankertermin + Versatz</b> und zieht das Ergebnis auf den nächsten '+
-    'zulässigen Tag: bei festem Ziel-Wochentag auf diesen Wochentag, sonst auf den nächsten Arbeitstag. '+
-    'Die Spalte rechts zeigt das Ergebnis für <b>'+(sample ? esc(sample.name) : "–")+'</b>.</div>';
+  var excel = state.rechenweise === "excel", frei = darfPlanAendern() ? "" : " disabled";
+  var head = '<div class="ruleshead">'+
+    '<div class="weise" role="group" aria-label="Rechenweise">'+
+      '<button type="button" class="btn sm" data-act="rechenweise" data-v="arbeitstage" aria-pressed="'+!excel+'"'+frei+'>Arbeitstage</button>'+
+      '<button type="button" class="btn sm" data-act="rechenweise" data-v="excel" aria-pressed="'+excel+'"'+frei+'>wie Excel</button></div>'+
+    (excel
+      ? 'Jeder Schritt rechnet <b>Ankertermin + Versatz</b> und zieht das Ergebnis auf den nächsten zulässigen Tag: bei festem '+
+        'Ziel-Wochentag auf diesen Wochentag – fällt der auf einen Feiertag, eine Woche früher.'
+      : 'Die Regel legt das <b>Normalraster</b> fest: so liegen die Termine in einem Monat ohne Feiertag. Feiertage verschieben '+
+        'dann nicht um ganze Wochen, sondern ziehen die Schritte davor um genau die fehlenden <b>Arbeitstage</b> vor. '+
+        '<b>Feste Wochentermine</b> (Konferenzen) bleiben in ihrer Woche – bei einem Feiertag am Nachbartag, in der '+
+        'Weihnachtswoche und zwischen den Jahren in der Woche davor.')+
+    ' Die Spalte rechts zeigt das Ergebnis für <b>'+(sample ? esc(sample.name) : "–")+'</b>.</div>';
   var table = '<div class="tablewrap"><table class="rules"><thead><tr>'+
-    ["#","Produktionsschritt","Ziel-Wochentag","Anker","Versatz (Tage)","Richtung","Phase","Ergebnis"]
+    ["#","Produktionsschritt","Ziel-Wochentag","Anker","Versatz (Tage)","Richtung","Phase","Wochentermin","Ergebnis"]
       .map(function(h){ return "<th>"+h+"</th>"; }).join("")+
     '</tr></thead><tbody>'+rows+'</tbody></table></div>';
   return card("Regelwerk · " + model.steps.length + " Schritte", head + table,
@@ -3267,6 +3379,12 @@ el("panel").addEventListener("click", function(e){
   var a = b.dataset.act;
   if (a === "orient"){ state.orientation = b.dataset.v; renderPanel(); save(); }
   else if (a === "fmt"){ exportFormat = b.dataset.v; renderPanel(); }
+  else if (a === "rechenweise"){
+    if (!darfPlanAendern() || state.rechenweise === b.dataset.v) return;
+    state.rechenweise = b.dataset.v === "excel" ? "excel" : "arbeitstage";
+    render();
+    toast(state.rechenweise === "excel" ? "Rechnet jetzt genau wie die Excel" : "Rechnet jetzt in Arbeitstagen");
+  }
   else if (a === "resetRules"){
     state.steps = DEFAULT_STEPS.map(function(s){ return Object.assign({}, s); });
     render(); toast("Regelwerk zurückgesetzt");
@@ -3351,6 +3469,7 @@ el("panel").addEventListener("change", function(e){
   if (!s) return;
   if (f === "label") s.label = e.target.value;
   else if (f === "phase") s.phase = e.target.value;
+  else if (f === "woche") s.woche = e.target.checked;
   else s[f] = +e.target.value;
   render(false);
 });
