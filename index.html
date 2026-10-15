@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Produktionsplan fuer das Magazin Berliner Wirtschaft: Rueckwaertsterminierung aller Produktionsschritte aus Jahr und Erscheinungsterminen.">
 <meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 40 40%27%3E%3Crect width=%2740%27 height=%2740%27 rx=%276%27 fill=%27%23003087%27/%3E%3Cpath d=%27M6 31a14 14 0 0 1 28 0%27 fill=%27none%27 stroke=%27%23fff%27 stroke-width=%273.5%27/%3E%3Cpath d=%27M13 31a7 7 0 0 1 14 0%27 fill=%27none%27 stroke=%27%23fff%27 stroke-width=%273.5%27 opacity=%27.55%27/%3E%3C/svg%3E">
 <style>
 :root{color-scheme:light dark}
 body{margin:0;font:14px/1.5 system-ui,sans-serif}
@@ -830,6 +831,8 @@ function statesTitle(h){
             "fest"         fester Termin: bleibt, Feiertag → Arbeitstag davor
    bezug  : Schritt, an dem die Kette hängt, wenn nicht der Anker
    meiden : Wochentag, auf den der Termin nicht fallen soll (dann Arbeitstag davor)
+   pause  : nicht in der Weihnachtswoche und nicht zwischen den Jahren (Konferenzen)
+   je     : abweichende Regel je Monat des E-Tags, z. B. {"3":{offset:-10}}
    ------------------------------------------------------------------------- */
 var PHASES = [
   {key:"a", label:"Anzeigen & Material", css:"var(--ph-1)"},
@@ -838,12 +841,12 @@ var PHASES = [
   {key:"d", label:"Druck, Versand, Erscheinen", css:"var(--ph-4)"}
 ];
 var DEFAULT_STEPS = [
-  {nr:1,  label:"Umfangsmeldung für Papierbestellung",                                       wd:0, anchor:2,  offset:7,  dir:-1, phase:"a"},
-  {nr:2,  label:"Anmeldung Sonderformate, Beihefter, TOC an Herstellung und Redaktion",      wd:0, anchor:3,  offset:-3, dir:-1, phase:"a"},
-  {nr:3,  label:"Buchungsschluss und Anlieferung Material Advertorial",                      wd:0, anchor:4,  offset:-4, dir:-1, phase:"a"},
-  {nr:4,  label:"Anmeldung Fachabteilungen",                                                 wd:5, anchor:5,  offset:-3, dir:-1, phase:"b", bindung:"woche"},
-  {nr:5,  label:"Kleine Redaktionskonferenz",                                                wd:1, anchor:6,  offset:-2, dir:-1, phase:"b", bindung:"woche"},
-  {nr:6,  label:"Große Redaktionskonferenz",                                                 wd:3, anchor:7,  offset:-8, dir:-1, phase:"b", bindung:"woche"},
+  {nr:1,  label:"Umfangsmeldung für Papierbestellung",                                       wd:0, anchor:2,  offset:7,  dir:-1, phase:"a", je:{"1":{anchor:6, offset:0, wd:0}, "2":{anchor:6, offset:0, wd:0}}},
+  {nr:2,  label:"Anmeldung Sonderformate, Beihefter, TOC an Herstellung und Redaktion",      wd:0, anchor:3,  offset:-3, dir:-1, phase:"a", je:{"1":{anchor:4, offset:-7}, "2":{anchor:4, offset:-7}, "3":{offset:-10}, "4":{offset:-10}}},
+  {nr:3,  label:"Buchungsschluss und Anlieferung Material Advertorial",                      wd:0, anchor:4,  offset:-4, dir:-1, phase:"a", je:{"1":{offset:-2, wd:0}, "2":{offset:-2, wd:0}}},
+  {nr:4,  label:"Anmeldung Fachabteilungen",                                                 wd:5, anchor:5,  offset:-3, dir:-1, phase:"b", bindung:"woche", pause:true},
+  {nr:5,  label:"Kleine Redaktionskonferenz",                                                wd:1, anchor:6,  offset:-2, dir:-1, phase:"b", bindung:"woche", pause:true},
+  {nr:6,  label:"Große Redaktionskonferenz",                                                 wd:3, anchor:7,  offset:-8, dir:-1, phase:"b", bindung:"woche", pause:true},
   {nr:7,  label:"Anzeigenschluss und Inhaltsprüfung Beihefter und Beilagen",                 wd:0, anchor:8,  offset:-4, dir:1,  phase:"b", bindung:"woche"},
   {nr:8,  label:"Redaktionsschluss",                                                         wd:0, anchor:12, offset:-7, dir:-1, phase:"b", meiden:5},
   {nr:9,  label:"Druckunterlagenschluss und Start Bildbearbeitung",                          wd:3, anchor:11, offset:-5, dir:-1, phase:"c", bindung:"verschiebung"},
@@ -1000,18 +1003,19 @@ function weihnachtsPause(d){
 }
 /* Ausweichtag in derselben Woche. `bis`: muss das Ausweichen wählen, dann
    lieber einen Tag, der nicht hinter dem Bezugsschritt liegt. */
-function inDerWoche(d0, dir, hol, bis){
+function inDerWoche(d0, dir, hol, bis, pause){
   var d = d0;
+  function frei(x){ return isFreeDay(x, hol) || (pause && weihnachtsPause(x)); }
   for (var w = 0; w < 8; w++){
     var mo = addDays(d, 1 - dow(d)), fr = addDays(mo, 4);
-    if (!isFreeDay(d, hol) && !weihnachtsPause(d)) return d;
+    if (!frei(d)) return d;
     for (var pass = bis ? 0 : 1; pass < 2; pass++){
       for (var k = 1; k < 5; k++){
         var kand = dir === 1 ? [k, -k] : [-k, k];
         for (var i = 0; i < 2; i++){
           var x = addDays(d, kand[i]);
           if (pass === 0 && +x > +bis) continue;
-          if (+x >= +mo && +x <= +fr && !isFreeDay(x, hol) && !weihnachtsPause(x)) return x;
+          if (+x >= +mo && +x <= +fr && !frei(x)) return x;
         }
       }
     }
@@ -1023,11 +1027,14 @@ function wochenAbstand(a, b){ return Math.round(diffDays(addDays(a, 1 - dow(a)),
 function planArbeitstage(steps, etag, hol, fix){
   var leer = new Set();
   /* Ein von Hand gesetzter E-Tag ist die Grundlage des Normalrasters */
-  var wurzel = steps.filter(function(s){ return s.anchor === 0; })[0], etagR = etag, stepsR = steps;
-  if (wurzel && fix && fix[wurzel.nr]){
-    etagR = parseISO(fix[wurzel.nr]);
-    stepsR = steps.map(function(s){ return s === wurzel ? Object.assign({}, s, {wd:0}) : s; });
-  }
+  var wurzel = steps.filter(function(s){ return s.anchor === 0; })[0], etagR = etag;
+  if (wurzel && fix && fix[wurzel.nr]) etagR = parseISO(fix[wurzel.nr]);
+  /* Regeln, die je nach Monat des E-Tags anders laufen (Weihnachtsheft, Frühjahr) */
+  var monat = String(etagR.getUTCMonth() + 1);
+  steps = steps.map(function(s){ return s.je && s.je[monat] ? Object.assign({}, s, s.je[monat]) : s; });
+  wurzel = steps.filter(function(s){ return s.anchor === 0; })[0];
+  var stepsR = steps;
+  if (wurzel && fix && fix[wurzel.nr]) stepsR = steps.map(function(s){ return s === wurzel ? Object.assign({}, s, {wd:0}) : s; });
   var raster = new Map(planExcel(stepsR, etagR, leer, null).map(function(r){ return [r.step.nr, r]; }));
   var byNr = new Map(steps.map(function(s){ return [s.nr, s]; }));
   var done = new Map(), busy = new Set();
@@ -1054,7 +1061,7 @@ function planArbeitstage(steps, etag, hol, fix){
       var wochen = verlegt ? wochenAbstand(raster.get(bez).date, anker.date) : 0;
       var ziel = addDays(normal, 7 * wochen);
       var vorAnker = +normal <= +raster.get(bez).date;
-      date = bind === "woche" ? inDerWoche(ziel, s.dir, hol, vorAnker ? anker.date : null)
+      date = bind === "woche" ? inDerWoche(ziel, s.dir, hol, vorAnker ? anker.date : null, !!s.pause)
                               : (isFreeDay(ziel, hol) ? planTermin(ziel, 0, hol, -1) : ziel);
     }
     else if (bind === "verschiebung"){
@@ -1081,6 +1088,7 @@ function planArbeitstage(steps, etag, hol, fix){
 /* =========================================================================
    Zustand
    ========================================================================= */
+var REGELSTAND = 2;                            /* gelernte Regeln: 2 = Pläne 2025/26 */
 var STORE_ALT = "bw-produktionsplan-v1";      /* Einzelplan früherer Fassungen */
 var STORE     = "bw-produktionsplan-v2";      /* lokale Ablage aller Pläne        */
 var LAST_KEY  = "bw-produktionsplan-zuletzt"; /* zuletzt geöffneter Plan          */
@@ -1108,6 +1116,7 @@ function defaultState(year){
     holExtra: [],    /* eigene freie Tage {id,name,date} */
     overrides: {},   /* manuelle Termine, Schlüssel "<Heft-Id>:<Schritt-Nr>" */
     rechenweise: "arbeitstage",   /* oder "excel": Regel genau wie in der Excel */
+    regelstand: REGELSTAND,       /* Stand der gelernten Regeln in state.steps */
     view: "plan",
     orientation: "steps",
     selected: 0
@@ -1117,7 +1126,7 @@ function defaultState(year){
 function normState(raw, year){
   var s = raw && typeof raw === "object" ? raw : {};
   var d = defaultState(year || s.year || 2027);
-  ["year","issues","steps","regions","holOff","holOn","holExtra","overrides","view","orientation","selected","rechenweise"]
+  ["year","issues","steps","regions","holOff","holOn","holExtra","overrides","view","orientation","selected","rechenweise","regelstand"]
     .forEach(function(k){ if (s[k] !== undefined && s[k] !== null) d[k] = s[k]; });
   if (!d.overrides || typeof d.overrides !== "object") d.overrides = {};
   if (!Array.isArray(d.regions)) d.regions = ["BE","HE"];
@@ -1136,23 +1145,22 @@ function normState(raw, year){
   if (!Array.isArray(d.holExtra)) d.holExtra = [];
   if (!Array.isArray(d.issues) || !d.issues.length) d.issues = suggestIssues(d.year);
   if (!Array.isArray(d.steps) || !d.steps.length) d.steps = DEFAULT_STEPS.map(function(x){ return Object.assign({}, x); });
-  /* Pläne von vor den gelernten Regeln: Bindung, Bezug und Meiden aus den Stammdaten */
-  d.steps.forEach(function(st){
-    if (st.bindung === undefined){
-      var v = DEFAULT_STEPS.filter(function(x){ return x.nr === st.nr; })[0] || {};
-      st.bindung = v.bindung || "kette";
-      if (v.bezug) st.bezug = v.bezug;
-      if (v.meiden) st.meiden = v.meiden;
-    }
+  /* Pläne von vor den gelernten Regeln: Bindung, Bezug, Meiden, Pause und
+     Monatsregeln aus den Stammdaten übernehmen (einmal je Regelstand) */
+  if (!(s.regelstand >= REGELSTAND)) d.steps.forEach(function(st){
+    var v = DEFAULT_STEPS.filter(function(x){ return x.nr === st.nr; })[0] || {};
+    st.bindung = v.bindung || "kette";
+    ["bezug", "meiden", "pause", "je"].forEach(function(k){ if (v[k] !== undefined) st[k] = JSON.parse(JSON.stringify(v[k])); else delete st[k]; });
     delete st.woche;
   });
+  d.regelstand = REGELSTAND;
   if (d.rechenweise !== "excel") d.rechenweise = "arbeitstage";
   return d;
 }
 function planInhalt(){
   return {year:state.year, issues:state.issues, steps:state.steps, regions:state.regions,
           holOff:state.holOff, holOn:state.holOn, holExtra:state.holExtra, overrides:state.overrides,
-          orientation:state.orientation, rechenweise:state.rechenweise};
+          orientation:state.orientation, rechenweise:state.rechenweise, regelstand:state.regelstand};
 }
 function istGesperrt(){ return !!planMeta && planMeta.status === "fertig"; }
 
@@ -2374,8 +2382,14 @@ function viewRules(){
       '<td><select data-r="bindung" aria-label="Bindung"'+(darfPlanAendern() && state.rechenweise !== "excel" ? "" : " disabled")+
         ' title="'+esc(BINDUNG[s.bindung || "kette"].t)+'">'+Object.keys(BINDUNG).map(function(k){
           return '<option value="'+k+'"'+((s.bindung || "kette") === k ? " selected" : "")+'>'+BINDUNG[k].n+'</option>'; }).join("")+'</select>'+
-        (s.bezug || s.meiden ? '<span class="bz">'+(s.bezug ? "an " + s.bezug : "")+(s.bezug && s.meiden ? " · " : "")+
-          (s.meiden ? "nicht " + WD_SHORT[s.meiden-1] : "")+'</span>' : "")+'</td>'+
+        (function(){
+          var t = [];
+          if (s.bezug) t.push("an " + s.bezug);
+          if (s.meiden) t.push("nicht " + WD_SHORT[s.meiden-1]);
+          if (s.pause) t.push("nicht Weihnachten");
+          if (s.je) t.push(Object.keys(s.je).map(function(m){ return MONTHS[+m-1].slice(0,3); }).join("/") + " anders");
+          return t.length ? '<span class="bz">' + esc(t.join(" · ")) + '</span>' : "";
+        })()+'</td>'+
       '<td class="res">'+(r ? wd(r.date)+" "+fmtShort(r.date) : "–")+'</td>'+
     '</tr>';
   }).join("");
@@ -2393,7 +2407,9 @@ function viewRules(){
         '<li>Die Prooffreigabe liegt immer 5 Arbeitstage vor dem Postversand; die Produktionskette davor hält ihre Arbeitstage.</li>'+
         '<li>Konferenzen, Anzeigenschluss und Beilagenanlieferung bleiben in ihrer Woche, in der Weihnachtswoche und zwischen den Jahren eine Woche davor.</li>'+
         '<li>Druckunterlagenschluss und Auflagenmeldung übernehmen die Verschiebung von Ausdrucken und Imprimatur.</li>'+
-        '<li>Der Redaktionsschluss fällt nicht auf einen Freitag.</li></ul>')+
+        '<li>Der Redaktionsschluss fällt nicht auf einen Freitag.</li>'+
+        '<li>Anzeigen-Schritte 1–3: März und April eine Woche mehr Vorlauf; im Januar/Februar-Heft Umfangsmeldung am Tag der Großen Konferenz, '+
+        'Anmeldung Sonderformate eine Woche und Buchungsschluss Advertorial zwei Tage vor der Anmeldung der Fachabteilungen.</li></ul>')+
     ' Die Spalte rechts zeigt das Ergebnis für <b>'+(sample ? esc(sample.name) : "–")+'</b>.</div>';
   var table = '<div class="tablewrap"><table class="rules"><thead><tr>'+
     ["#","Produktionsschritt","Ziel-Wochentag","Anker","Versatz (Tage)","Richtung","Phase","Bindung","Ergebnis"]

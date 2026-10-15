@@ -147,23 +147,37 @@ Hand erstellten Redaktionsplan 2027 abgeleitet:
 |---|---|---|
 | Kette | hält zu seinem Bezug die Arbeitstage des Normalrasters – ein Feiertag dazwischen zieht ihn um einen Arbeitstag vor | die Produktionskette |
 | Verschiebung | übernimmt die Verschiebung seines Bezugs in Arbeitstagen | Druckunterlagenschluss, Auflagenmeldung IHK/dpv (Bezug: Imprimatur) |
-| Wochentermin | bleibt in seiner Kalenderwoche; bei einem Feiertag der Nachbartag, in der Weihnachtswoche und zwischen den Jahren die Woche davor | Anmeldung Fachabteilungen, Kleine und Große Redaktionskonferenz, Anzeigenschluss, Beilagenanlieferung |
+| Wochentermin | bleibt in seiner Kalenderwoche; bei einem Feiertag der Nachbartag | Anmeldung Fachabteilungen, Kleine und Große Redaktionskonferenz, Anzeigenschluss, Beilagenanlieferung |
 | Fester Termin | bleibt auf seinem Tag; bei einem Feiertag der Arbeitstag davor | Druck, Postversand |
 
 Dazu: Die **Prooffreigabe** hängt in der Kette am Postversand (immer 5
 Arbeitstage davor), und der **Redaktionsschluss** fällt nicht auf einen
-Freitag. Wochentermine wandern nicht mit, wenn die Kette sich verschiebt – nur
+Freitag. Die **Konferenzen** liegen nie in der Weihnachtswoche oder zwischen
+den Jahren, sondern dann eine Woche davor; der Anzeigenschluss darf dagegen
+zwischen den Jahren liegen (wie 2025 und 2026).
+
+**Anzeigen-Schritte 1–3** laufen je nach Monat des E-Tags anders (Spalte
+*Bindung*, Hinweis „… anders“):
+
+| Heft | Umfangsmeldung (1) | Anmeldung Sonderformate (2) | Buchungsschluss Advertorial (3) |
+|---|---|---|---|
+| Januar/Februar | am Tag der Großen Redaktionskonferenz | eine Woche vor der Anmeldung Fachabteilungen | zwei Tage vor der Anmeldung Fachabteilungen |
+| März, April | eine Woche nach (2) | 10 Tage vor (3) – eine Woche mehr Vorlauf | wie üblich |
+| übrige | eine Woche nach (2) | 3 Tage vor (3) | 4 Tage vor der Anmeldung Fachabteilungen | Wochentermine wandern nicht mit, wenn die Kette sich verschiebt – nur
 mit dem E-Tag und mit ihrem eigenen Block (etwa der Konferenzblock über
 Weihnachten).
 
-**Trefferquote** (Schritte 4–24; die Schritte 1–2 hatten 2025/26 noch andere
-Abstände):
+**Trefferquote**:
 
 | Vergleich | Excel-Regel | gelernte Regeln |
 |---|---|---|
-| Produktionsplan 2026 | 176 von 210 | **210 von 210** |
+| Produktionsplan 2026, alle 24 Schritte | 195 von 240 | **239 von 240** |
 | Redaktionsplan 2027 (mit den drei grün markierten Terminen) | 61 von 80 | **78 von 80** |
-| Produktionsplan 2025 | 199 von 210 | 191 von 210 |
+| Produktionsplan 2025, alle 24 Schritte | 216 von 240 | 216 von 240 |
+
+Die eine Abweichung 2026 ist die Umfangsmeldung im Dezember-Heft, die 2025 und
+2026 unterschiedlich lag. Der E-Tag des Januar/Februar-Hefts ist wie 2025 und
+2026 der letzte Mittwoch im Januar.
 
 2025 wurden Feiertage im Mai und Juni noch anders gelöst (Proof zusammengeschoben
 statt die Kette zu verschieben); 2026 und 2027 verschieben die Kette – dem folgt
