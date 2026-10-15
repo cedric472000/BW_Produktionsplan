@@ -287,6 +287,11 @@ tr.phaserow th.rowhead{padding:0}
   padding:9px 18px;border-radius:20px;font-size:13px;z-index:99;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .18s}
 .toast.show{opacity:1}
 
+.xlsxinfo{padding:16px 18px}
+.xlsxkopf{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);margin-bottom:10px}
+.xlsxinfo ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
+.xlsxinfo li b{color:var(--ink);font-weight:600;margin-right:7px}
+
 /* ---------- Plan: Kopfleiste und Seitenkarte ---------- */
 .planbox{display:flex;align-items:center;gap:8px;padding:0 18px;border-right:1px solid var(--line);min-width:0}
 .planbox .pl{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}
@@ -382,6 +387,85 @@ body.gesperrt td.cell.click:hover{outline:0;background:inherit}
 .teamgroup .tadd input{width:100%;background:none;border:0;font-size:11.5px;padding:2px 2px;color:var(--ink)}
 .teamgroup .tadd input::placeholder{color:var(--ink-3)}
 
+.keinzugang{min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.kz{max-width:440px;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:6px;
+  box-shadow:var(--shadow);padding:26px 28px}
+.kzlbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.kz h2{font-size:22px;margin:6px 0 8px}
+.kz p{margin:0;color:var(--ink-2);font-size:13.5px;line-height:1.55}
+.stat.rolle{background:var(--surface-3);color:var(--ink-2)}
+body.anmeldung main.layout,body.anmeldung nav.tabs,body.anmeldung .yearbox,body.anmeldung .planbox,
+body.ohnezugang .yearbox,body.ohnezugang .planbox{display:none !important}
+.anm{width:100%}
+.anm label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--ink-2);margin-top:14px}
+.anm input{background:var(--surface-2);border:1px solid var(--line-2);border-radius:5px;padding:9px 10px;font-size:14px;font-weight:400;color:var(--ink)}
+.anm input:focus{background:var(--surface);border-color:var(--accent);outline:none}
+.anm .btn.primary{width:100%;margin-top:18px;padding:9px 12px;font-size:14px;font-weight:600}
+.anm .btn.primary:disabled{opacity:.6;cursor:progress}
+.anmfehler{margin-top:12px;font-size:12.5px;line-height:1.45;color:var(--crit);background:var(--crit-soft);border-radius:4px;padding:7px 9px}
+.anmfehler.gut{color:var(--ok);background:var(--ok-soft)}
+.anmfehler:empty{display:none}
+.anmlinks{display:flex;justify-content:space-between;gap:6px 14px;flex-wrap:wrap;margin-top:14px}
+.anmlinks:empty{display:none}
+.anmlinks button,.konto .lnk{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font-size:12.5px;
+  text-decoration:underline;text-underline-offset:2px}
+.kzbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.konto{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap;margin-top:12px;padding-top:10px;
+  border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-3)}
+.konto b{color:var(--ink-2);font-weight:600;word-break:break-all}
+.zneu{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) 190px auto;gap:8px;padding:14px 18px 6px}
+.zneu input,.zneu select{background:var(--surface-2);border:1px solid var(--line-2);border-radius:5px;padding:7px 9px;font-size:13px;min-width:0}
+.zneu input:focus{background:var(--surface);border-color:var(--accent);outline:none}
+@media (max-width:760px){.zneu{grid-template-columns:1fr}}
+.zwer input{background:none;border:1px solid transparent;border-radius:4px;padding:1px 4px;margin-left:-5px;font-size:13px;font-weight:600;min-width:0}
+.zwer input:hover{border-color:var(--line-2)}
+.zwer input:focus{border-color:var(--accent);background:var(--surface);outline:none}
+.note.warn{background:var(--warn-soft);border-left-color:var(--warn);color:var(--warn)}
+.pltitel{font-family:var(--serif);font-size:14px;font-weight:600;padding:2px 0}
+body.nurlesen td.cell{cursor:default}
+.task .who.login::after{content:" · Login";font-weight:500;opacity:.75}
+.task .frei{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ok);background:var(--ok-soft);border-radius:3px;padding:1px 6px}
+.task .antwort{display:block;font-size:11.5px;color:var(--accent);margin-top:3px}
+.task.mein{background:var(--accent-soft)}
+.task .eigen{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;align-items:center}
+.task .eigen input[type=text]{flex:1;min-width:180px;background:var(--surface);border:1px solid var(--line-2);border-radius:4px;padding:4px 8px;font-size:12px}
+.task .eigen label{font-size:11.5px;color:var(--ink-2);display:flex;gap:6px;align-items:center}
+.task .eigen input[type=date]{background:var(--surface);border:1px solid var(--line-2);border-radius:4px;padding:3px 6px;font-family:var(--mono);font-size:12px}
+.tfrei{grid-column:1/-1;font-size:12px;color:var(--ink-2);display:flex;gap:7px;align-items:center}
+.tfrei input{accent-color:var(--accent);margin:0}
+.zhinweis{padding:14px 18px;border-bottom:1px solid var(--line);background:var(--surface-2);font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.zhinweis > b{display:block;color:var(--ink);font-size:13px;margin-bottom:4px}
+.zhinweis ol{margin:4px 0 10px;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.zhinweis dl{display:grid;grid-template-columns:max-content 1fr;gap:3px 14px;margin:0}
+.zhinweis dt{font-weight:700;color:var(--ink)}
+.zhinweis dd{margin:0}
+.zsuche{padding:14px 18px 6px;position:relative}
+.zsuche input{width:100%;background:var(--surface-2);border:1px solid var(--line-2);border-radius:5px;padding:8px 10px;font-size:13.5px}
+.zsuche input:focus{background:var(--surface);border-color:var(--accent)}
+.ztreffer{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.ztr{display:grid;grid-template-columns:26px minmax(0,1fr) minmax(0,1.3fr) auto;gap:10px;align-items:center;text-align:left;
+  background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:6px 10px;cursor:pointer;font-size:12.5px}
+.ztr:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+.ztr:disabled{opacity:.55;cursor:default}
+.ztr img{width:26px;height:26px;border-radius:50%}
+.ztr span{color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ztr em{font-style:normal;font-size:11px;color:var(--accent);font-weight:600}
+.zleer{font-size:12px;color:var(--ink-3);padding:6px 2px}
+.zliste{padding:8px 18px 16px;display:flex;flex-direction:column}
+.zrow{display:grid;grid-template-columns:30px minmax(0,1fr) 190px 170px 24px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.zrow:last-child{border-bottom:0}
+.zrow.ich{grid-template-columns:30px minmax(0,1fr)}
+@media (max-width:760px){.zrow{grid-template-columns:30px minmax(0,1fr) 24px}.zrow select{grid-column:2/3}}
+.zav{display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--ink-2);flex:none;width:30px;height:30px;border-radius:50%;background:var(--surface-3)}
+.zwer{display:flex;flex-direction:column;min-width:0}
+.zwer b{font-size:13px;font-weight:600}
+.zwer span{font-size:11.5px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.zrow select{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:4px 6px;font-size:12px;min-width:0}
+.zrow .x{background:none;border:0;color:var(--ink-3);cursor:pointer;font-size:16px;line-height:1;border-radius:3px}
+.zrow .x:hover{color:var(--crit);background:var(--crit-soft)}
+.teamgroup .tp .lp{flex:1;padding:2px 5px;font-size:12px}
+.teamgroup .tp .tag{margin-left:auto}
+
 /* ---------- Länderauswahl ---------- */
 .regions{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:11px}
 .regions .rlab{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-right:2px}
@@ -407,6 +491,12 @@ td.cell.manual::before{content:"";position:absolute;top:0;left:0;border-top:7px 
 td.cell.manual.shifted{background:var(--accent-soft)}
 td.cell.manual.shifted::after{display:none}
 tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(--accent)}
+td.cell.mit{color:var(--accent)}
+td.cell.mit::before{content:"";position:absolute;top:0;left:0;border-top:5px solid var(--accent);border-right:5px solid transparent;opacity:.45}
+.tl.mit .d{color:var(--accent)}
+.tl .mitnote{display:block;font-size:11px;color:var(--ink-3);margin-top:2px}
+.dlg .folge{font-size:11.5px;color:var(--accent);line-height:1.45}
+.dlg .folge:empty{display:none}
 .tl.click{cursor:pointer}
 .tl.click:hover{background:var(--accent-soft)}
 .tl.manual .d{color:var(--accent);font-weight:600}
@@ -491,9 +581,34 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
     <button type="button" role="tab" data-view="pruefung" aria-selected="false">Prüfung<span class="cnt zero" id="warnCount">0</span></button>
     <button type="button" role="tab" data-view="regeln" aria-selected="false">Regelwerk</button>
     <button type="button" role="tab" data-view="export" aria-selected="false">Export</button>
+    <button type="button" role="tab" data-view="zugriff" aria-selected="false" id="tabZugriff" hidden>Zugriff</button>
   </nav>
 </header>
 
+<section class="keinzugang" id="anmeldung" hidden>
+  <form class="kz anm" id="anmForm" novalidate>
+    <div class="kzlbl">Berliner Wirtschaft · Produktionsplan</div>
+    <h2 id="anmTitel">Anmelden</h2>
+    <p id="anmText"></p>
+    <label id="anmMailBox">Mailadresse <input type="email" id="anmMail" autocomplete="username" inputmode="email" spellcheck="false"></label>
+    <label id="anmPwBox">Passwort <input type="password" id="anmPw" autocomplete="current-password"></label>
+    <label id="anmPw2Box">Passwort wiederholen <input type="password" id="anmPw2" autocomplete="new-password"></label>
+    <div class="anmfehler" id="anmFehler" role="alert"></div>
+    <button type="submit" class="btn primary" id="anmOk">Anmelden</button>
+    <div class="anmlinks" id="anmLinks"></div>
+  </form>
+</section>
+<section class="keinzugang" id="keinZugang" hidden>
+  <div class="kz">
+    <div class="kzlbl">Berliner Wirtschaft · Produktionsplan</div>
+    <h2 id="kzTitel">Kein Zugriff</h2>
+    <p id="kzText">Diese Seite ist nur für freigeschaltete Personen. Bitte wende dich an die Person, die dir den Link geschickt hat.</p>
+    <div class="kzbtns" id="kzBtns" hidden>
+      <button type="button" class="btn sm primary" data-konto="neu">Neu laden</button>
+      <button type="button" class="btn sm ghost" data-konto="ab">Abmelden</button>
+    </div>
+  </div>
+</section>
 <main class="layout">
   <aside class="rail">
     <div id="planCard"></div>
@@ -539,7 +654,8 @@ tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(-
       <header><h2>Daten</h2></header>
       <div class="body">
         <div class="rowbtns" style="margin-top:0">
-          <button type="button" class="btn sm" id="printBtn">Plan drucken</button>
+          <button type="button" class="btn sm" id="printBtn">Drucken / PDF</button>
+          <button type="button" class="btn sm" id="xlsxBtn">Excel-Datei</button>
           <button type="button" class="btn sm ghost" id="resetAll">Alles zurücksetzen</button>
         </div>
       </div>
@@ -783,13 +899,26 @@ function planTermin(basis, target, hol, dir){
   }
   return basis;
 }
+/* Abstand in Arbeitstagen von a nach b (negativ, wenn b vor a liegt) */
+function arbeitstage(a, b, hol){
+  var n = 0, x = a, step = b > a ? 1 : -1, guard = 0;
+  while (+x !== +b && guard++ < 3000){
+    if (step > 0){ x = addDays(x, 1); if (!isFreeDay(x, hol)) n++; }
+    else { if (!isFreeDay(x, hol)) n--; x = addDays(x, -1); }
+  }
+  return n;
+}
 /* Kompletten Heftplan rückwärts vom E-Tag rechnen.
    `fix` enthält manuell gesetzte Termine je Schritt-Nr. Ein fester Termin
-   wird unverändert übernommen; alle Schritte, die ihn als Anker haben,
-   rechnen von dort aus weiter. */
+   wird unverändert übernommen. Was auf ihm aufbaut, rechnet nicht noch einmal
+   nach der Regel (Ziel-Wochentage würden kleine Änderungen zu Wochensprüngen
+   machen), sondern wandert mit: im selben Abstand in Arbeitstagen wie im
+   automatischen Plan. Ohne manuelle Termine ist das Ergebnis das der Excel. */
 function computePlan(steps, etag, hol, fix){
   var byNr = new Map(steps.map(function(s){ return [s.nr, s]; }));
   var done = new Map(), busy = new Set();
+  var auto = fix && Object.keys(fix).length ? computePlan(steps, etag, hol, null) : null;
+  var autoBy = auto ? new Map(auto.map(function(r){ return [r.step.nr, r]; })) : null;
   function resolve(nr){
     if (done.has(nr)) return done.get(nr);
     if (busy.has(nr)) throw new Error("Zirkelbezug: Schritt " + nr + " hängt von sich selbst ab.");
@@ -797,15 +926,23 @@ function computePlan(steps, etag, hol, fix){
     if (!s) throw new Error("Schritt " + nr + " ist als Anker angegeben, existiert aber nicht.");
     busy.add(nr);
     var manual = fix && fix[s.nr] ? parseISO(fix[s.nr]) : null;
-    var basis, date;
+    var basis, date, mit = null;
+    var anker = s.anchor === 0 ? null : resolve(s.anchor);
     if (manual){
       basis = manual; date = manual;
+    } else if (anker && autoBy && (anker.manual || anker.mit)){
+      /* Anker wurde verschoben: Abstand halten statt Regel neu anwenden */
+      var au = autoBy.get(s.nr), aa = autoBy.get(s.anchor);
+      var g = arbeitstage(aa.date, au.date, hol);
+      date = g ? workday(anker.date, g, hol) : planTermin(anker.date, 0, hol, s.dir);
+      basis = date;
+      mit = {von: anker.manual ? anker.step.nr : anker.mit.von, tage: arbeitstage(au.date, date, hol)};
     } else {
-      basis = s.anchor === 0 ? etag : addDays(resolve(s.anchor).date, s.offset);
+      basis = anker ? addDays(anker.date, s.offset) : etag;
       date  = planTermin(basis, s.wd, hol, s.dir);
     }
     busy.delete(nr);
-    var r = {step:s, basis:basis, date:date, shift:diffDays(basis, date), manual:!!manual};
+    var r = {step:s, basis:basis, date:date, shift:diffDays(basis, date), manual:!!manual, mit:mit};
     done.set(nr, r);
     return r;
   }
@@ -824,6 +961,9 @@ var planMeta = null;              /* Kopfdaten des offenen Plans */
 var plaene = [];                  /* alle Pläne (Kopfdaten + Inhalt) */
 var aufgaben = [];                /* Aufgaben des offenen Plans */
 var team = [];                    /* Abteilungen und Personen */
+var zugriff = [];                 /* Zugriffsliste: {id (Konto), rolle, abteilungId} */
+var rueckmeldungen = {};          /* je Konto: was die Person an ihren Aufgaben geändert hat */
+var Rechte = {bereit:false, api:null, id:null, owner:false, kannEdit:false};
 
 function uid(prefix){ return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 function nowISO(){ return new Date().toISOString(); }
@@ -910,7 +1050,7 @@ var Ablage = {
       d.aufgaben = d.aufgaben || {};
       d.aufgaben[planId] = d.aufgaben[planId] || {};
       d.aufgaben[planId][satz.id] = satz;
-    } else d[art][satz.id] = satz;
+    } else { d[art] = d[art] || {}; d[art][satz.id] = satz; }
     this._schreiben(d);
     return Promise.resolve();
   },
@@ -918,7 +1058,7 @@ var Ablage = {
     if (this.db) return this.db.doc(this._pfad(art, planId) + "/" + id).delete().catch(dbFehler);
     var d = this._lesen();
     if (art === "aufgaben"){ if (d.aufgaben && d.aufgaben[planId]) delete d.aufgaben[planId][id]; }
-    else delete d[art][id];
+    else if (d[art]) delete d[art][id];
     this._schreiben(d);
     return Promise.resolve();
   },
@@ -957,16 +1097,24 @@ var Ablage = {
       plaene = werte(d.plaene); team = werte(d.team);
       fertig();
     }
+    /* Website mit Anmeldung: Firebase statt Browserspeicher, nie stillschweigend lokal */
+    if (Konto.aktiv()){ Konto.start(function(db){ self._geteilt(db, fertig); }); return; }
     try{
       if (window.claude && typeof window.claude.use === "function"){
         window.claude.use("db").then(function(db){
           beantwortet = true;
           if (!db){ lokalStarten(); return; }
-          self.db = db; self.modus = "geteilt";
-          var offen = 2;
-          function evtl(){ if (--offen === 0) fertig(); }
-          self._abo(db, "plaene", function(list){ plaene = list; }, self.beiPlaenen, evtl);
-          self._abo(db, "team",   function(list){ team = list; },   self.beiTeam,   evtl);
+          self._geteilt(db, fertig, function(evtl){
+            /* Wer schaut zu? Die Plattform liefert eine geprüfte Kennung. */
+            window.claude.use("user").then(function(u){
+              Rechte.api = u;
+              if (!u){ Rechte.bereit = true; evtl(); return; }
+              u.me().then(function(m){
+                Rechte.id = m.id; Rechte.owner = !!m.isOwner; Rechte.kannEdit = !!m.canEdit;
+                Rechte.bereit = true; evtl();
+              }, function(){ Rechte.bereit = true; evtl(); });
+            }, function(){ Rechte.bereit = true; evtl(); });
+          });
         }, function(){ beantwortet = true; lokalStarten(); });
         setTimeout(function(){ if (!beantwortet) lokalStarten(); }, 10500);
         return;
@@ -974,7 +1122,23 @@ var Ablage = {
     }catch(e){}
     lokalStarten();
   },
-  /* Ein Abo, das den eigenen Schreib-Widerhall nicht als Änderung meldet */
+  /* Abos auf alles, was geteilt liegt; fertig() nach der ersten Lieferung von allen */
+  _geteilt: function(db, fertig, rechte){
+    var self = this, offen = rechte ? 5 : 4;
+    this.db = db; this.modus = "geteilt";
+    function evtl(){ if (--offen === 0) fertig(); }
+    this._abo(db, "plaene",    function(list){ plaene = list; }, this.beiPlaenen, evtl);
+    this._abo(db, "team",      function(list){ team = list; },   this.beiTeam,   evtl);
+    this._abo(db, "zugriff",   function(list){ zugriff = list; }, function(){ self.beiTeam(); }, evtl);
+    this._abo(db, "freigaben", function(list){
+      rueckmeldungen = {};
+      list.forEach(function(d){ rueckmeldungen[d.id] = d; });
+    }, function(){ self.beiAufgaben(); }, evtl);
+    if (rechte) rechte(evtl);
+  },
+  /* Ein Abo, das den eigenen Schreib-Widerhall nicht als Änderung meldet.
+     Firestore liefert eigene Schreibvorgänge sofort zurück (hasPendingWrites) –
+     die stehen schon in den Listen der Seite. */
   _abo: function(db, pfad, setzen, melden, einmal){
     var letzter = null, ersteLieferung = true;
     return db.collection(pfad).onSnapshot(function(snap){
@@ -984,7 +1148,7 @@ var Ablage = {
       letzter = jetzt;
       setzen(list);
       if (ersteLieferung){ ersteLieferung = false; if (einmal) einmal(); return; }
-      if (!gleich) melden();
+      if (!gleich && !(snap.metadata && snap.metadata.hasPendingWrites)) melden();
     }, function(){ if (ersteLieferung){ ersteLieferung = false; if (einmal) einmal(); } });
   },
 
@@ -1008,12 +1172,307 @@ var Ablage = {
 };
 function werte(o){ return Object.keys(o || {}).map(function(k){ return o[k]; }); }
 function dbFehler(e){
-  var c = e && e.code;
+  var c = String(e && e.code || "").replace(/-/g, "_");      /* Firestore: "permission-denied" */
+  if (c === "permission_denied"){ toast("Keine Berechtigung für diese Änderung"); return; }
   if (c === "quota_exceeded") toast("Speicher voll – bitte alte Pläne löschen");
   else if (c === "resource_exhausted") toast("Zu viele Zugriffe – bitte kurz warten");
   else if (c === "revoked" || c === "not_granted") toast("Kein Zugriff auf die geteilte Ablage");
   else toast("Konnte nicht gespeichert werden");
 }
+
+/* =========================================================================
+   Rechte
+   Wer die Seite öffnen kann, legt das Teilen-Menü fest (Login über claude.ai).
+   Die Rolle steht in der Zugriffsliste. Durchgesetzt wird sie von den Regeln
+   der Datenbank: Schreiben nur mit Bearbeiten-Freigabe; mit Ansehen-Freigabe
+   darf jede Person nur ihr eigenes Dokument unter freigaben/ schreiben, und
+   daraus übernimmt die Seite nur Änderungen an Aufgaben, die dieser Person
+   zugewiesen sind.
+   ========================================================================= */
+var ROLLEN = {admin:"Admin", beobachter:"Beobachter", zugewiesen:"Zugewiesene Aufgaben"};
+function geteilt(){ return Ablage.modus === "geteilt"; }
+function eintragVon(id){ return zugriff.filter(function(z){ return z.id === id; })[0] || null; }
+function meineRolle(){
+  if (!geteilt()) return "admin";               /* Datei-Fassung: ein Rechner, eine Person */
+  if (Rechte.owner) return "admin";
+  var z = Rechte.id ? eintragVon(Rechte.id) : null;
+  return z && ROLLEN[z.rolle] ? z.rolle : null;
+}
+function istAdmin(){ return meineRolle() === "admin" && (!geteilt() || Rechte.owner || Rechte.kannEdit); }
+function darfPlanAendern(){ return istAdmin() && !istGesperrt(); }
+function loginId(personId){ return String(personId || "").indexOf("u:") === 0 ? personId.slice(2) : null; }
+function istMeineAufgabe(t){
+  return geteilt() && !!Rechte.id && loginId(t.personId) === Rechte.id &&
+         meineRolle() === "zugewiesen" && !istGesperrt();
+}
+/* Was die zuständige Person selbst an der Aufgabe geändert hat */
+function rueckmeldung(t){
+  if (istGesperrt()) return null;               /* freigegeben: der Stand ist im Plan festgeschrieben */
+  var u = loginId(t.personId), z = u ? eintragVon(u) : null;
+  if (!z || z.rolle !== "zugewiesen") return null;
+  var d = rueckmeldungen[u];
+  return d && d.aufgaben && d.aufgaben[t.id] || null;
+}
+function erledigt(t){
+  var e = rueckmeldung(t);
+  if (e && typeof e.erledigt === "boolean" && String(e.stand || "") > String(t.erledigtStand || "")) return e.erledigt;
+  return !!t.erledigt;
+}
+/* Manuelle Termine des Plans plus die, die zuständige Personen setzen durften */
+function wirksameUeberschreibungen(){
+  var o = Object.assign({}, state.overrides);
+  aufgaben.forEach(function(t){
+    if (!t.terminFreigegeben || !t.schrittNr || !t.ausgabeId) return;
+    var e = rueckmeldung(t);
+    if (e && e.datum) o[t.ausgabeId + ":" + t.schrittNr] = e.datum;
+  });
+  return o;
+}
+function rueckmeldungSetzen(t, feld, wert){
+  if (!istMeineAufgabe(t)) return;
+  var alt = rueckmeldungen[Rechte.id] || {aufgaben:{}};
+  var doc = {id:Rechte.id, aufgaben:Object.assign({}, alt.aufgaben)};
+  var e = Object.assign({}, doc.aufgaben[t.id] || {}, {plan:planMeta.id});
+  e[feld] = wert;
+  if (feld === "erledigt") e.stand = nowISO();
+  doc.aufgaben[t.id] = e;
+  rueckmeldungen[Rechte.id] = doc;
+  Ablage.sichern("freigaben", doc);
+  render(false);
+}
+/* Namen und Mailadressen kommen live aus dem Verzeichnis, gespeichert werden nur Kennungen */
+var profile = {}, profileLaufen = false;
+function avatar(url, name){
+  return url ? '<img class="zav" src="'+esc(url)+'" alt="">'
+             : '<span class="zav" aria-hidden="true">'+esc(String(name || "").trim().charAt(0).toUpperCase())+'</span>';
+}
+function profilVon(id){
+  /* Website: Name aus der Zugriffsliste, die Kennung ist die Mailadresse */
+  if (Konto.drin){ var z = eintragVon(id); return {name:z && z.name || "", email:id, avatarUrl:""}; }
+  return profile[id] || {name:"", email:null, avatarUrl:""};
+}
+function profileLaden(){
+  if (!Rechte.api || profileLaufen) return;
+  var ids = zugriff.map(function(z){ return z.id; });
+  if (Rechte.id) ids.push(Rechte.id);
+  var fehlen = ids.filter(function(id){ return !profile[id]; });
+  if (!fehlen.length) return;
+  profileLaufen = true;
+  Rechte.api.profiles(ids).then(function(ps){
+    profileLaufen = false;
+    var neu = false;
+    Object.keys(ps).forEach(function(id){ if (!profile[id] || profile[id].name !== ps[id].name) neu = true; profile[id] = ps[id]; });
+    if (neu) neuAufbauen();
+  }, function(){ profileLaufen = false; });
+}
+function personName(id){ var p = profilVon(id); return p.name || p.email || "Person ohne Namen"; }
+
+/* =========================================================================
+   Anmeldung der Website-Fassung (Firebase)
+   Konto mit Mailadresse und Passwort; die Adresse muss bestätigt sein.
+   Was eine Person lesen und schreiben darf, entscheiden die Regeln in
+   firestore.rules auf dem Server. Die Kennung einer Person ist ihre
+   Mailadresse in Kleinbuchstaben – unter ihr steht sie in der Zugriffsliste.
+   ========================================================================= */
+var Konto = {
+  F: null, auth: null, fs: null, user: null, mail: "", besitzer: "", drin: false, modus: null,
+  aktiv: function(){
+    return !!window.BW_FIREBASE && /^https?:$/.test(location.protocol) &&
+           !(window.claude && typeof window.claude.use === "function");
+  },
+  start: function(weiter){
+    var self = this;
+    this.weiter = weiter;
+    anmeldungZeigen("laden");
+    import("./vendor/firebase.js").then(function(F){
+      var cfg = window.BW_FIREBASE, app = F.initializeApp(cfg);
+      self.F = F;
+      self.auth = F.initializeAuth(app, {persistence:[F.indexedDBLocalPersistence, F.browserLocalPersistence]});
+      self.auth.languageCode = "de";
+      self.fs = F.initializeFirestore(app, {ignoreUndefinedProperties:true});
+      if (cfg.emulator){                                   /* nur für die Tests */
+        F.connectAuthEmulator(self.auth, cfg.emulator.auth, {disableWarnings:true});
+        F.connectFirestoreEmulator(self.fs, cfg.emulator.host, cfg.emulator.port);
+      }
+      F.onAuthStateChanged(self.auth, function(u){
+        if (self.drin){ if (!u) location.reload(); return; }
+        self.user = u;
+        if (!u) anmeldungZeigen("login");
+        else self.pruefen();
+      });
+    }, function(){ anmeldungZeigen("fehler"); });
+  },
+  /* Bestätigt? Frisch nachfragen – und das Token erneuern, damit der Server es auch weiß */
+  pruefen: function(){
+    var self = this, u = this.user;
+    if (!u) return Promise.resolve();
+    return this.F.reload(u).then(function(){
+      if (!u.emailVerified){ anmeldungZeigen("bestaetigen"); return; }
+      return u.getIdToken(true).then(function(){ return self.eintreten(); });
+    }, function(e){ anmeldungZeigen("fehler", e); });
+  },
+  eintreten: function(){
+    var self = this, F = this.F;
+    this.mail = String(this.user.email || "").toLowerCase();
+    return F.getDoc(F.doc(this.fs, "meta/besitzer")).then(function(snap){
+      if (!snap.exists()){ anmeldungZeigen("einrichten"); return; }
+      if (self.drin) return;
+      self.drin = true;
+      self.besitzer = String(snap.data().email || "");
+      Rechte.id = self.mail; Rechte.owner = self.besitzer === self.mail;
+      Rechte.kannEdit = true; Rechte.bereit = true;     /* die Regeln entscheiden, die Seite zeigt nur an */
+      anmeldungZeigen(null);
+      self.weiter(self.ablage());
+    }, function(e){ anmeldungZeigen("fehler", e); });
+  },
+  einrichten: function(){
+    var self = this;
+    return this.F.setDoc(this.F.doc(this.fs, "meta/besitzer"), {email:this.mail, seit:nowISO()})
+      .then(function(){ return self.eintreten(); });
+  },
+  abmelden: function(){
+    if (!this.F){ location.reload(); return; }
+    this.F.signOut(this.auth).then(function(){ location.reload(); });
+  },
+  /* Ziel der Links in den Mails: zurück auf diese Seite. Ist die Adresse in
+     Firebase nicht als Domain freigegeben, ohne Rücksprung senden. */
+  _mitRueckweg: function(senden){
+    return senden({url:location.origin + location.pathname}).catch(function(e){
+      if (/continue-uri|unauthorized-domain/.test(e && e.code || "")) return senden(undefined);
+      throw e;
+    });
+  },
+  bestaetigungSenden: function(){
+    var u = this.user, F = this.F;
+    return this._mitRueckweg(function(acs){ return F.sendEmailVerification(u, acs); });
+  },
+  passwortLink: function(mail){
+    var a = this.auth, F = this.F;
+    return this._mitRueckweg(function(acs){ return F.sendPasswordResetEmail(a, mail, acs); });
+  },
+  /* Firestore mit derselben kleinen Schnittstelle wie die Datenbank im Artifact */
+  ablage: function(){
+    var F = this.F, fs = this.fs;
+    return {
+      doc: function(p){
+        var r = F.doc(fs, p);
+        return {set:function(b){ return F.setDoc(r, b); }, delete:function(){ return F.deleteDoc(r); }};
+      },
+      collection: function(p){
+        var r = F.collection(fs, p);
+        return {get:function(){ return F.getDocs(r); },
+                onSnapshot:function(ok, err){ return F.onSnapshot(r, ok, err); }};
+      }
+    };
+  }
+};
+var ANM = {
+  laden:       {t:"Einen Moment …", x:"Die Anmeldung wird geladen."},
+  login:       {t:"Anmelden", x:"Nur für freigeschaltete Personen. Melde dich mit deiner Mailadresse und deinem Passwort an.",
+                mail:1, pw:1, ok:"Anmelden", links:[["neu", "Erstes Mal hier? Konto anlegen"], ["vergessen", "Passwort vergessen"]]},
+  neu:         {t:"Konto anlegen", x:"Nimm die Mailadresse, unter der du freigeschaltet wurdest, und wähl ein Passwort mit mindestens 8 Zeichen. Danach bekommst du eine Mail zum Bestätigen.",
+                mail:1, pw:1, pw2:1, ok:"Konto anlegen", links:[["login", "Ich habe schon ein Konto"]]},
+  vergessen:   {t:"Passwort vergessen", x:"Wir schicken dir einen Link, mit dem du ein neues Passwort setzt.",
+                mail:1, ok:"Link senden", links:[["login", "Zurück zur Anmeldung"]]},
+  bestaetigen: {t:"Mailadresse bestätigen", ok:"Ich habe bestätigt – weiter", links:[["nochmal", "Mail noch einmal senden"], ["ab", "Abmelden"]]},
+  einrichten:  {t:"Seite einrichten", ok:"Als Besitzer übernehmen", links:[["ab", "Abmelden"]]},
+  fehler:      {t:"Anmeldung nicht erreichbar", x:"Die Anmeldung konnte nicht geladen werden. Bitte prüf die Internetverbindung und lade die Seite neu.", ok:"Neu laden"}
+};
+function anmeldungZeigen(modus, fehler){
+  Konto.modus = modus;
+  document.body.classList.toggle("anmeldung", !!modus);
+  el("anmeldung").hidden = !modus;
+  if (!modus) return;
+  var m = ANM[modus], mail = Konto.user && Konto.user.email || "";
+  el("anmTitel").textContent = m.t;
+  el("anmText").textContent = m.x ||
+    (modus === "bestaetigen" ? "Wir haben eine Mail an " + mail + " geschickt. Klick auf den Link darin und dann hier auf „Weiter“. Keine Mail da? Schau auch im Spam-Ordner nach."
+                             : "Noch hat niemand diese Seite eingerichtet. Wenn du übernimmst, wirst du (" + mail + ") Besitzer: immer Admin, du vergibst den Zugriff. Ändern lässt sich das danach nur in der Firebase-Konsole.");
+  el("anmMailBox").hidden = !m.mail; el("anmPwBox").hidden = !m.pw; el("anmPw2Box").hidden = !m.pw2;
+  el("anmPw").autocomplete = modus === "neu" ? "new-password" : "current-password";
+  el("anmPw").value = ""; el("anmPw2").value = "";
+  el("anmOk").hidden = !m.ok; el("anmOk").textContent = m.ok || ""; el("anmOk").disabled = false;
+  el("anmLinks").innerHTML = (m.links || []).map(function(l){
+    return '<button type="button" data-anm="'+l[0]+'">'+esc(l[1])+'</button>'; }).join("");
+  anmMeldung(fehler ? anmFehlertext(fehler) : "");
+  var f = m.mail ? (el("anmMail").value ? (m.pw ? el("anmPw") : el("anmOk")) : el("anmMail")) : el("anmOk");
+  if (f && !f.hidden) setTimeout(function(){ try{ f.focus(); }catch(e){} }, 0);
+}
+function anmMeldung(text, gut){
+  var b = el("anmFehler"); b.textContent = text || ""; b.className = "anmfehler" + (gut ? " gut" : "");
+}
+function anmFehlertext(e){
+  var c = e && e.code || "";
+  return ({
+    "auth/invalid-credential":"Mailadresse oder Passwort stimmt nicht.",
+    "auth/wrong-password":"Mailadresse oder Passwort stimmt nicht.",
+    "auth/user-not-found":"Mailadresse oder Passwort stimmt nicht.",
+    "auth/invalid-email":"Bitte eine gültige Mailadresse eingeben.",
+    "auth/missing-email":"Bitte die Mailadresse eingeben.",
+    "auth/missing-password":"Bitte das Passwort eingeben.",
+    "auth/email-already-in-use":"Für diese Adresse gibt es schon ein Konto. Bitte anmelden – oder „Passwort vergessen“.",
+    "auth/weak-password":"Das Passwort ist zu kurz – bitte mindestens 8 Zeichen.",
+    "auth/password-does-not-meet-requirements":"Das Passwort erfüllt die Vorgaben nicht. Bitte länger und mit Zahlen oder Sonderzeichen.",
+    "auth/too-many-requests":"Zu viele Versuche. Bitte in ein paar Minuten noch einmal.",
+    "auth/network-request-failed":"Keine Verbindung. Bitte die Internetverbindung prüfen.",
+    "auth/user-disabled":"Dieses Konto ist gesperrt.",
+    "auth/operation-not-allowed":"Die Anmeldung mit Mail und Passwort ist in Firebase noch nicht eingeschaltet.",
+    "permission-denied":"Das ist nicht erlaubt – vermutlich hat jemand die Seite gerade schon eingerichtet. Bitte neu laden."
+  })[c] || "Das hat nicht geklappt (" + (c || "unbekannter Fehler") + ").";
+}
+el("anmForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  var m = Konto.modus, F = Konto.F, ok = el("anmOk");
+  var mail = el("anmMail").value.trim(), pw = el("anmPw").value;
+  if (m === "fehler"){ location.reload(); return; }
+  if (!F || ok.disabled) return;
+  function fehler(x){ ok.disabled = false; anmMeldung(anmFehlertext(x)); }
+  var lauf;
+  if (m === "login"){
+    lauf = F.signInWithEmailAndPassword(Konto.auth, mail, pw);
+  } else if (m === "neu"){
+    if (pw.length < 8){ anmMeldung("Bitte ein Passwort mit mindestens 8 Zeichen wählen."); return; }
+    if (pw !== el("anmPw2").value){ anmMeldung("Die beiden Passwörter sind nicht gleich."); return; }
+    lauf = F.createUserWithEmailAndPassword(Konto.auth, mail, pw).then(function(c){
+      Konto.user = c.user;
+      return Konto.bestaetigungSenden();
+    });
+  } else if (m === "vergessen"){
+    if (!mail){ anmMeldung("Bitte die Mailadresse eingeben."); return; }
+    lauf = Konto.passwortLink(mail).then(function(){
+      anmeldungZeigen("login");
+      anmMeldung("Falls es zu " + mail + " ein Konto gibt, ist ein Link zum neuen Passwort unterwegs.", true);
+    }, function(x){
+      if (x && x.code === "auth/user-not-found"){ anmeldungZeigen("login"); anmMeldung("Falls es zu " + mail + " ein Konto gibt, ist ein Link zum neuen Passwort unterwegs.", true); return; }
+      throw x;
+    });
+  } else if (m === "bestaetigen"){
+    lauf = Konto.pruefen().then(function(){
+      if (Konto.modus === "bestaetigen") anmMeldung("Noch nicht bestätigt. Bitte erst auf den Link in der Mail klicken.");
+    });
+  } else if (m === "einrichten"){
+    lauf = Konto.einrichten();
+  } else return;
+  ok.disabled = true;
+  lauf.then(function(){ ok.disabled = false; }, fehler);
+});
+el("anmLinks").addEventListener("click", function(e){
+  var k = e.target.dataset.anm;
+  if (!k) return;
+  if (k === "ab"){ Konto.abmelden(); return; }
+  if (k === "nochmal"){
+    Konto.bestaetigungSenden().then(function(){ anmMeldung("Mail ist noch einmal unterwegs.", true); },
+                                   function(x){ anmMeldung(anmFehlertext(x)); });
+    return;
+  }
+  anmeldungZeigen(k);
+});
+document.addEventListener("click", function(e){
+  var k = e.target.closest && e.target.closest("[data-konto]");
+  if (!k) return;
+  if (k.dataset.konto === "ab") Konto.abmelden();
+  else location.reload();
+});
 
 /* Speichern mit kurzer Verzögerung, damit Tippen nicht jeden Tastendruck
    schreibt – und nur, wenn sich wirklich etwas geändert hat. Sonst schreibt
@@ -1025,7 +1484,7 @@ function planStand(){
 }
 function standMerken(){ standGesichert = planStand(); }
 function save(){
-  if (!planMeta) return;
+  if (!planMeta || !istAdmin()) return;
   planMeta.inhalt = planInhalt();
   planMeta.jahr = state.year;
   if (planStand() === standGesichert) return;
@@ -1067,13 +1526,14 @@ function buildModel(){
   var hol = holidayModel();
   var steps = state.steps.slice().sort(function(a,b){ return a.nr - b.nr; });
   var findings = [], issues = [], error = null;
+  var ov = wirksameUeberschreibungen();
 
   state.issues.forEach(function(inp, idx){
     var raw = parseISO(inp.raw);
     var corrected = isFreeDay(raw, hol.set) ? workday(addDays(raw,1), -1, hol.set) : raw;
     var fix = {}, hasFix = false;
     steps.forEach(function(st){
-      var v = state.overrides[inp.id + ":" + st.nr];
+      var v = ov[inp.id + ":" + st.nr];
       if (v){ fix[st.nr] = v; hasFix = true; }
     });
     var rows, autoRows = null;
@@ -1119,11 +1579,18 @@ function buildModel(){
       if (r.manual){
         var a = is.autoByNr.get(r.step.nr);
         var delta = a ? diffDays(a.date, r.date) : 0;
+        var mitList = is.rows.filter(function(x){ return x.mit && x.mit.von === r.step.nr && x.mit.tage; });
+        var wdWeg = mitList.filter(function(x){ return x.step.wd && dow(x.date) !== x.step.wd; });
         findings.push({sev: isFreeDay(r.date, hol.set) ? "warn" : "info", issue:is.name,
           t:"Manueller Termin für Schritt " + r.step.nr,
           m:"„"+r.step.label+"“ steht fest auf <b>"+wd(r.date)+" "+fmt(r.date)+"</b>"+
             (a ? ", automatisch wäre <b>"+fmt(a.date)+"</b> ("+(delta>0?"+":"")+delta+" Tage)" : "")+"."+
-            (isFreeDay(r.date, hol.set) ? " Der Termin liegt auf einem Wochenende oder Feiertag." : "")});
+            (isFreeDay(r.date, hol.set) ? " Der Termin liegt auf einem Wochenende oder Feiertag." : "")+
+            (mitList.length ? " Mit im gleichen Abstand gewandert: Schritt "+mitList.map(function(x){ return x.step.nr; }).join(", ")+
+              " ("+arbeitstageText(mitList[0].mit.tage)+")." : "")+
+            (wdWeg.length ? " Dadurch nicht mehr auf ihrem Wochentag: "+wdWeg.map(function(x){
+              return x.step.nr+" „"+esc(x.step.label)+"“ ("+WD_SHORT[dow(x.date)-1]+" statt "+WD_SHORT[x.step.wd-1]+")"; }).join(", ")+
+              " – falls nötig von Hand setzen." : "")});
       }
       if (!r.manual && Math.abs(r.shift) >= 3){
         findings.push({sev:"warn", issue:is.name,
@@ -1138,10 +1605,12 @@ function buildModel(){
       }
       if (r.step.anchor !== 0){
         var a = is.byNr.get(r.step.anchor);
-        if (a && r.step.offset < 0 && r.date > a.date){
+        var falsch = a ? reihenfolgeFalsch(is, r, a) : 0;
+        if (falsch){
           findings.push({sev:"warn", issue:is.name,
-            t:"Schritt "+r.step.nr+" liegt hinter seinem Anker",
-            m:"„"+r.step.label+"“ (<b>"+fmt(r.date)+"</b>) fällt nach Schritt "+a.step.nr+" „"+a.step.label+"“ (<b>"+fmt(a.date)+"</b>), obwohl der Versatz negativ ist."});
+            t:"Reihenfolge: Schritt "+r.step.nr+" liegt "+(falsch > 0 ? "nach" : "vor")+" Schritt "+a.step.nr,
+            m:"„"+r.step.label+"“ (<b>"+fmt(r.date)+"</b>) fällt "+(falsch > 0 ? "nach" : "vor")+" „"+a.step.label+"“ (<b>"+fmt(a.date)+"</b>). "+
+              "Spätere Schritte bleiben am Erscheinungstag fest – den Folgeschritt bei Bedarf ebenfalls verschieben, dann wandert alles mit, was auf ihm aufbaut."});
         }
       }
     });
@@ -1169,6 +1638,29 @@ function buildModel(){
   return {issues:issues, steps:steps, hol:hol, findings:findings, broken:false};
 }
 
+/* Stimmt die Reihenfolge zwischen Schritt und Anker noch? 1 = liegt jetzt
+   danach, -1 = davor, 0 = in Ordnung. Mit manuellen Terminen gilt die
+   Reihenfolge des automatischen Plans, sonst das Vorzeichen des Versatzes. */
+function reihenfolgeFalsch(is, r, a){
+  var au = is.autoByNr.get(r.step.nr), aa = is.autoByNr.get(a.step.nr);
+  if (is.hasFix && au && aa){
+    if (+au.date <= +aa.date && r.date > a.date) return 1;
+    if (+au.date > +aa.date && r.date < a.date) return -1;
+    return 0;
+  }
+  return r.step.offset < 0 && r.date > a.date ? 1 : 0;
+}
+function arbeitstageText(k){
+  var n = Math.abs(k);
+  return n + " Arbeitstag" + (n === 1 ? "" : "e") + (k < 0 ? " früher" : " später");
+}
+/* Wirksame manuelle Termine einer Ausgabe je Schritt-Nr. */
+function fixFuer(issueId){
+  var ov = wirksameUeberschreibungen(), f = {};
+  state.steps.forEach(function(st){ var v = ov[issueId + ":" + st.nr]; if (v) f[st.nr] = v; });
+  return f;
+}
+
 /* =========================================================================
    Rendering
    ========================================================================= */
@@ -1180,16 +1672,51 @@ function phaseOf(s){ return PH[s.phase] || PHASES[0]; }
 
 var model = null;
 
+function zugangPruefen(){
+  var ohne = geteilt() && !meineRolle();
+  el("keinZugang").hidden = !ohne;
+  document.querySelector("main.layout").hidden = ohne;
+  el("tabs").hidden = ohne;
+  document.body.classList.toggle("ohnezugang", ohne);
+  el("kzBtns").hidden = !Konto.drin;
+  if (ohne && Konto.drin){
+    el("kzTitel").textContent = "Noch nicht freigeschaltet";
+    el("kzText").textContent = "Du bist als " + Konto.mail + " angemeldet, stehst aber nicht auf der Zugriffsliste. " +
+      "Bitte wende dich an die Redaktion. Sobald du eingetragen bist, lade die Seite neu.";
+  } else if (ohne){
+    el("kzTitel").textContent = Rechte.api ? "Kein Zugriff" : "Anmeldung nicht möglich";
+    el("kzText").textContent = Rechte.api
+      ? "Diese Seite ist nur für freigeschaltete Personen. Bitte wende dich an die Person, die dir den Link geschickt hat."
+      : "Deine Anmeldung konnte nicht geprüft werden. Bitte lade die Seite neu.";
+  }
+  el("tabZugriff").hidden = !(geteilt() && istAdmin());
+  if (state.view === "zugriff" && el("tabZugriff").hidden) state.view = "plan";
+  return !ohne;
+}
+/* Ein Feld, das beim Neuaufbau den Fokus verliert, meldet „change“ – und
+   würde mitten im Neuaufbau den nächsten starten. Der wartet kurz. */
+var rendernLaeuft = false;
 function render(withRail){
+  if (rendernLaeuft){ setTimeout(function(){ render(withRail); }, 0); return; }
+  rendernLaeuft = true;
+  try{ rendernJetzt(withRail); } finally { rendernLaeuft = false; }
+}
+function rendernJetzt(withRail){
+  profileLaden();
+  if (!zugangPruefen()) return;
   model = buildModel();
-  if (withRail !== false){ renderIssues(); renderHolidays(); }
+  if (withRail !== false){
+    railNeu = false;
+    el("yearInput").value = state.year;
+    renderIssues(); renderHolidays();
+  }
   renderOverrides();
   renderPlanCard();
   renderMeta();
   renderPanel();
   var n = model.findings.filter(function(f){ return f.sev !== "info"; }).length;
   var c = el("warnCount"); c.textContent = n; c.className = "cnt" + (n ? "" : " zero");
-  var offen = aufgaben.filter(function(t){ return !t.erledigt; }).length;
+  var offen = aufgaben.filter(function(t){ return !erledigt(t); }).length;
   var tc = el("taskCount"); tc.textContent = offen; tc.className = "cnt" + (offen ? "" : " zero");
   el("issueCount").textContent = state.issues.length + (state.issues.length === 1 ? " Heft" : " Hefte");
   el("holCount").textContent = model.hol.set.size + " Tage";
@@ -1199,7 +1726,7 @@ function render(withRail){
 
 /* Ein freigegebener Plan wird nicht mehr verändert, bis er entsperrt wird. */
 function sperreAnwenden(){
-  var aus = istGesperrt();
+  var aus = istGesperrt() || !istAdmin();
   document.body.classList.toggle("gesperrt", aus);
   /* Gesperrt sind die Eingaben des Plans. Planverwaltung, Drucken und
      Aufgaben bleiben erreichbar. */
@@ -1208,6 +1735,8 @@ function sperreAnwenden(){
             "#holName, #holDate, #addHol, #excelMode, #resetHol," +
             "#ovCard button, #yearInput, #yearMinus, #yearPlus, #resetAll";
   Array.prototype.forEach.call(document.querySelectorAll(sel), function(x){ x.disabled = aus; });
+  document.body.classList.toggle("nurlesen", !istAdmin());
+  el("resetAll").hidden = !istAdmin();
 }
 function zeigeSpeicherstand(){
   var b = el("planBox");
@@ -1217,24 +1746,35 @@ function zeigeSpeicherstand(){
 }
 function renderPlanCard(){
   if (!planMeta){ el("planCard").innerHTML = ""; el("planBox").innerHTML = ""; return; }
-  var fertig = aufgaben.filter(function(t){ return t.erledigt; }).length;
+  var fertig = aufgaben.filter(erledigt).length;
+  var rolle = meineRolle();
   el("planBox").innerHTML =
     '<span class="pl">'+esc(planMeta.titel)+'</span>'+statusChip(planMeta)+
-    '<span class="sv">'+(sichernOffen ? "speichert …" : "gespeichert")+'</span>';
+    (geteilt() && rolle ? '<span class="stat rolle">'+ROLLEN[rolle]+'</span>' : "")+
+    (istAdmin() ? '<span class="sv">'+(sichernOffen ? "speichert …" : "gespeichert")+'</span>' : "");
   el("planCard").innerHTML = '<section class="card plancard"><header><h2>Plan</h2>'+
     '<span class="hint">'+(Ablage.modus === "geteilt" ? "geteilt" : "lokal")+'</span></header><div class="body">'+
-    '<input type="text" id="planTitel" value="'+esc(planMeta.titel)+'" aria-label="Bezeichnung des Plans">'+
+    (istAdmin() ? '<input type="text" id="planTitel" value="'+esc(planMeta.titel)+'" aria-label="Bezeichnung des Plans">'
+                : '<div class="pltitel">'+esc(planMeta.titel)+'</div>')+
     '<div class="planstat">'+statusChip(planMeta)+
       (aufgaben.length ? '<span class="tsum">Aufgaben '+fertig+'/'+aufgaben.length+'</span>'
                        : '<span class="tsum">noch keine Aufgaben</span>')+'</div>'+
+    (meineRolle() === "admin" && !istAdmin()
+      ? '<div class="note warn"><span>Du bist als Admin eingetragen, im Teilen-Menü aber nur zum Ansehen freigegeben. Bitte die Besitzerin oder den Besitzer der Seite um „Bearbeiten“.</span></div>' : "")+
+    (geteilt() && !istAdmin() && meineRolle() !== "admin"
+      ? '<div class="note"><span>'+(meineRolle() === "zugewiesen"
+          ? "Du kannst alles ansehen und deine eigenen Aufgaben im Reiter Aufgaben bearbeiten."
+          : "Du kannst alles ansehen, aber nichts ändern.")+'</span></div>' : "")+
     (istGesperrt()
       ? '<div class="note"><span>Freigegeben – die Eingaben sind gesperrt.</span>'+
-        '<button type="button" data-act="entsperren">Entsperren</button></div>'
+        (istAdmin() ? '<button type="button" data-act="entsperren">Entsperren</button>' : "")+'</div>'
       : '')+
-    '<div class="rowbtns">'+
+    (istAdmin() ? '<div class="rowbtns">'+
       '<button type="button" class="btn sm" data-act="planNew">+ Neuer Plan</button>'+
       '<button type="button" class="btn sm ghost" data-act="planCopy" data-v="'+esc(planMeta.id)+'">Duplizieren</button>'+
-    '</div></div></section>';
+    '</div>' : "")+
+    (Konto.drin ? '<div class="konto"><span>Angemeldet als <b>'+esc(Konto.mail)+'</b></span>'+
+      '<button type="button" class="lnk" data-konto="ab">Abmelden</button></div>' : "")+'</div></section>';
 }
 
 /* ---------- Rail: Erscheinungstermine ------------------------------------ */
@@ -1345,7 +1885,7 @@ var Dialog = {
   schliesse: function(){
     this.offen = false; this._ok = null;
     el("dlg").hidden = true; el("dlgBack").hidden = true;
-    if (Dialog._nachholen){ Dialog._nachholen = false; render(false); }
+    if (Dialog._nachholen){ Dialog._nachholen = false; neuAufbauen(); }
   },
   _nachholen: false
 };
@@ -1388,6 +1928,7 @@ function bestaetige(titel, text, label, weiter){
 }
 /* Termin eines Schritts von Hand setzen */
 function openPop(issueId, stepNr){
+  if (!istAdmin()){ toast("Termine ändern dürfen nur Admins"); return; }
   if (istGesperrt()){ toast("Der Plan ist freigegeben – zum Ändern erst entsperren"); return; }
   var x = model.issues.filter(function(i){ return i.id === issueId; })[0];
   if (!x) return;
@@ -1405,7 +1946,9 @@ function openPop(issueId, stepNr){
     if (auto && iso(auto.date) === feld) delete state.overrides[key];
     else state.overrides[key] = feld;
     render();
-    toast("Termin gesetzt – abhängige Schritte neu gerechnet");
+    var y = model.issues.filter(function(i){ return i.id === issueId; })[0];
+    var n = y ? y.rows.filter(function(q){ return q.mit && q.mit.von === stepNr && q.mit.tage; }).length : 0;
+    toast(n ? "Termin gesetzt – " + n + (n === 1 ? " Schritt wandert" : " Schritte wandern") + " im gleichen Abstand mit" : "Termin gesetzt");
   };
   Dialog.zeige(
     '<span class="who">'+esc(x.name)+'</span>'+
@@ -1413,16 +1956,27 @@ function openPop(issueId, stepNr){
     '<input type="date" id="dlgDatum" value="'+feld+'" aria-label="Termin">'+
     '<div class="auto">Automatisch: <b>'+(auto ? wd(auto.date)+" "+fmt(auto.date) : "–")+'</b>'+
       (r.step.wd ? ' · Ziel-Wochentag '+WD_LONG[r.step.wd-1] : ' · flexibler Arbeitstag')+'</div>'+
+    '<div class="folge" id="dlgFolge"></div>'+
     '<div class="warnline" id="dlgWarn"></div>',
     aktionen,
     function(d){
-      var i = d.querySelector("#dlgDatum"), w = d.querySelector("#dlgWarn");
+      var i = d.querySelector("#dlgDatum"), w = d.querySelector("#dlgWarn"), fo = d.querySelector("#dlgFolge");
       function pruefe(){
         feld = i.value;
-        if (!feld){ w.textContent = ""; return; }
+        if (!feld){ w.textContent = ""; fo.textContent = ""; return; }
         var dt = parseISO(feld), msg = [];
         if (isFreeDay(dt, model.hol.set)) msg.push("Wochenende oder Feiertag");
         if (r.step.wd && dow(dt) !== r.step.wd) msg.push("nicht " + WD_LONG[r.step.wd-1]);
+        /* So sähe die Ausgabe mit diesem Termin aus */
+        var f = fixFuer(x.id); f[stepNr] = feld;
+        var neu = computePlan(model.steps, x.corrected, model.hol.set, f);
+        var probe = {hasFix:true, autoByNr:x.autoByNr}, by = new Map(neu.map(function(q){ return [q.step.nr, q]; }));
+        var mit = neu.filter(function(q){ return q.mit && q.mit.von === stepNr && q.mit.tage; });
+        fo.textContent = mit.length
+          ? "Wandert mit: " + mit.length + (mit.length === 1 ? " Schritt" : " Schritte") + ", die darauf aufbauen – " + arbeitstageText(mit[0].mit.tage) + "."
+          : "";
+        var anker = r.step.anchor ? by.get(r.step.anchor) : null, falsch = anker ? reihenfolgeFalsch(probe, by.get(stepNr), anker) : 0;
+        if (falsch) msg.push((falsch > 0 ? "liegt nach " : "liegt vor ") + "Schritt " + anker.step.nr + " „" + anker.step.label + "“ (" + wd(anker.date) + " " + fmt(anker.date) + ")");
         w.textContent = msg.length ? "Hinweis: " + msg.join(", ") + "." : "";
       }
       i.addEventListener("input", pruefe);
@@ -1456,6 +2010,7 @@ function renderPanel(){
   if (model.broken && v !== "regeln") v = "pruefung";
   if      (v === "plaene")   html = viewPlaene();
   else if (v === "aufgaben") html = viewAufgaben();
+  else if (v === "zugriff")  html = istAdmin() && geteilt() ? viewZugriff() : viewPlan();
   else if (v === "plan")     html = viewPlan();
   else if (v === "ausgabe")  html = viewIssue();
   else if (v === "kalender") html = viewCalendar();
@@ -1469,12 +2024,17 @@ function renderPanel(){
 
 /* ---------- Ansicht: Terminplan ------------------------------------------ */
 function cellHTML(r, issue){
-  var cls = "cell click" + (r.manual ? " manual" : "") + (!r.manual && Math.abs(r.shift) >= 1 ? " shifted" : "");
+  var mit = r.mit && r.mit.tage ? r.mit : null;
+  var cls = "cell" + (darfPlanAendern() ? " click" : "") + (r.manual ? " manual" : "") + (mit ? " mit" : "") +
+            (!r.manual && Math.abs(r.shift) >= 1 ? " shifted" : "");
   var auto = issue ? issue.autoByNr.get(r.step.nr) : null;
   var title;
   if (r.manual){
     title = "Manuell gesetzt auf " + WD_LONG[dow(r.date)-1] + ", " + fmt(r.date) +
             (auto ? "\nAutomatisch wäre " + fmt(auto.date) : "") + "\nZum Ändern anklicken";
+  } else if (mit){
+    title = "Wandert mit Schritt " + mit.von + " – " + arbeitstageText(mit.tage) +
+            (auto ? "\nAutomatisch wäre " + fmt(auto.date) : "") + "\nZum manuellen Setzen anklicken";
   } else if (r.shift){
     title = "Rechenbasis " + fmt(r.basis) + " → " + fmt(r.date) + " (" + WD_LONG[dow(r.date)-1] + ", " +
             (r.shift > 0 ? "+" : "") + r.shift + " Tage)\nZum manuellen Setzen anklicken";
@@ -1547,10 +2107,13 @@ function viewIssue(){
     }
     var rel = diffDays(r.date, x.etag);
     var auto = x.autoByNr.get(r.step.nr);
+    var mit = r.mit && r.mit.tage ? r.mit : null, von = mit ? x.byNr.get(mit.von) : null;
     var extra = r.manual
       ? '<span class="manualnote">Manuell gesetzt'+(auto && +auto.date !== +r.date ? ' · automatisch '+fmt(auto.date) : "")+'</span>'
+      : mit ? '<span class="mitnote">Wandert mit Schritt '+mit.von+(von ? ' „'+esc(von.step.label)+'“' : "")+' · '+arbeitstageText(mit.tage)+
+              (auto ? ' · automatisch '+fmt(auto.date) : "")+'</span>'
       : (r.shift ? '<span class="shift">Basis '+fmt(r.basis)+' → verschoben auf '+WD_LONG[dow(r.date)-1]+' ('+(r.shift>0?"+":"")+r.shift+' Tage)</span>' : "");
-    out += '<div class="tl click'+(r.step.anchor === 0 ? " ms" : "")+(r.manual ? " manual" : "")+
+    out += '<div class="tl click'+(r.step.anchor === 0 ? " ms" : "")+(r.manual ? " manual" : "")+(mit ? " mit" : "")+
       '" style="--ph:'+ph.css+'" data-issue="'+esc(x.id)+'" data-step="'+r.step.nr+'" title="Zum Setzen eines eigenen Termins anklicken">'+
       '<span class="d"><span class="wd">'+wd(r.date)+'</span>'+fmt(r.date)+'</span>'+
       '<span class="kw">KW&nbsp;'+isoWeek(r.date)+'</span>'+
@@ -1641,13 +2204,13 @@ function viewRules(){
     var r = sample ? sample.byNr.get(s.nr) : null;
     return '<tr data-nr="'+s.nr+'" style="--ph:'+phaseOf(s).css+'">'+
       '<td class="nr">'+s.nr+'</td>'+
-      '<td><input type="text" data-r="label" value="'+esc(s.label)+'" aria-label="Bezeichnung Schritt '+s.nr+'"></td>'+
-      '<td><select data-r="wd" aria-label="Ziel-Wochentag">'+opts(s.wd)+'</select></td>'+
-      '<td><select data-r="anchor" aria-label="Anker">'+anchors(s.anchor, s.nr)+'</select></td>'+
-      '<td><input type="number" data-r="offset" value="'+s.offset+'" step="1" aria-label="Versatz in Tagen"'+(s.anchor === 0 ? " disabled" : "")+'></td>'+
-      '<td><select data-r="dir" aria-label="Suchrichtung"><option value="-1"'+(s.dir === -1 ? " selected" : "")+'>rückwärts</option>'+
+      '<td><input type="text" data-r="label" value="'+esc(s.label)+'" aria-label="Bezeichnung Schritt '+s.nr+'"'+(darfPlanAendern() ? "" : " disabled")+'></td>'+
+      '<td><select data-r="wd" aria-label="Ziel-Wochentag"'+(darfPlanAendern() ? "" : " disabled")+'>'+opts(s.wd)+'</select></td>'+
+      '<td><select data-r="anchor" aria-label="Anker"'+(darfPlanAendern() ? "" : " disabled")+'>'+anchors(s.anchor, s.nr)+'</select></td>'+
+      '<td><input type="number" data-r="offset" value="'+s.offset+'" step="1" aria-label="Versatz in Tagen"'+(s.anchor === 0 || !darfPlanAendern() ? " disabled" : "")+'></td>'+
+      '<td><select data-r="dir" aria-label="Suchrichtung"'+(darfPlanAendern() ? "" : " disabled")+'><option value="-1"'+(s.dir === -1 ? " selected" : "")+'>rückwärts</option>'+
         '<option value="1"'+(s.dir === 1 ? " selected" : "")+'>vorwärts</option></select></td>'+
-      '<td><select data-r="phase" aria-label="Phase">'+PHASES.map(function(p){
+      '<td><select data-r="phase" aria-label="Phase"'+(darfPlanAendern() ? "" : " disabled")+'>'+PHASES.map(function(p){
         return '<option value="'+p.key+'"'+(s.phase === p.key ? " selected" : "")+'>'+esc(p.label)+'</option>'; }).join("")+'</select></td>'+
       '<td class="res">'+(r ? wd(r.date)+" "+fmtShort(r.date) : "–")+'</td>'+
     '</tr>';
@@ -1660,14 +2223,14 @@ function viewRules(){
       .map(function(h){ return "<th>"+h+"</th>"; }).join("")+
     '</tr></thead><tbody>'+rows+'</tbody></table></div>';
   return card("Regelwerk · " + model.steps.length + " Schritte", head + table,
-    '<button type="button" class="btn sm" data-act="resetRules">Standard wiederherstellen</button>');
+    darfPlanAendern() ? '<button type="button" class="btn sm" data-act="resetRules">Standard wiederherstellen</button>' : "");
 }
 
 /* ---------- Ansicht: Pläne ------------------------------------------------ */
 function planFortschritt(planId){
   var list = planId === (planMeta && planMeta.id) ? aufgaben : null;
   if (!list) return null;
-  var fertig = list.filter(function(t){ return t.erledigt; }).length;
+  var fertig = list.filter(erledigt).length;
   return {gesamt:list.length, fertig:fertig};
 }
 function statusChip(pl){
@@ -1700,11 +2263,11 @@ function viewPlaene(){
       '<div class="pj">'+esc(String(pl.jahr || ""))+'</div>'+
       '<div class="pa">'+
         (offen ? '' : '<button type="button" class="btn sm" data-act="planOpen" data-v="'+esc(pl.id)+'">Öffnen</button>')+
-        '<button type="button" class="btn sm ghost" data-act="planCopy" data-v="'+esc(pl.id)+'">Duplizieren</button>'+
-        '<button type="button" class="btn sm ghost" data-act="planDel" data-v="'+esc(pl.id)+'">Löschen</button>'+
+        (istAdmin() ? '<button type="button" class="btn sm ghost" data-act="planCopy" data-v="'+esc(pl.id)+'">Duplizieren</button>'+
+        '<button type="button" class="btn sm ghost" data-act="planDel" data-v="'+esc(pl.id)+'">Löschen</button>' : "")+
       '</div></div>';
   }).join("");
-  var tools = '<button type="button" class="btn sm primary" data-act="planNew">+ Neuer Plan</button>';
+  var tools = istAdmin() ? '<button type="button" class="btn sm primary" data-act="planNew">+ Neuer Plan</button>' : "";
   return card("Pläne · " + plaene.length, kopf + '<div class="planlist">'+(zeilen || '<div class="empty">Noch kein Plan gespeichert.</div>')+'</div>', tools) +
     '<section class="card"><header><h2>Ablage</h2></header><div class="body"><div class="ablage">'+
     (Ablage.modus === "geteilt"
@@ -1715,10 +2278,22 @@ function viewPlaene(){
 
 /* ---------- Ansicht: Aufgaben --------------------------------------------- */
 function abteilungen(){ return team.filter(function(m){ return m.art === "abteilung"; }); }
-function personen(abtId){
-  return team.filter(function(m){ return m.art === "person" && (!abtId || m.abteilungId === abtId); });
+function loginPersonen(abtId, auchOhne){
+  return zugriff.filter(function(z){
+    return (z.rolle === "zugewiesen" || z.rolle === "admin") &&
+           (!abtId || z.abteilungId === abtId || (auchOhne && !z.abteilungId));
+  }).map(function(z){ return {id:"u:" + z.id, name:personName(z.id), art:"person", abteilungId:z.abteilungId || "", login:true}; });
 }
-function mitglied(id){ return team.filter(function(m){ return m.id === id; })[0] || null; }
+function personen(abtId, mitLogin){
+  var frei = team.filter(function(m){ return m.art === "person" && (!abtId || m.abteilungId === abtId); });
+  return mitLogin ? frei.concat(loginPersonen(abtId, mitLogin === "auchOhne")) : frei;
+}
+function mitglied(id){
+  var u = loginId(id);
+  if (u) return eintragVon(u) ? {id:id, name:personName(u), art:"person", login:true}
+                              : {id:id, name:"nicht mehr freigeschaltet", art:"person", login:true};
+  return team.filter(function(m){ return m.id === id; })[0] || null;
+}
 /* Fälligkeit einer Aufgabe: an einen Produktionsschritt gekoppelt oder frei */
 function aufgabeFaellig(t){
   if (t.schrittNr && t.ausgabeId){
@@ -1730,7 +2305,7 @@ function aufgabeFaellig(t){
 }
 function viewAufgaben(){
   if (!planMeta) return card("Aufgaben", '<div class="empty">Kein Plan geöffnet.</div>');
-  var fertig = aufgaben.filter(function(t){ return t.erledigt; }).length;
+  var fertig = aufgaben.filter(erledigt).length;
   var quote = aufgaben.length ? Math.round(fertig / aufgaben.length * 100) : 0;
 
   var abt = abteilungen();
@@ -1742,12 +2317,12 @@ function viewAufgaben(){
 
   var listen = gruppen.filter(function(g){ return g.list.length; }).map(function(g){
     var sortiert = g.list.slice().sort(function(x, y){
-      if (!!x.erledigt !== !!y.erledigt) return x.erledigt ? 1 : -1;
+      if (erledigt(x) !== erledigt(y)) return erledigt(x) ? 1 : -1;
       var dx = aufgabeFaellig(x), dy = aufgabeFaellig(y);
       if (dx && dy) return dx - dy;
       return dx ? -1 : dy ? 1 : 0;
     });
-    var gf = g.list.filter(function(t){ return t.erledigt; }).length;
+    var gf = g.list.filter(erledigt).length;
     return '<div class="taskgroup"><div class="tghead">'+esc(g.a.name)+
       '<span class="tgcount">'+gf+'/'+g.list.length+'</span></div>'+
       sortiert.map(function(t){
@@ -1755,18 +2330,28 @@ function viewAufgaben(){
         var pers = t.personId ? mitglied(t.personId) : null;
         var schritt = t.schrittNr ? model.steps.filter(function(x){ return x.nr === +t.schrittNr; })[0] : null;
         var ausg = t.ausgabeId ? model.issues.filter(function(i){ return i.id === t.ausgabeId; })[0] : null;
-        var spaet = d && !t.erledigt && d < heute();
-        return '<div class="task'+(t.erledigt ? " done" : "")+'" data-task="'+esc(t.id)+'">'+
-          '<input type="checkbox" data-tdone="'+esc(t.id)+'"'+(t.erledigt ? " checked" : "")+
-            ' aria-label="Aufgabe erledigt"'+(istGesperrt() ? "" : "")+'>'+
+        var fertigT = erledigt(t), mein = istMeineAufgabe(t), rm = rueckmeldung(t);
+        var spaet = d && !fertigT && d < heute();
+        var terminFrei = t.terminFreigegeben && schritt && ausg;
+        return '<div class="task'+(fertigT ? " done" : "")+(mein ? " mein" : "")+'" data-task="'+esc(t.id)+'">'+
+          '<input type="checkbox" data-tdone="'+esc(t.id)+'"'+(fertigT ? " checked" : "")+
+            ' aria-label="Aufgabe erledigt"'+(darfPlanAendern() || mein ? "" : " disabled")+'>'+
           '<div class="tmain"><span class="tt">'+esc(t.titel)+'</span>'+
             '<span class="tmeta">'+
-              (pers ? '<span class="who">'+esc(pers.name)+'</span>' : "")+
+              (pers ? '<span class="who'+(pers.login ? " login" : "")+'">'+esc(pers.name)+'</span>' : "")+
               (schritt ? '<span class="lnk">Schritt '+schritt.nr+' · '+esc(schritt.label.slice(0,38))+(ausg ? " · "+esc(ausg.name) : "")+'</span>' : "")+
+              (terminFrei ? '<span class="frei">Termin freigegeben</span>' : "")+
               (t.notiz ? '<span class="note2">'+esc(t.notiz)+'</span>' : "")+
-            '</span></div>'+
+            '</span>'+
+            ((rm && rm.notiz || t.antwort) && !mein ? '<span class="antwort">Rückmeldung: '+esc(rm && rm.notiz || t.antwort)+'</span>' : "")+
+            (rm && rm.datum && terminFrei && !mein ? '<span class="antwort">Termin von der zuständigen Person gesetzt</span>' : "")+
+            (mein ? '<span class="eigen">'+
+                '<input type="text" data-rnotiz="'+esc(t.id)+'" value="'+esc(rm && rm.notiz || "")+'" placeholder="Rückmeldung an die Admins …" aria-label="Rückmeldung">'+
+                (terminFrei ? '<label>Termin <input type="date" data-rdatum="'+esc(t.id)+'" value="'+(d ? iso(d) : "")+'"></label>' : "")+
+              '</span>' : "")+
+          '</div>'+
           '<span class="tdue'+(spaet ? " late" : "")+'">'+(d ? wd(d)+" "+fmtShort(d) : "–")+'</span>'+
-          '<button type="button" class="x" data-tdel="'+esc(t.id)+'" title="Aufgabe löschen" aria-label="Aufgabe löschen">&times;</button>'+
+          (darfPlanAendern() ? '<button type="button" class="x" data-tdel="'+esc(t.id)+'" title="Aufgabe löschen" aria-label="Aufgabe löschen">&times;</button>' : '<span></span>')+
         '</div>';
       }).join("")+'</div>';
   }).join("");
@@ -1788,23 +2373,35 @@ function viewAufgaben(){
     '<select id="tAusgabe" aria-label="Ausgabe">'+issueOpts+'</select>'+
     '<input type="date" id="tDatum" aria-label="Fällig am">'+
     '<button type="button" class="btn sm primary" id="tAdd">Hinzufügen</button>'+
+    (geteilt() ? '<label class="tfrei"><input type="checkbox" id="tTermin"> Die zuständige Person darf den Termin des Schritts ändern</label>' : "")+
   '</div>';
+  if (!darfPlanAendern()) form = "";
 
   var bar = '<div class="taskbar">'+
     '<div class="prog"><div class="bar"><span style="width:'+quote+'%"></span></div>'+
       '<span class="pt">'+fertig+' von '+aufgaben.length+' erledigt</span></div>'+
-    (aufgaben.length && fertig === aufgaben.length && planMeta.status !== "fertig"
+    (istAdmin() && aufgaben.length && fertig === aufgaben.length && planMeta.status !== "fertig"
       ? '<button type="button" class="btn sm primary" data-act="freigeben">Plan freigeben</button>' : "")+
-    (planMeta.status === "fertig"
+    (istAdmin() && planMeta.status === "fertig"
       ? '<button type="button" class="btn sm" data-act="entsperren">Zur Bearbeitung entsperren</button>' : "")+
   '</div>';
 
   return card("Aufgaben · " + esc(planMeta.titel), bar + form +
-      '<div class="tasklist">'+(listen || '<div class="empty">Noch keine Aufgabe angelegt. Trage oben ein, was für diesen Plan zu erledigen ist – etwa „Themen für die Große Redaktionskonferenz sammeln“ für die Redaktion.</div>')+'</div>') +
+      '<div class="tasklist">'+(listen || '<div class="empty">'+(istAdmin()
+        ? 'Noch keine Aufgabe angelegt. Trage oben ein, was für diesen Plan zu erledigen ist – etwa „Themen für die Große Redaktionskonferenz sammeln“ für die Redaktion.'
+        : 'Für diesen Plan sind noch keine Aufgaben angelegt.')+'</div>')+'</div>') +
     teamCard();
 }
 function teamCard(){
   var abt = abteilungen();
+  if (!istAdmin()){
+    return '<section class="card"><header><h2>Abteilungen &amp; Personen</h2></header><div class="body"><div class="teamlist">'+
+      abt.map(function(a){
+        return '<div class="teamgroup"><div class="tg"><b>'+esc(a.name)+'</b></div>'+
+          personen(a.id, true).map(function(pp){ return '<div class="tp"><span>'+esc(pp.name)+'</span>'+(pp.login ? '<span class="tag">Login</span>' : "")+'</div>'; }).join("")+
+        '</div>';
+      }).join("")+'</div></div></section>';
+  }
   var body = abt.length || personen().length
     ? '<div class="teamlist">'+abt.map(function(a){
         return '<div class="teamgroup"><div class="tg">'+
@@ -1814,6 +2411,9 @@ function teamCard(){
             return '<div class="tp">'+
               '<input type="text" value="'+esc(pp.name)+'" data-rename="'+esc(pp.id)+'" aria-label="Name der Person">'+
               '<button type="button" class="x" data-teamdel="'+esc(pp.id)+'" title="Person entfernen" aria-label="Person entfernen">&times;</button></div>';
+          }).join("")+
+          loginPersonen(a.id).map(function(pp){
+            return '<div class="tp"><span class="lp">'+esc(pp.name)+'</span><span class="tag" title="Rolle und Abteilung im Reiter Zugriff ändern">Login</span></div>';
           }).join("")+
           '<div class="tadd"><input type="text" data-pers-for="'+esc(a.id)+'" placeholder="Person hinzufügen …" aria-label="Person in '+esc(a.name)+'"></div>'+
         '</div>';
@@ -1834,22 +2434,423 @@ function heute(){
   return D(n.getFullYear(), n.getMonth()+1, n.getDate());
 }
 
+/* ---------- Excel-Datei (.xlsx) ohne Fremdbibliothek -----------------------
+   Eine .xlsx ist ein ZIP-Archiv aus XML-Dateien. Geschrieben wird
+   unkomprimiert – für einige hundert Zellen reicht das, und die Seite bleibt
+   ohne Internetverbindung voll funktionsfähig. Datumswerte werden als echte
+   Excel-Daten abgelegt, damit sich danach sortieren und filtern lässt.
+   ------------------------------------------------------------------------- */
+var Xlsx = (function(){
+  var CRC = [];
+  for (var n = 0; n < 256; n++){
+    var c = n;
+    for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+    CRC[n] = c >>> 0;
+  }
+  function crc32(b){
+    var c = 0xFFFFFFFF;
+    for (var i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+  function zip(dateien){
+    var enc = new TextEncoder(), teile = [], verz = [], pos = 0;
+    dateien.forEach(function(f){
+      var name = enc.encode(f.name), d = enc.encode(f.xml), crc = crc32(d);
+      var h = new DataView(new ArrayBuffer(30));
+      h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true);
+      h.setUint16(12, 0x21, true);                                   /* 01.01.1980 */
+      h.setUint32(14, crc, true); h.setUint32(18, d.length, true); h.setUint32(22, d.length, true);
+      h.setUint16(26, name.length, true);
+      teile.push(new Uint8Array(h.buffer), name, d);
+      var z = new DataView(new ArrayBuffer(46));
+      z.setUint32(0, 0x02014b50, true); z.setUint16(4, 20, true); z.setUint16(6, 20, true);
+      z.setUint16(8, 0x0800, true); z.setUint16(14, 0x21, true);
+      z.setUint32(16, crc, true); z.setUint32(20, d.length, true); z.setUint32(24, d.length, true);
+      z.setUint16(28, name.length, true); z.setUint32(42, pos, true);
+      verz.push(new Uint8Array(z.buffer), name);
+      pos += 30 + name.length + d.length;
+    });
+    var groesse = verz.reduce(function(a, b){ return a + b.length; }, 0);
+    var e = new DataView(new ArrayBuffer(22));
+    e.setUint32(0, 0x06054b50, true); e.setUint16(8, dateien.length, true); e.setUint16(10, dateien.length, true);
+    e.setUint32(12, groesse, true); e.setUint32(16, pos, true);
+    var alle = teile.concat(verz, [new Uint8Array(e.buffer)]);
+    var out = new Uint8Array(alle.reduce(function(a, b){ return a + b.length; }, 0)), o = 0;
+    alle.forEach(function(a){ out.set(a, o); o += a.length; });
+    return out;
+  }
+  function x(t){
+    return String(t).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function spalte(i){ var s = ""; i++; while (i > 0){ var m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; }
+  var NULLTAG = Date.UTC(1899, 11, 30);
+  function zelle(ref, c){
+    if (c === null || c === undefined || c === "") return "";
+    if (typeof c !== "object" || c instanceof Date) c = {v:c};
+    var st = c.s ? ' s="' + c.s + '"' : "";
+    if (c.v === null || c.v === undefined || c.v === "") return st ? '<c r="' + ref + '"' + st + '/>' : "";
+    if (c.v instanceof Date) return '<c r="' + ref + '"' + st + '><v>' + Math.round((c.v - NULLTAG) / MS) + '</v></c>';
+    if (typeof c.v === "number") return '<c r="' + ref + '"' + st + '><v>' + c.v + '</v></c>';
+    if (Array.isArray(c.v)) return '<c r="' + ref + '"' + st + ' t="inlineStr"><is>' + c.v.map(function(t){
+        return '<r><rPr><rFont val="Arial"/><family val="2"/>' + (c.fett ? '<b/>' : "") +
+          '<color rgb="FF' + (t.c || "000000") + '"/><sz val="10"/></rPr><t xml:space="preserve">' + x(t.t) + '</t></r>';
+      }).join("") + '</is></c>';
+    return '<c r="' + ref + '"' + st + ' t="inlineStr"><is><t xml:space="preserve">' + x(c.v) + '</t></is></c>';
+  }
+  function blatt(b){
+    var zeilen = b.zeilen.map(function(z, i){
+      var h = b.hoehen && b.hoehen[i] ? ' ht="' + b.hoehen[i] + '" customHeight="1"' : "";
+      return '<row r="' + (i + 1) + '"' + h + '>' + z.map(function(c, j){ return zelle(spalte(j) + (i + 1), c); }).join("") + '</row>';
+    }).join("");
+    var fix = b.fix ? '<pane' + (b.fix[0] ? ' xSplit="' + b.fix[0] + '"' : "") + (b.fix[1] ? ' ySplit="' + b.fix[1] + '"' : "") +
+      ' topLeftCell="' + spalte(b.fix[0]) + (b.fix[1] + 1) + '" activePane="' + (b.fix[0] && b.fix[1] ? "bottomRight" : b.fix[1] ? "bottomLeft" : "topRight") +
+      '" state="frozen"/>' : "";
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
+      '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>' +
+      '<sheetViews><sheetView workbookViewId="0" zoomScale="100">' + fix + '</sheetView></sheetViews>' +
+      '<sheetFormatPr defaultRowHeight="15"/>' +
+      '<cols>' + b.breiten.map(function(w, i){ return '<col min="' + (i + 1) + '" max="' + (i + 1) + '" width="' + w + '" customWidth="1"/>'; }).join("") + '</cols>' +
+      '<sheetData>' + zeilen + '</sheetData>' +
+      (b.filter ? '<autoFilter ref="' + b.filter + '"/>' : "") +
+      (b.verbunden && b.verbunden.length ? '<mergeCells count="' + b.verbunden.length + '">' + b.verbunden.map(function(m){ return '<mergeCell ref="' + m + '"/>'; }).join("") + '</mergeCells>' : "") +
+      '<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/>' +
+      '<pageSetup paperSize="9" orientation="' + (b.quer ? "landscape" : "portrait") + '" fitToWidth="1" fitToHeight="0"/>' +
+      '</worksheet>';
+  }
+  /* Formatvorlagen nach Namen; ihre Nummer in der Datei steht in S */
+  var schrift = function(f){
+    return '<font>' + (f.b ? '<b/>' : "") + (f.i ? '<i/>' : "") + '<sz val="' + (f.sz || 10) + '"/>' +
+      (f.c ? '<color rgb="FF' + f.c + '"/>' : "") + '<name val="Arial"/><family val="2"/></font>';
+  };
+  var FONTS = {normal:{}, kopfWeiss:{b:1, c:"FFFFFF"}, fett:{b:1}, blauFett:{b:1, c:"003087"}, rotFett:{b:1, c:"B3202B"},
+               titel:{b:1, sz:15, c:"003087"}, unter:{i:1, sz:9, c:"74839A"}, phase:{b:1, sz:9, c:"44546B"},
+               datumBlau:{c:"2F5597"}, lila:{c:"7030A0"}, titelHell:{b:1, sz:14, c:"0070C0"},
+               anzKopf:{b:1, sz:9, c:"2E75B6"}, dunkelFett:{b:1, c:"1F2937"}, dunkel:{c:"1F2937"}};
+  var FILLS = {keine:null, raster:null, ihkBlau:"003087", manuell:"E2EAF6", etag:"FBE6E7", phase:"E7ECF4",
+               verschoben:"FAEBD3", grau:"F2F2F2", orange:"FFC000"};
+  var BORDERS = {keine:null, hell:["D3DBE6", "left right top bottom"], schwarz:["000000", "left right top bottom"],
+                 linie:["D9D9D9", "bottom"]};
+  var FORMATE = {standard:0, zahl:1, tagKurz:164, datum:165, datumLang:166};
+  var MITTE = '<alignment horizontal="center" vertical="center" wrapText="1"/>',
+      LINKS = '<alignment horizontal="left" vertical="center"/>',
+      UMBRUCH = '<alignment vertical="center" wrapText="1"/>';
+  /*  Name            Zahlenformat  Schrift      Füllung      Rahmen    Ausrichtung */
+  var VORLAGEN = [
+    ["standard",      "standard",  "normal",    "keine",     "keine",   ""],
+    ["kopf",          "standard",  "kopfWeiss", "ihkBlau",   "hell",    UMBRUCH],
+    ["dat",           "tagKurz",   "normal",    "keine",     "hell",    LINKS],
+    ["datMan",        "tagKurz",   "blauFett",  "manuell",   "hell",    LINKS],
+    ["datVer",        "tagKurz",   "normal",    "verschoben","hell",    LINKS],
+    ["datE",          "tagKurz",   "rotFett",   "etag",      "hell",    LINKS],
+    ["datKopf",       "tagKurz",   "kopfWeiss", "ihkBlau",   "hell",    LINKS],
+    ["txt",           "standard",  "normal",    "keine",     "hell",    UMBRUCH],
+    ["txtE",          "standard",  "rotFett",   "etag",      "hell",    UMBRUCH],
+    ["phase",         "standard",  "phase",     "phase",     "hell",    '<alignment vertical="center"/>'],
+    ["zahl",          "zahl",      "normal",    "keine",     "hell",    '<alignment horizontal="center" vertical="center"/>'],
+    ["titel",         "standard",  "titel",     "keine",     "keine",   ""],
+    ["unter",         "standard",  "unter",     "keine",     "keine",   ""],
+    ["titelLinks",    "standard",  "titelHell", "keine",     "keine",   '<alignment horizontal="left" vertical="center"/>'],
+    ["titelMitte",    "standard",  "titelHell", "keine",     "keine",   '<alignment horizontal="center" vertical="center"/>'],
+    ["titelRechts",   "standard",  "titelHell", "keine",     "keine",   '<alignment horizontal="right" vertical="center"/>'],
+    ["redKopf",       "standard",  "fett",      "keine",     "schwarz", MITTE],
+    ["redAusgabe",    "standard",  "lila",      "grau",      "schwarz", MITTE],
+    ["redDat",        "datumLang", "datumBlau", "keine",     "schwarz", MITTE],
+    ["redDatMan",     "datumLang", "datumBlau", "orange",    "schwarz", MITTE],
+    ["anzKopf",       "standard",  "anzKopf",   "keine",     "linie",   '<alignment horizontal="left" vertical="bottom" wrapText="1"/>'],
+    ["anzAusgabe",    "standard",  "dunkelFett","keine",     "linie",   LINKS],
+    ["anzDat",        "datum",     "dunkel",    "keine",     "linie",   LINKS],
+    ["anzDatMan",     "datum",     "dunkel",    "orange",    "linie",   LINKS]
+  ];
+  function index(o){ var m = {}; Object.keys(o).forEach(function(k, i){ m[k] = i; }); return m; }
+  var FI = index(FONTS), LI = index(FILLS), BI = index(BORDERS), S = {};
+  VORLAGEN.forEach(function(v, i){ S[v[0]] = i; });
+  var STYLES = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+    '<numFmts count="3"><numFmt numFmtId="164" formatCode="[$-407]ddd dd.mm.yy"/><numFmt numFmtId="165" formatCode="dd.mm.yyyy"/>' +
+      '<numFmt numFmtId="166" formatCode="' + x('[$-407]dd". "mmmm yyyy" ("ddd".)"') + '"/></numFmts>' +
+    '<fonts count="' + Object.keys(FONTS).length + '">' +
+      Object.keys(FONTS).map(function(k){ return schrift(FONTS[k]); }).join("") + '</fonts>' +
+    '<fills count="' + Object.keys(FILLS).length + '"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>' +
+      Object.keys(FILLS).slice(2).map(function(k){ return '<fill><patternFill patternType="solid"><fgColor rgb="FF' + FILLS[k] + '"/><bgColor indexed="64"/></patternFill></fill>'; }).join("") + '</fills>' +
+    '<borders count="' + Object.keys(BORDERS).length + '">' + Object.keys(BORDERS).map(function(k){
+      var b = BORDERS[k];
+      return '<border>' + ["left","right","top","bottom"].map(function(seite){
+        return b && b[1].indexOf(seite) >= 0 ? '<' + seite + ' style="thin"><color rgb="FF' + b[0] + '"/></' + seite + '>' : '<' + seite + '/>';
+      }).join("") + '<diagonal/></border>';
+    }).join("") + '</borders>' +
+    '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
+    '<cellXfs count="' + VORLAGEN.length + '">' + VORLAGEN.map(function(v){
+      var nf = FORMATE[v[1]], f = FI[v[2]], l = LI[v[3]], r = BI[v[4]];
+      return '<xf numFmtId="' + nf + '" fontId="' + f + '" fillId="' + l + '" borderId="' + r + '" xfId="0"' +
+        (nf ? ' applyNumberFormat="1"' : "") + (f ? ' applyFont="1"' : "") + (l ? ' applyFill="1"' : "") +
+        (r ? ' applyBorder="1"' : "") + (v[5] ? ' applyAlignment="1">' + v[5] + '</xf>' : '/>');
+    }).join("") + '</cellXfs>' +
+    '<cellStyles count="1"><cellStyle name="Standard" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+
+  function mappe(titel, blaetter){
+    var ns = "http://schemas.openxmlformats.org/";
+    var dateien = [
+      {name:"[Content_Types].xml", xml:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="' + ns + 'package/2006/content-types">' +
+        '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>' +
+        '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+        blaetter.map(function(b, i){ return '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'; }).join("") +
+        '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' +
+        '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>'},
+      {name:"_rels/.rels", xml:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="' + ns + 'package/2006/relationships">' +
+        '<Relationship Id="rId1" Type="' + ns + 'officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' +
+        '<Relationship Id="rId2" Type="' + ns + 'package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>'},
+      {name:"docProps/core.xml", xml:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="' + ns + 'package/2006/metadata/core-properties" ' +
+        'xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
+        '<dc:title>' + x(titel) + '</dc:title><dc:creator>Produktionsplan Berliner Wirtschaft</dc:creator>' +
+        '<dcterms:created xsi:type="dcterms:W3CDTF">' + new Date().toISOString().split(".")[0] + 'Z</dcterms:created></cp:coreProperties>'},
+      {name:"xl/workbook.xml", xml:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="' + ns + 'spreadsheetml/2006/main" xmlns:r="' + ns + 'officeDocument/2006/relationships">' +
+        '<bookViews><workbookView/></bookViews><sheets>' +
+        blaetter.map(function(b, i){ return '<sheet name="' + x(b.name) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>'; }).join("") +
+        '</sheets>' + (blaetter.some(function(b){ return b.drucktitel; }) ? '<definedNames>' + blaetter.map(function(b, i){
+          return b.drucktitel ? '<definedName name="_xlnm.Print_Titles" localSheetId="' + i + '">' +
+            b.drucktitel.split(",").map(function(t){ return "'" + x(b.name) + "'!" + t; }).join(",") + '</definedName>' : "";
+        }).join("") + '</definedNames>' : "") + '</workbook>'},
+      {name:"xl/_rels/workbook.xml.rels", xml:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="' + ns + 'package/2006/relationships">' +
+        blaetter.map(function(b, i){ return '<Relationship Id="rId' + (i + 1) + '" Type="' + ns + 'officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (i + 1) + '.xml"/>'; }).join("") +
+        '<Relationship Id="rId' + (blaetter.length + 1) + '" Type="' + ns + 'officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},
+      {name:"xl/styles.xml", xml:STYLES}
+    ];
+    blaetter.forEach(function(b, i){ dateien.push({name:"xl/worksheets/sheet" + (i + 1) + ".xml", xml:blatt(b)}); });
+    return zip(dateien);
+  }
+  return {mappe:mappe, spalte:spalte, S:S};
+})();
+
+/* Arbeitsmappe des offenen Plans: Terminplan, Anzeigenplan, Redaktionsplan */
+var ANZEIGENPLAN = [
+  {nr:24, kopf:"Erscheinungstermin"},
+  {nr:7,  kopf:"Anzeigenschluss"},
+  {nr:9,  kopf:"Druckunterlagenschluss"},
+  {nr:14, kopf:"Anlieferungstermin Beilagen/ Einhefter"},
+  {nr:3,  kopf:"Anzeigenschluss Advertorials"}
+];
+var REDAKTIONSPLAN = [
+  {nr:4,  kopf:"Anmeldung Fachabteilungen (Fr.)"},
+  {nr:5,  kopf:"Kleine Redaktionskonferenz (Mo.)"},
+  {nr:6,  kopf:"Große Redaktionskonferenz (Mi.)"},
+  {nr:8,  kopf:"Redaktionsschluss"},
+  {nr:10, kopf:"Auflagenmeldung von der IHK und dpv bis 10.00 Uhr (Mittwoch)"},
+  {nr:12, kopf:"Start der Seitenfreigabe"},
+  {nr:15, kopf:[{t:"Layout-Imprimatur Endabstimmung mit IHK "}, {t:"Donnerstag bis 18.00 Uhr", c:"C00000"},
+                {t:" und Ende Bildbearbeitung"}]},
+  {nr:24, kopf:"E-Tag Berliner Wirtschaft (Mittwoch)"}
+];
+/* Spalten eines Auszugs: nur Schritte, die es im Regelwerk gibt. Wurde ein
+   Schritt umbenannt, steht sein neuer Name im Kopf. */
+function auszugSpalten(defs){
+  return defs.map(function(d){
+    var st = model.steps.filter(function(x){ return x.nr === d.nr; })[0];
+    if (!st) return null;
+    var vorgabe = DEFAULT_STEPS.filter(function(x){ return x.nr === d.nr; })[0];
+    return {nr:d.nr, kopf: vorgabe && st.label === vorgabe.label ? d.kopf : st.label};
+  }).filter(Boolean);
+}
+/* Kopfzeile: Zeitschrift links, Blattname mittig, Stand rechts */
+function titelzeile(n, name){
+  var drittel = Math.floor(n / 3), z = [], merges = [];
+  var links = "Berliner Wirtschaft " + state.year, stand = "Stand " + fmt(heute());
+  if (drittel < 1) return {zeile:[{v:links + " · " + name + " · " + stand, s:Xlsx.S.titelLinks}], merges:[]};
+  for (var i = 0; i < n; i++){
+    var v = i === 0 ? links : i === drittel ? name : i === n - drittel ? stand : "";
+    var st = i < drittel ? "titelLinks" : i < n - drittel ? "titelMitte" : "titelRechts";
+    z.push({v:v, s:Xlsx.S[st]});
+  }
+  var sp = Xlsx.spalte;
+  merges.push("A1:" + sp(drittel - 1) + "1", sp(drittel) + "1:" + sp(n - drittel - 1) + "1", sp(n - drittel) + "1:" + sp(n - 1) + "1");
+  return {zeile:z, merges:merges.filter(function(m){ var t = m.split(":"); return t[0] !== t[1]; })};
+}
+function excelMappe(){
+  var is = model.issues, steps = model.steps, S = Xlsx.S;
+  var titel = planMeta ? planMeta.titel : "Produktionsplan " + state.year;
+
+  /* 1 – Terminplan als Matrix, wie auf dem Bildschirm */
+  var breit = 2 + is.length;
+  var plan = [
+    [{v:"Berliner Wirtschaft · " + titel, s:S.titel}],
+    [{v:"Stand " + fmt(heute()) + " · Magazin der IHK Berlin · blau = manuell gesetzt · gelb = wegen Feiertag, Wochenende oder Ziel-Wochentag verschoben", s:S.unter}],
+    [{v:"Nr", s:S.kopf}, {v:"Produktionsschritt", s:S.kopf}].concat(is.map(function(x){ return {v:x.name, s:S.kopf}; })),
+    [{v:"", s:S.kopf}, {v:"E-Tag", s:S.kopf}].concat(is.map(function(x){ return {v:x.etag, s:S.datKopf}; }))
+  ];
+  var letztePhase = null;
+  steps.forEach(function(st){
+    var ph = phaseOf(st);
+    if (ph.key !== letztePhase){
+      letztePhase = ph.key;
+      var z = [{v:"", s:S.phase}, {v:ph.label.toUpperCase(), s:S.phase}];
+      for (var i = 2; i < breit; i++) z.push({v:"", s:S.phase});
+      plan.push(z);
+    }
+    var etag = st.anchor === 0;
+    plan.push([{v:st.nr, s:S.zahl}, {v:st.label, s:etag ? S.txtE : S.txt}].concat(is.map(function(x){
+      var r = x.byNr.get(st.nr);
+      if (!r) return {v:"", s:S.txt};
+      return {v:r.date, s: r.manual ? S.datMan : etag ? S.datE : r.shift ? S.datVer : S.dat};
+    })));
+  });
+
+  /* 2 und 3 – Anzeigen- und Redaktionsplan: Ausgaben als Zeilen, ausgewählte Schritte als Spalten */
+  function auszug(name, defs, art){
+    var sp = auszugSpalten(defs), n = sp.length + 1, t = titelzeile(n, name);
+    var anz = art === "anz";
+    var zeilen = [t.zeile, [],
+      [{v:anz ? "AUSGABEN" : "Ausgabe", s:anz ? S.anzKopf : S.redKopf}].concat(sp.map(function(c){
+        var k = anz && typeof c.kopf === "string" ? c.kopf.toUpperCase() : c.kopf;
+        return {v:k, s:anz ? S.anzKopf : S.redKopf, fett:true};
+      }))];
+    is.forEach(function(x){
+      zeilen.push([{v:x.name, s:anz ? S.anzAusgabe : S.redAusgabe}].concat(sp.map(function(c){
+        var r = x.byNr.get(c.nr);
+        if (!r) return {v:"", s:anz ? S.anzDat : S.redDat};
+        return {v:r.date, s:r.manual ? (anz ? S.anzDatMan : S.redDatMan) : (anz ? S.anzDat : S.redDat)};
+      })));
+    });
+    var hoehen = {0:24, 1:8, 2:anz ? 32 : 48};
+    for (var i = 3; i < zeilen.length; i++) hoehen[i] = anz ? 24 : 30;
+    return {name:name, zeilen:zeilen, breiten:[anz ? 20 : 16].concat(sp.map(function(){ return anz ? 27 : 24; })),
+            fix:[1, 3], verbunden:t.merges, hoehen:hoehen, quer:true, drucktitel:"$3:$3"};
+  }
+
+  return Xlsx.mappe(titel, [
+    {name:"Terminplan", zeilen:plan, breiten:[5, 46].concat(is.map(function(){ return 13; })),
+     fix:[2, 4], verbunden:["A1:" + Xlsx.spalte(breit - 1) + "1", "A2:" + Xlsx.spalte(breit - 1) + "2"],
+     hoehen:{2:30}, quer:true, drucktitel:"$A:$B,$3:$4"},
+    auszug("Anzeigenplan", ANZEIGENPLAN, "anz"),
+    auszug("Redaktionsplan", REDAKTIONSPLAN, "red")
+  ]);
+}
+function dateiName(endung){
+  var t = (planMeta ? planMeta.titel : "produktionsplan-" + state.year).toLowerCase()
+    .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return (t || "produktionsplan") + "." + endung;
+}
+function excelDatei(){
+  return {name:dateiName("xlsx"), type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", bytes:excelMappe()};
+}
+
+/* ---------- Ansicht: Zugriff --------------------------------------------- */
+function viewZugriff(){
+  var abt = abteilungen(), web = Konto.drin;
+  function rollen(wahl){ return Object.keys(ROLLEN).map(function(k){
+    return '<option value="'+k+'"'+(wahl === k ? " selected" : "")+'>'+ROLLEN[k]+'</option>'; }).join(""); }
+  var zeilen = zugriff.slice().sort(function(a, b){ return personName(a.id).localeCompare(personName(b.id), "de"); })
+    .map(function(z){
+      var p = profilVon(z.id);
+      return '<div class="zrow">'+
+        avatar(p.avatarUrl, personName(z.id))+
+        (web ? '<span class="zwer"><input type="text" data-zname="'+esc(z.id)+'" value="'+esc(z.name || "")+'" placeholder="Name eintragen" aria-label="Name"><span>'+esc(z.id)+'</span></span>'
+             : '<span class="zwer"><b>'+esc(personName(z.id))+'</b><span>'+esc(p.email || "")+'</span></span>')+
+        '<select data-zrolle="'+esc(z.id)+'" aria-label="Rolle">'+rollen(z.rolle)+'</select>'+
+        '<select data-zabt="'+esc(z.id)+'" aria-label="Abteilung"><option value="">keine Abteilung</option>'+abt.map(function(a){
+          return '<option value="'+esc(a.id)+'"'+(z.abteilungId === a.id ? " selected" : "")+'>'+esc(a.name)+'</option>'; }).join("")+'</select>'+
+        '<button type="button" class="x" data-zweg="'+esc(z.id)+'" title="Zugriff entziehen" aria-label="Zugriff entziehen">&times;</button>'+
+      '</div>';
+    }).join("");
+  var ich = web ? '<div class="zrow ich">'+avatar("", Konto.besitzer)+
+      '<span class="zwer"><b>'+esc(Konto.besitzer)+'</b><span>Besitzer der Seite – immer Admin'+(Rechte.owner ? " (du)" : "")+'</span></span></div>'
+    : Rechte.owner ? '<div class="zrow ich">'+avatar(profilVon(Rechte.id).avatarUrl, personName(Rechte.id))+
+      '<span class="zwer"><b>'+esc(personName(Rechte.id))+'</b><span>Besitzer der Seite – immer Admin</span></span></div>' : "";
+  var schritte = web
+    ? '<ol><li>Trag die Person hier mit Name und Mailadresse ein und wähl die Rolle.</li>'+
+      '<li>Schick ihr den Link zu dieser Seite. Beim ersten Mal klickt sie auf <b>„Konto anlegen“</b>, nimmt genau diese Mailadresse, wählt ein Passwort und bestätigt die Mail. Wer nicht auf der Liste steht, kommt nach der Anmeldung nicht weiter.</li></ol>'
+    : '<ol><li>Im <b>Teilen-Menü</b> der Seite gibst du die Personen frei – <b>Admins mit „Bearbeiten“</b>, alle anderen mit <b>„Ansehen“</b>. Wer nicht geteilt ist, kommt gar nicht erst hinein.</li>'+
+      '<li>Hier trägst du dieselben Personen über ihre Mailadresse ein und vergibst die Rolle. Wer geteilt, aber hier nicht eingetragen ist, sieht nur einen Hinweis.</li></ol>';
+  var neu = web
+    ? '<div class="zneu"><input type="text" id="zName" placeholder="Name" aria-label="Name" autocomplete="off">'+
+      '<input type="email" id="zMail" placeholder="Mailadresse" aria-label="Mailadresse" autocomplete="off" spellcheck="false">'+
+      '<select id="zRolle" aria-label="Rolle">'+rollen("beobachter")+'</select>'+
+      '<button type="button" class="btn primary sm" id="zAdd">Hinzufügen</button></div>'
+    : '<div class="zsuche"><input type="search" id="zSuche" placeholder="Mailadresse oder Name eingeben …" aria-label="Person suchen" autocomplete="off">'+
+      '<div class="ztreffer" id="zTreffer"></div></div>';
+  return card("Zugriff · " + zugriff.length + (zugriff.length === 1 ? " Person" : " Personen"),
+    '<div class="zhinweis"><b>So greifen die Rechte</b>'+schritte+
+      '<dl><dt>Admin</dt><dd>darf alles: Pläne, Termine, Aufgaben, Team und diese Liste</dd>'+
+      '<dt>Beobachter</dt><dd>sieht alles, ändert nichts</dd>'+
+      '<dt>Zugewiesene Aufgaben</dt><dd>sieht alles und bearbeitet nur die eigenen Aufgaben: abhaken, Rückmeldung schreiben und – wenn bei der Aufgabe freigegeben – den Termin des verknüpften Schritts setzen</dd></dl></div>'+
+    neu+
+    '<div class="zliste">'+ich+(zeilen || (ich ? "" : '<div class="empty">Noch niemand eingetragen.</div>'))+'</div>');
+}
+var suchNr = 0;
+function zugriffSuchen(q){
+  var box = el("zTreffer");
+  if (!box || !Rechte.api) return;
+  var nr = ++suchNr;
+  if (!q.trim()){ box.innerHTML = ""; return; }
+  Rechte.api.search(q).then(function(hits){
+    if (nr !== suchNr || !el("zTreffer")) return;
+    if (!hits.length){ box.innerHTML = '<div class="zleer">Niemand gefunden. Die Person muss zu eurer Organisation auf claude.ai gehören.</div>'; return; }
+    box.innerHTML = "";
+    hits.forEach(function(h){
+      profile[h.id] = h;
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "ztr"; b.dataset.zneu = h.id;
+      var img = document.createElement("img"); img.src = h.avatarUrl; img.alt = "";
+      var n = document.createElement("b"); n.textContent = h.name;
+      var m = document.createElement("span"); m.textContent = h.email || "";
+      var t = document.createElement("em"); t.textContent = eintragVon(h.id) ? "bereits eingetragen" : (h.isMe ? "du" : "hinzufügen");
+      b.appendChild(img); b.appendChild(n); b.appendChild(m); b.appendChild(t);
+      if (eintragVon(h.id) || h.isMe && Rechte.owner) b.disabled = true;
+      box.appendChild(b);
+    });
+  });
+}
+/* Website: Person mit Mailadresse eintragen */
+function zugriffNeu(){
+  if (!istAdmin() || !el("zMail")) return;
+  var mail = el("zMail").value.trim().toLowerCase(), name = el("zName").value.trim();
+  if (!/^[^\s@\/]+@[^\s@\/]+\.[^\s@\/]+$/.test(mail)){ toast("Bitte eine gültige Mailadresse eingeben"); el("zMail").focus(); return; }
+  if (mail === Konto.besitzer){ toast("Das ist die Adresse des Besitzers – sie ist immer Admin"); return; }
+  if (eintragVon(mail)){ toast("Diese Adresse steht schon in der Liste"); return; }
+  var rolle = el("zRolle").value;
+  zugriffSetzen(mail, {name:name, rolle:rolle});
+  toast((name || mail) + " als " + ROLLEN[rolle] + " eingetragen");
+  var f = el("zName"); if (f) f.focus();
+}
+function zugriffSetzen(id, aenderung){
+  if (!istAdmin()) return;
+  var alt = eintragVon(id);
+  var z = Object.assign({id:id, rolle:"beobachter", abteilungId:""}, alt || {}, aenderung);
+  if (alt && JSON.stringify(z) === JSON.stringify(Object.assign({}, alt))) return;     /* nichts geändert */
+  zugriff = zugriff.filter(function(x){ return x.id !== id; }).concat([z]);
+  Ablage.sichern("zugriff", z);
+  render(false);
+}
+
 /* ---------- Ansicht: Export ---------------------------------------------- */
 var EXPORT_FORMATS = [
+  {k:"xlsx",       n:"Excel (.xlsx)"},
   {k:"csv-matrix", n:"CSV · Matrix"},
   {k:"csv-liste",  n:"CSV · Terminliste"},
   {k:"ics",        n:"Kalender (.ics)"},
   {k:"json",       n:"Konfiguration (.json)"}
 ];
-var exportFormat = "csv-matrix";
+var exportFormat = "xlsx";
 function viewExport(){
   var bar = '<div class="exportbar">'+
     EXPORT_FORMATS.map(function(f){
       return '<button type="button" class="btn sm" data-act="fmt" data-v="'+f.k+'" aria-pressed="'+(exportFormat === f.k)+'">'+f.n+'</button>';
     }).join("")+
     '<span class="spacer"></span>'+
-    '<button type="button" class="btn sm" data-act="copy">Kopieren</button>'+
+    (exportFormat === "xlsx" ? "" : '<button type="button" class="btn sm" data-act="copy">Kopieren</button>')+
     '<button type="button" class="btn sm primary" data-act="download">Datei sichern</button></div>';
+  if (exportFormat === "xlsx"){
+    var blaetter = [
+      ["Terminplan", "die Matrix wie auf dem Bildschirm – " + model.steps.length + " Schritte × " + model.issues.length + " Ausgaben, nach Phasen gegliedert"],
+      ["Anzeigenplan", "je Ausgabe Erscheinungstermin, Anzeigenschluss, Druckunterlagenschluss, Anlieferung Beilagen/Einhefter und Anzeigenschluss Advertorials"],
+      ["Redaktionsplan", "je Ausgabe Anmeldung Fachabteilungen, beide Redaktionskonferenzen, Redaktionsschluss, Auflagenmeldung, Seitenfreigabe, Layout-Imprimatur und E-Tag"]
+    ];
+    return card("Export", bar + '<div class="xlsxinfo"><div class="xlsxkopf">'+esc(dateiName("xlsx"))+'</div>'+
+      '<ol>'+blaetter.map(function(b){ return '<li><b>'+b[0]+'</b>'+esc(b[1])+'</li>'; }).join("")+'</ol></div>'+
+      '<div class="exphint">Alle Datumsangaben sind echte Excel-Daten – sortieren und weiterrechnen funktioniert direkt. '+
+      'Manuell gesetzte Termine sind im Terminplan blau, im Anzeigen- und Redaktionsplan orange hinterlegt; zum Drucken ist jedes Blatt auf Seitenbreite eingestellt.</div>');
+  }
   return card("Export", bar + '<textarea id="exportText" spellcheck="false" aria-label="Exportdaten"></textarea>'+
     '<div class="exphint">CSV mit Semikolon und BOM – öffnet sich in Excel direkt in Spalten. '+
     'Die .ics-Datei legt jeden Termin als ganztägigen Kalendereintrag an. '+
@@ -1857,6 +2858,7 @@ function viewExport(){
 }
 function exportPayload(){
   var is = model.issues;
+  if (exportFormat === "xlsx") return excelDatei();
   if (exportFormat === "json") return {name:"produktionsplan-"+state.year+".json", type:"application/json", text:JSON.stringify(state, null, 2)};
   if (exportFormat === "ics"){
     var stamp = new Date().toISOString().replace(/[-:]/g,"").split(".")[0]+"Z", lines = [
@@ -1906,25 +2908,27 @@ function exportPayload(){
 }
 function buildExport(){
   var t = el("exportText");
-  if (t) t.value = exportPayload().text;
+  if (t && exportFormat !== "xlsx") t.value = exportPayload().text;
 }
 
 function saveFile(p){
+  var inhalt = p.bytes || p.text;
   if (downloadsApi){
-    downloadsApi.save({filename:p.name, data:p.text}).then(function(){
+    downloadsApi.save({filename:p.name, data:inhalt}).then(function(){
       toast(p.name + " gesichert");
     }, function(err){
       var c = err && err.code;
       if (c === "declined") return;
       if (c === "rejected_extension" || c === "extension_not_enabled")
-        toast("Dieses Format lässt sich hier nicht sichern – bitte „Kopieren“ verwenden");
+        toast(p.bytes ? "Excel-Dateien sind in dieser Ansicht gesperrt – auf GitHub Pages oder in der Datei-Fassung funktioniert es"
+                      : "Dieses Format lässt sich hier nicht sichern – bitte „Kopieren“ verwenden");
       else if (c === "rate_limited") toast("Bitte kurz warten und erneut versuchen");
-      else toast("Sichern nicht möglich – bitte „Kopieren“ verwenden");
+      else toast("Sichern nicht möglich" + (p.bytes ? "" : " – bitte „Kopieren“ verwenden"));
     });
     return;
   }
   try{
-    var blob = new Blob([p.text], {type:p.type + ";charset=utf-8"});
+    var blob = new Blob([inhalt], {type:p.type + (p.bytes ? "" : ";charset=utf-8")});
     var url = URL.createObjectURL(blob), link = document.createElement("a");
     link.href = url; link.download = p.name;
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
@@ -2099,6 +3103,7 @@ el("printBtn").addEventListener("click", function(){
   }
   setTimeout(function(){ window.print(); }, 60);
 });
+el("xlsxBtn").addEventListener("click", function(){ saveFile(excelDatei()); });
 el("resetAll").addEventListener("click", function(){
   bestaetige("Plan zurücksetzen",
     "Erscheinungstermine, Feiertage, Regelwerk und manuelle Termine dieses Plans gehen auf den Auslieferungszustand zurück. Die Aufgaben bleiben erhalten.",
@@ -2134,8 +3139,9 @@ el("planCard").addEventListener("input", function(e){
 
 /* Aktionen rund um Pläne, Freigabe und Team */
 function planAktion(a, v){
-  if (a === "planOpen"){ planOeffnen(v); toast("Plan geöffnet"); }
-  else if (a === "planNew"){
+  if (a === "planOpen"){ planOeffnen(v); toast("Plan geöffnet"); return; }
+  if (!istAdmin()){ toast("Das dürfen nur Admins"); return; }
+  if (a === "planNew"){
     var j = state ? state.year : 2027;
     planAnlegen(defaultState(j), "Neuer Plan " + j, j).then(function(pl){
       planOeffnen(pl.id); toast("Neuer Plan angelegt");
@@ -2169,7 +3175,7 @@ function planAktion(a, v){
     });
   }
   else if (a === "freigeben"){
-    var offen = aufgaben.filter(function(t){ return !t.erledigt; }).length;
+    var offen = aufgaben.filter(function(t){ return !erledigt(t); }).length;
     if (!offen){ planStatus("fertig"); toast("Plan freigegeben"); return; }
     bestaetige("Plan freigeben", "Es sind noch " + offen + " Aufgaben offen. Trotzdem freigeben?", "Freigeben", function(){
       planStatus("fertig"); toast("Plan freigegeben");
@@ -2189,6 +3195,27 @@ el("panel").addEventListener("click", function(e){
     planAktion(pb.dataset.act, pb.dataset.v); return;
   }
   if (e.target.id === "tAdd"){ aufgabeAnlegen(); return; }
+  /* Zugriffsliste */
+  if (e.target.id === "zAdd"){ zugriffNeu(); return; }
+  var zneu = e.target.closest("[data-zneu]");
+  if (zneu && !zneu.disabled){
+    zugriffSetzen(zneu.dataset.zneu, {});
+    toast("Als Beobachter eingetragen – Rolle bei Bedarf ändern");
+    return;
+  }
+  var zweg = e.target.dataset.zweg;
+  if (zweg){
+    if (!istAdmin()) return;
+    bestaetige("Zugriff entziehen", personName(zweg) + (Konto.drin
+        ? " kommt danach nicht mehr an die Pläne. Das Konto bleibt bestehen – wer wieder eingetragen wird, ist sofort wieder drin."
+        : " sieht die Seite danach nur noch den Hinweis „Kein Zugriff“. Im Teilen-Menü bleibt die Person freigegeben, bis du sie dort entfernst."), "Entziehen", function(){
+      zugriff = zugriff.filter(function(z){ return z.id !== zweg; });
+      Ablage.loeschen("zugriff", zweg);
+      render(false);
+    });
+    return;
+  }
+  if (!istAdmin() && (e.target.id === "abtAdd" || e.target.dataset.tdel || e.target.dataset.teamdel)) return;
   if (e.target.id === "abtAdd"){
     var n = el("abtName").value.trim();
     if (!n){ toast("Bitte einen Namen eingeben"); return; }
@@ -2240,7 +3267,18 @@ el("panel").addEventListener("click", function(e){
   else if (a === "download") saveFile(exportPayload());
 });
 el("panel").addEventListener("change", function(e){
+  if (e.target.dataset.zrolle){ zugriffSetzen(e.target.dataset.zrolle, {rolle:e.target.value}); return; }
+  if (e.target.dataset.zname){ zugriffSetzen(e.target.dataset.zname, {name:e.target.value.trim()}); return; }
+  if (e.target.dataset.zabt !== undefined && e.target.dataset.zabt){ zugriffSetzen(e.target.dataset.zabt, {abteilungId:e.target.value}); return; }
+  var eigen = e.target.dataset.rnotiz || e.target.dataset.rdatum;
+  if (eigen){
+    var ta = aufgaben.filter(function(x){ return x.id === eigen; })[0];
+    if (ta) rueckmeldungSetzen(ta, e.target.dataset.rnotiz ? "notiz" : "datum", e.target.value.trim());
+    if (ta && e.target.dataset.rdatum) toast("Termin übernommen – abhängige Schritte neu gerechnet");
+    return;
+  }
   var rn = e.target.dataset.rename;
+  if (rn && !istAdmin()) return;
   if (rn){
     var mr = mitglied(rn), neu = e.target.value.trim();
     if (!mr) return;
@@ -2252,8 +3290,14 @@ el("panel").addEventListener("change", function(e){
   if (done && planMeta){
     var t = aufgaben.filter(function(x){ return x.id === done; })[0];
     if (!t) return;
+    if (!istAdmin()){
+      if (istMeineAufgabe(t)) rueckmeldungSetzen(t, "erledigt", e.target.checked);
+      else { e.target.checked = !e.target.checked; toast("Diese Aufgabe ist dir nicht zugewiesen"); }
+      return;
+    }
     t.erledigt = e.target.checked;
     t.erledigtAm = e.target.checked ? nowISO() : "";
+    t.erledigtStand = nowISO();
     Ablage.aufgabeSichern(planMeta.id, t).then(function(){ pruefeFreigabe(); render(false); });
     render(false);
     return;
@@ -2299,6 +3343,7 @@ el("panel").addEventListener("change", function(e){
 el("panel").addEventListener("keydown", function(e){
   if (e.key !== "Enter") return;
   var abt = e.target.dataset.persFor;
+  if (abt !== undefined && !istAdmin()) return;
   if (abt !== undefined){
     var n = e.target.value.trim();
     if (!n) return;
@@ -2306,6 +3351,7 @@ el("panel").addEventListener("keydown", function(e){
     return;
   }
   if (e.target.id === "tTitel"){ aufgabeAnlegen(); }
+  if (e.target.id === "zName" || e.target.id === "zMail"){ zugriffNeu(); return; }
   if (e.target.id === "abtName"){
     var na = e.target.value.trim();
     if (na){ teamAnlegen(na, "abteilung"); render(); }
@@ -2317,8 +3363,8 @@ function fuellePersonen(behalte){
   if (!sel || !abtSel) return;
   var gueltig = abtSel.value && abtSel.value !== "__neu";
   sel.innerHTML = '<option value="">Person (optional)</option>' +
-    personen(abtSel.value).map(function(m){
-      return '<option value="'+esc(m.id)+'"'+(m.id === behalte ? " selected" : "")+'>'+esc(m.name)+'</option>';
+    personen(abtSel.value, "auchOhne").map(function(m){
+      return '<option value="'+esc(m.id)+'"'+(m.id === behalte ? " selected" : "")+'>'+esc(m.name)+(m.login ? " · mit Login" : "")+'</option>';
     }).join("") +
     (gueltig ? '<option value="__neu">+ Neue Person …</option>' : "");
 }
@@ -2333,6 +3379,7 @@ function setzeFaellig(){
 }
 
 el("panel").addEventListener("input", function(e){
+  if (e.target.id === "zSuche"){ zugriffSuchen(e.target.value); return; }
   if (e.target.dataset.r === "label" || e.target.dataset.r === "offset"){
     var tr = e.target.closest("tr[data-nr]"), nr = +tr.dataset.nr;
     var s = state.steps.filter(function(x){ return x.nr === nr; })[0];
@@ -2390,16 +3437,28 @@ function planStatus(status){
 }
 /* Sind alle Aufgaben erledigt, gilt der Plan als freigegeben und liegt im Archiv. */
 function pruefeFreigabe(){
-  if (!planMeta || planMeta.status === "fertig") return;
+  if (!planMeta || planMeta.status === "fertig" || !istAdmin()) return;
   if (!aufgaben.length) return;
-  if (aufgaben.some(function(t){ return !t.erledigt; })) return;
+  if (aufgaben.some(function(t){ return !erledigt(t); })) return;
+  /* Rückmeldungen festschreiben, damit sie den abgelegten Plan nicht mehr verändern */
+  var ov = wirksameUeberschreibungen();
+  aufgaben.forEach(function(t){
+    var e = rueckmeldung(t);
+    if (!e) return;
+    t.erledigt = true;
+    if (e.notiz) t.antwort = e.notiz;
+    Ablage.aufgabeSichern(planMeta.id, t);
+  });
+  state.overrides = ov;
+  planMeta.inhalt = planInhalt();
   planMeta.status = "fertig";
   planMeta.freigegebenAm = nowISO();
   Ablage.planSichern(planMeta);
+  standMerken();
   toast("Alle Aufgaben erledigt – Plan freigegeben und abgelegt");
 }
 function aufgabeAnlegen(){
-  if (!planMeta) return;
+  if (!planMeta || !istAdmin()) return;
   var titel = el("tTitel").value.trim();
   if (!titel){ toast("Bitte die Aufgabe benennen"); return; }
   var t = {
@@ -2409,6 +3468,7 @@ function aufgabeAnlegen(){
     schrittNr: el("tSchritt").value ? +el("tSchritt").value : 0,
     ausgabeId: el("tAusgabe").value || "",
     faellig: el("tDatum").value || "",
+    terminFreigegeben: !!(el("tTermin") && el("tTermin").checked),
     erledigt: false, erstelltAm: nowISO()
   };
   aufgaben.push(t);
@@ -2428,32 +3488,38 @@ function teamAnlegen(name, art, abteilungId){
 /* Start */
 /* Neuaufbau nach einer Rückmeldung der Ablage – aber nicht, während jemand
    in einem Fenster oder einem Eingabefeld arbeitet. */
+/* Hat jemand anderes den Plan geändert, müssen auch Jahr, Erscheinungstermine
+   und Feiertage links neu – aber nicht, während man dort gerade tippt. */
+var railNeu = false;
 function neuAufbauen(){
   if (!model) return;
   if (Dialog.offen){ Dialog._nachholen = true; return; }
-  var a = document.activeElement;
-  if (a && el("panel").contains(a) && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)){
+  var a = document.activeElement, tippt = a && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName);
+  if (tippt && el("panel").contains(a)){
     Dialog._nachholen = true;
-    setTimeout(function(){ if (Dialog._nachholen && !Dialog.offen){ Dialog._nachholen = false; render(false); } }, 4000);
+    setTimeout(function(){ if (Dialog._nachholen && !Dialog.offen){ Dialog._nachholen = false; neuAufbauen(); } }, 4000);
     return;
   }
-  render(false);
+  var links = tippt && (document.querySelector(".rail").contains(a) || a.id === "yearInput");
+  render(railNeu && !links ? undefined : false);
 }
 Ablage.beiPlaenen = function(){
   if (planMeta){
     var akt = plaene.filter(function(x){ return x.id === planMeta.id; })[0];
     if (akt && akt !== planMeta){
       planMeta = akt;
-      if (!sichernOffen){ state = normState(akt.inhalt, akt.jahr); standMerken(); }
+      if (!sichernOffen){ state = normState(akt.inhalt, akt.jahr); standMerken(); railNeu = true; }
     }
-    if (!akt) planMeta = null;
+    /* anderswo gelöscht (oder der Ansichtsplatzhalter): nächsten Plan öffnen */
+    if (!akt){ planMeta = null; aufgaben = []; irgendeinPlan(); return; }
   }
   neuAufbauen();
 };
 Ablage.beiAufgaben = function(){ if (model){ pruefeFreigabe(); neuAufbauen(); } };
 Ablage.beiTeam    = function(){ neuAufbauen(); };
 
-Ablage.start(function(){
+/* Welcher Plan beim Öffnen: der zuletzt geöffnete, sonst der zuletzt freigegebene, sonst der jüngste */
+function startPlan(){
   var letzte = null;
   try{ letzte = localStorage.getItem(LAST_KEY); }catch(e){}
   var ziel = plaene.filter(function(x){ return x.id === letzte; })[0];
@@ -2463,8 +3529,19 @@ Ablage.start(function(){
     ziel = fertige[0] || plaene.slice().sort(function(a,b){
       return String(b.geaendertAm||"").localeCompare(String(a.geaendertAm||"")); })[0];
   }
+  return ziel || null;
+}
+function irgendeinPlan(){
+  var ziel = startPlan();
   if (ziel){ planOeffnen(ziel.id); return; }
   state = defaultState(2027);
-  planAnlegen(defaultState(2027), "Produktionsplan 2027", 2027).then(function(pl){ planOeffnen(pl.id); });
-});
+  if (istAdmin()){
+    planAnlegen(defaultState(2027), "Produktionsplan 2027", 2027).then(function(pl){ planOeffnen(pl.id); });
+    return;
+  }
+  /* Ohne Schreibrecht nichts anlegen – ein leerer Plan nur zur Ansicht */
+  plaene.push({id:"ansicht", titel:"Noch kein Plan angelegt", jahr:2027, status:"entwurf", inhalt:defaultState(2027)});
+  planOeffnen("ansicht");
+}
+Ablage.start(irgendeinPlan);
 </script>

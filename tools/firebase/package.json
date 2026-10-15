@@ -1,0 +1,12 @@
+{
+  "name": "bw-produktionsplan-firebase",
+  "private": true,
+  "description": "Bündelt das Firebase-SDK für die Website-Fassung nach vendor/firebase.js",
+  "scripts": {
+    "bundle": "esbuild entry.js --bundle --format=esm --minify --platform=browser --legal-comments=eof --outfile=../../vendor/firebase.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "firebase": "13.0.0"
+  }
+}

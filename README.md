@@ -16,31 +16,70 @@ Die Seite ersetzt die Excel-Vorlage `BW_2027_Produktionsplan_automatisierungspla
 python3 build.py     # erzeugt index.html aus src/app.html
 ```
 
-Danach `index.html` im Browser öffnen – kein Server, kein Build-Werkzeug,
-keine Abhängigkeiten. Die Datei läuft auch von einem Netzlaufwerk oder als
-GitHub Page. Alle Eingaben werden im Browser (localStorage) gespeichert.
+Die Seite gibt es in drei Fassungen, alle aus derselben Quelle `src/app.html`:
 
-## Als Webseite veröffentlichen (GitHub Pages)
+| Fassung | Anmeldung | Ablage |
+|---|---|---|
+| **Website** (GitHub Pages + Firebase) | Mail und Passwort, nur Personen auf der Zugriffsliste | gemeinsam, live, Rechte auf dem Server |
+| claude.ai-Artifact | claude.ai-Konto, Teilen-Menü | gemeinsam, live |
+| `index.html` als Datei | keine | Browserspeicher dieses Rechners |
 
-`index.html` liegt im Wurzelverzeichnis und ist vollständig eigenständig –
-GitHub Pages kann das Repository ohne Bauschritt ausliefern.
+Ohne `firebase-config.json` ist `index.html` die Datei-Fassung: Doppelklick
+genügt, kein Server, keine Abhängigkeiten.
 
-1. Im Repository **Settings → Pages** öffnen
-2. Unter *Build and deployment* → *Source* **Deploy from a branch** wählen
-3. Branch auswählen, Ordner `/ (root)`, **Save**
-4. Nach ein bis zwei Minuten ist die Seite unter
-   `https://<benutzer>.github.io/<repository>/` erreichbar
+## Website mit Anmeldung einrichten
 
-Die leere Datei `.nojekyll` schaltet die Jekyll-Verarbeitung ab, damit die
-Dateien unverändert ausgeliefert werden.
+Die Website liegt auf GitHub Pages. Anmeldung und gemeinsame Ablage kommen von
+Firebase (Google), im kostenlosen Spark-Tarif, ohne Kreditkarte. Einmalig:
 
-**Wichtig zur Datenhaltung:** Auf GitHub Pages gibt es keine geteilte Ablage.
-Jede Besucherin und jeder Besucher arbeitet in der eigenen Browser-Kopie;
-Pläne, Aufgaben und Team werden nicht zwischen Rechnern abgeglichen. Für die
-gemeinsame Arbeit im Team ist die veröffentlichte Artifact-Fassung mit
-geteilter Datenbank gedacht. Nach einer Änderung an `src/app.html` immer
-`python3 build.py` laufen lassen und `index.html` mit committen – Pages
-liefert genau diese Datei aus.
+**1. Firebase-Projekt**
+1. <https://console.firebase.google.com> → *Projekt hinzufügen*, Name z. B.
+   `bw-produktionsplan`, Google Analytics aus.
+2. *Build → Authentication → Jetzt starten → Sign-in method*: **E-Mail-Adresse/Passwort**
+   aktivieren (nur den oberen Schalter, nicht „E-Mail-Link“) → Speichern.
+3. *Authentication → Einstellungen → Autorisierte Domains*: `cedric472000.github.io`
+   hinzufügen, damit die Links in den Mails auf die Seite zurückführen.
+4. *Authentication → Vorlagen*: Vorlagensprache **Deutsch**. Optional den
+   Absendernamen auf „Produktionsplan Berliner Wirtschaft“ setzen.
+5. *Build → Firestore Database → Datenbank erstellen*: Standort
+   **europe-west3 (Frankfurt)**, im **Produktionsmodus** starten.
+6. *Firestore → Regeln*: den Inhalt von [`firestore.rules`](firestore.rules)
+   vollständig einfügen → **Veröffentlichen**.
+7. *Projekteinstellungen (Zahnrad) → Allgemein → Meine Apps → Web (`</>`)*:
+   App registrieren (ohne Hosting). Die angezeigten Werte von `firebaseConfig`
+   als `firebase-config.json` neben `build.py` ablegen:
+   ```json
+   {"apiKey": "…", "authDomain": "….firebaseapp.com", "projectId": "…",
+    "storageBucket": "…", "messagingSenderId": "…", "appId": "…"}
+   ```
+   Diese Werte sind kein Geheimnis. Sie stehen in jeder Firebase-Website im
+   Quelltext; geschützt wird über die Regeln aus Schritt 6.
+8. `python3 build.py`, `index.html` und `firebase-config.json` committen.
+
+**2. GitHub Pages**
+1. Pages ist bei privaten Repositories nur mit bezahltem GitHub-Tarif möglich.
+   Kostenlos: *Settings → General → Danger Zone → Change visibility → Public*.
+   Im Repository liegen nur Code und Regeln, keine Pläne und keine Personen.
+2. *Settings → Pages → Build and deployment → Deploy from a branch*,
+   Branch `main`, Ordner `/ (root)` → **Save**.
+3. Nach ein bis zwei Minuten läuft die Seite unter
+   <https://cedric472000.github.io/BW_Produktionsplan/>.
+
+**3. Erster Login**
+Die erste Person, die sich nach der Einrichtung mit bestätigter Mailadresse
+anmeldet, wird **Besitzer** (immer Admin). Das also sofort selbst erledigen:
+*Konto anlegen*, Mail bestätigen, *Als Besitzer übernehmen*. Danach im Reiter
+**Zugriff** die Kolleginnen und Kollegen mit Name, Mailadresse und Rolle eintragen
+und ihnen den Link schicken. Den Besitz ändern lässt sich nur in der
+Firebase-Konsole (*Firestore → meta → besitzer*).
+
+**Grenzen des kostenlosen Tarifs:** täglich 50 000 Lese- und 20 000
+Schreibvorgänge, 1 000 Bestätigungs- und 150 Passwort-Mails. Für eine
+Redaktion reicht das weit. Ein Login per Mail-Link ohne Passwort wäre im
+kostenlosen Tarif auf 5 Mails am Tag begrenzt, deshalb Mail und Passwort.
+
+`.nojekyll` schaltet die Jekyll-Verarbeitung von GitHub Pages ab. Nach jeder
+Änderung an `src/app.html`: `python3 build.py` und `index.html` mit committen.
 
 ## Aufbau
 
@@ -49,6 +88,10 @@ liefert genau diese Datei aus.
 | `src/app.html` | Die komplette Anwendung: Styles, Markup, Rechenkern (einzige Quelle) |
 | `build.py` | Verpackt `src/app.html` in ein vollständiges HTML-Dokument |
 | `index.html` | Erzeugt – die auslieferbare Seite |
+| `firebase-config.json` | Zugangsdaten des Firebase-Projekts; fehlt sie, wird die Datei-Fassung gebaut |
+| `firestore.rules` | Zugriffsregeln der Website – hier wird über Rechte entschieden |
+| `vendor/firebase.js` | Firebase-Bibliothek, gebündelt (neu bauen: `cd tools/firebase && npm install && npm run bundle`) |
+| `firebase.json` | für die Firebase-Werkzeuge: Regeln hochladen, Emulator für Tests |
 
 `src/app.html` ist bewusst ohne `<!doctype>`/`<html>`/`<head>`/`<body>` geschrieben,
 damit dieselbe Quelle als eigenständige Seite **und** als eingebettetes Artifact läuft.
@@ -115,13 +158,90 @@ Standardansicht. Über *Entsperren* geht er zurück in Arbeit.
 
 | Umgebung | Ablage |
 |---|---|
-| veröffentlichte Seite (Artifact) | geteilte Datenbank – alle im Team sehen denselben Stand, Änderungen erscheinen live |
-| `index.html` als Datei oder GitHub Page | Browserspeicher des jeweiligen Rechners |
+| Website mit Anmeldung | Firestore (Firebase) – alle im Team sehen denselben Stand, Änderungen erscheinen live |
+| veröffentlichte Seite (Artifact) | geteilte Datenbank in claude.ai, ebenso live |
+| `index.html` als Datei | Browserspeicher des jeweiligen Rechners |
 
-Beide Wege nutzen dieselbe Schnittstelle (`Ablage` in `src/app.html`), die
-Seite funktioniert also in jedem Fall vollständig. Die geteilte Ablage legt
+Alle Wege nutzen dieselbe Schnittstelle (`Ablage` in `src/app.html`), die
+Seite funktioniert also in jedem Fall vollständig. Die Website fällt nie
+stillschweigend auf den Browserspeicher zurück. Die geteilte Ablage legt
 Pläne unter `plaene/<id>`, Aufgaben unter `plaene/<id>/aufgaben/<id>` und das
 Team unter `team/<id>` ab.
+
+## Zugriff und Rollen
+
+Im Reiter **Zugriff** (nur für Admins) stehen die Personen, die an die Pläne
+dürfen, jeweils mit einer Rolle:
+
+| Rolle | darf |
+|---|---|
+| Admin | alles: Pläne, Termine, Regelwerk, Aufgaben, Team, Zugriffsliste |
+| Beobachter | alles ansehen und exportieren, nichts ändern |
+| Zugewiesene Aufgaben | wie Beobachter, dazu bei den eigenen Aufgaben: abhaken, Rückmeldung schreiben und – wenn bei der Aufgabe „Die zuständige Person darf den Termin des Schritts ändern“ gesetzt ist – den Termin des verknüpften Schritts setzen |
+
+Der Besitzer der Seite ist immer Admin. Damit eine Aufgabe als „eigene“ gilt,
+wählt man beim Anlegen die Person mit dem Zusatz „· mit Login“. Wird ein Plan
+freigegeben, schreibt die Seite Haken, Termine und Rückmeldungen der zuständigen
+Personen in den Plan fest. Spätere Änderungen an ihren Rückmeldungen wirken
+dann nicht mehr.
+
+### Website (Firebase)
+
+Anmelden kann sich nur, wer ein Konto mit **bestätigter** Mailadresse hat. Ein
+Konto anlegen kann zwar jede Person – an die Daten kommt aber nur, wer in der
+Zugriffsliste steht. Alle anderen sehen „Noch nicht freigeschaltet“. Die
+Kennung einer Person ist ihre Mailadresse in Kleinbuchstaben.
+
+Entschieden wird auf dem Server, in [`firestore.rules`](firestore.rules):
+
+| Ablage | lesen | schreiben |
+|---|---|---|
+| `meta/besitzer` | alle Angemeldeten | einmalig von der ersten Person, danach niemand |
+| `zugriff/<mail>` | alle auf der Liste, jede Person ihren eigenen Eintrag | Admins (nur Kleinbuchstaben, nur gültige Rollen) |
+| `plaene`, `plaene/<id>/aufgaben`, `team` | alle auf der Liste | Admins |
+| `freigaben/<mail>` | alle auf der Liste | Admins und die Person selbst, wenn ihre Rolle *Zugewiesene Aufgaben* ist |
+
+Wer nicht auf der Liste steht oder seine Mail nicht bestätigt hat, bekommt
+vom Server nichts – auch nicht mit den Entwicklerwerkzeugen des Browsers. Wer
+von der Liste genommen wird, verliert den Zugriff sofort. Das Konto bleibt
+bestehen, beim erneuten Eintragen ist die Person sofort wieder drin. Passwörter
+liegen nur bei Firebase und sind für Admins nicht einsehbar. Wer seins vergisst,
+setzt es über *Passwort vergessen* selbst neu.
+
+### claude.ai-Fassung
+
+Hier regelt das **Teilen-Menü** den Zugang: Admins mit *Bearbeiten*, alle
+anderen mit *Ansehen*. Im Reiter Zugriff sucht man die Personen im Verzeichnis
+der Organisation. Ist jemand als Admin eingetragen, aber nur mit *Ansehen*
+geteilt, bleibt die Seite für diese Person schreibgeschützt und zeigt einen
+Hinweis.
+
+Durchgesetzt werden die Rechte von den Regeln der Datenbank, nicht nur von der
+Oberfläche:
+
+```json
+{"db":{"rules":[
+  {"path":"",                "read":"interact", "write":"admin"},
+  {"path":"freigaben",       "read":"interact", "write":"admin"},
+  {"path":"freigaben/{self}",                    "write":"interact"}
+]}, "user":{"scopes":["profile"]}, "downloads":true}
+```
+
+Schreiben darf also nur, wer *Bearbeiten* hat. Alle anderen dürfen nur ihr
+eigenes Dokument `freigaben/<kennung>` schreiben, und daraus übernimmt die
+Seite nur Einträge zu Aufgaben, die dieser Person zugewiesen sind und deren
+Rolle *Zugewiesene Aufgaben* ist. Die Zugriffsliste unter `zugriff/<kennung>`
+speichert nur die Kennung, die Rolle und die Abteilung. Namen kommen bei jedem
+Aufruf frisch aus dem Verzeichnis. Die Suche findet Personen auch über die
+Mailadresse. Angezeigt wird die Adresse nur, wenn die Organisation den Bereich
+`email` freigibt; derzeit ist er nicht verfügbar.
+
+Der Hinweis „Kein Zugriff“ ist hier nur eine Sperre der Oberfläche: Wer im
+Teilen-Menü freigegeben ist, kann die Daten technisch lesen. Wer nichts sehen
+soll, wird im Teilen-Menü gar nicht erst freigegeben.
+
+Die Datei-Fassung hat keine Anmeldung. Dort arbeitet jede Person als Admin in
+ihrem eigenen Browserspeicher.
 
 ## Manuelle Termine
 
@@ -137,12 +257,28 @@ daneben.
 Dasselbe Fenster stellt auch Rückfragen und erfragt Namen. Es ersetzt
 `confirm()` und `prompt()`, die in eingebetteten Seiten blockiert sein können.
 
-Ein fester Termin wird unverändert übernommen. **Alle Schritte, die ihn als
-Anker haben, rechnen von dort aus weiter** – in der Rückwärtskette sind das die
-vorgelagerten Schritte. Zieht man etwa den Start der Seitenfreigabe im Mai-Heft
-eine Woche vor, wandern Redaktionsschluss, Anzeigenschluss, beide
-Redaktionskonferenzen und der Druckunterlagenschluss mit; alles nach dem
-Seitenfreigabe-Start bleibt am E-Tag verankert.
+Ein fester Termin wird unverändert übernommen. **Was auf ihm aufbaut, wandert
+mit – im selben Abstand in Arbeitstagen wie im automatischen Plan.** In der
+Rückwärtskette sind das die vorgelagerten Schritte. Die Regel mit ihren
+Ziel-Wochentagen wird dafür bewusst nicht noch einmal angewendet: Sie würde
+aus kleinen Änderungen Wochensprünge machen. Beispiel Mai 2027: Der Start der
+Seitenfreigabe zwei Arbeitstage früher (Do 15.04. statt Mo 19.04.) zieht
+Redaktionsschluss, Anzeigenschluss, Druckunterlagenschluss, beide
+Redaktionskonferenzen und die Anmeldungen um genau zwei Arbeitstage vor, über
+Ostern hinweg. Nach der Regel wäre die Große Redaktionskonferenz eine ganze
+Woche gesprungen.
+
+Was nach dem gesetzten Termin kommt, bleibt am Erscheinungstag und am Druck
+verankert. Gerät dadurch die Reihenfolge durcheinander, etwa weil die
+Seitenfreigabe jetzt nach „EPSe bereitstellen“ beginnt, warnen das Terminfenster
+und die *Prüfung*. Dann setzt man den Folgeschritt ebenfalls, und alles, was auf
+ihm aufbaut, wandert wieder mit. Das Terminfenster zeigt schon vor dem
+Übernehmen, wie viele Schritte mitwandern. Mitgewanderte Termine sind in hellem
+Blau mit kleiner Ecke markiert. Die Prüfung nennt sie und weist auf Schritte
+hin, die dadurch nicht mehr auf ihrem Wochentag liegen (z. B. eine
+Redaktionskonferenz am Donnerstag statt am Mittwoch); die lassen sich bei
+Bedarf von Hand setzen. Ohne manuelle Termine rechnet die Seite unverändert
+wie die Excel.
 
 Gesetzte Termine sind blau markiert, stehen gesammelt in der Karte *Manuelle
 Termine* und lassen sich einzeln oder gesamt auf Automatik zurückstellen. Der
@@ -204,6 +340,25 @@ Reihenfolge und ungewöhnliche Vorlaufzeiten.
 
 ## Export
 
-CSV-Matrix und CSV-Terminliste (Semikolon + BOM, öffnen direkt in Excel),
-`.ics` mit jedem Termin als ganztägiger Kalendereintrag, JSON-Konfiguration
-zum Sichern und Weitergeben sowie eine Druckansicht (A4 quer).
+**Excel (.xlsx)** – über *Excel-Datei* in der Seitenspalte oder im Reiter
+*Export*. Eine Arbeitsmappe mit drei Blättern:
+
+| Blatt | Inhalt |
+|---|---|
+| Terminplan | die Matrix wie auf dem Bildschirm, nach Phasen gegliedert; manuelle Termine blau, verschobene gelb, E-Tag rot hinterlegt |
+| Anzeigenplan | je Ausgabe Erscheinungstermin, Anzeigenschluss, Druckunterlagenschluss, Anlieferungstermin Beilagen/Einhefter und Anzeigenschluss Advertorials (Schritte 24, 7, 9, 14, 3) |
+| Redaktionsplan | je Ausgabe Anmeldung Fachabteilungen, Kleine und Große Redaktionskonferenz, Redaktionsschluss, Auflagenmeldung, Start der Seitenfreigabe, Layout-Imprimatur und E-Tag (Schritte 4, 5, 6, 8, 10, 12, 15, 24) |
+
+Im Anzeigen- und Redaktionsplan sind manuell gesetzte Termine orange
+hinterlegt. Die Spalten beider Pläne stehen in `ANZEIGENPLAN` und
+`REDAKTIONSPLAN` in `src/app.html`; wird ein Schritt im Regelwerk umbenannt,
+übernimmt der Spaltenkopf den neuen Namen.
+
+Alle Datumsangaben sind echte Excel-Daten. Kopfzeilen sind fixiert und
+wiederholen sich beim Drucken; jedes Blatt ist auf Seitenbreite eingestellt.
+Die Datei wird ohne Fremdbibliothek in der Seite selbst erzeugt (`Xlsx` in
+`src/app.html`), funktioniert also auch ohne Internetverbindung.
+
+Daneben: CSV-Matrix und CSV-Terminliste (Semikolon + BOM), `.ics` mit jedem
+Termin als ganztägiger Kalendereintrag, JSON-Konfiguration zum Sichern und
+Weitergeben sowie *Drucken / PDF* (A4 quer).

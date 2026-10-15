@@ -1,0 +1,72 @@
+rules_version = '2';
+
+// Zugriffsregeln der Website-Fassung (Firebase).
+// Die Seite selbst lässt sich im Browser beliebig verändern – maßgeblich ist,
+// was diese Regeln auf dem Server erlauben.
+//
+//   meta/besitzer      wer die Seite eingerichtet hat: immer Admin
+//   zugriff/<mail>     Zugriffsliste: {name, rolle, abteilungId}
+//   plaene, team       Pläne mit Aufgaben, Abteilungen und Personen
+//   freigaben/<mail>   Rückmeldungen der Personen mit zugewiesenen Aufgaben
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Angemeldet mit bestätigter Mailadresse
+    function angemeldet() {
+      return request.auth != null
+        && request.auth.token.email is string
+        && request.auth.token.email_verified == true;
+    }
+    function mail() { return request.auth.token.email.lower(); }
+
+    function besitzerDoc() { return /databases/$(database)/documents/meta/besitzer; }
+    function eintragDoc()  { return /databases/$(database)/documents/zugriff/$(mail()); }
+
+    function besitzer() {
+      return angemeldet() && exists(besitzerDoc()) && get(besitzerDoc()).data.email == mail();
+    }
+    function rolle() {
+      return angemeldet() && exists(eintragDoc()) ? get(eintragDoc()).data.rolle : "";
+    }
+    function lesen() { return besitzer() || rolle() in ["admin", "beobachter", "zugewiesen"]; }
+    function admin() { return besitzer() || rolle() == "admin"; }
+
+    // Die erste Person, die sich nach der Einrichtung anmeldet, wird Besitzer.
+    // Danach ist das Dokument unveränderlich (ändern nur in der Firebase-Konsole).
+    match /meta/besitzer {
+      allow read: if angemeldet();
+      allow create: if angemeldet()
+        && request.resource.data.keys().hasOnly(["email", "seit"])
+        && request.resource.data.email == mail();
+    }
+
+    match /zugriff/{person} {
+      allow read: if lesen() || (angemeldet() && person == mail());
+      allow write: if admin()
+        && person == person.lower()
+        && (request.resource == null || request.resource.data.rolle in ["admin", "beobachter", "zugewiesen"]);
+    }
+
+    match /plaene/{plan} {
+      allow read: if lesen();
+      allow write: if admin();
+      match /aufgaben/{aufgabe} {
+        allow read: if lesen();
+        allow write: if admin();
+      }
+    }
+
+    match /team/{eintrag} {
+      allow read: if lesen();
+      allow write: if admin();
+    }
+
+    // Jede Person mit zugewiesenen Aufgaben schreibt nur ihr eigenes Dokument.
+    // Die Seite übernimmt daraus nur Einträge zu Aufgaben, die ihr zugewiesen sind.
+    match /freigaben/{person} {
+      allow read: if lesen();
+      allow write: if admin() || (person == mail() && rolle() == "zugewiesen");
+    }
+  }
+}
