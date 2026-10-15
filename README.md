@@ -131,33 +131,50 @@ falls er auf ein Wochenende oder einen Feiertag fällt.
 Anker, Versatz, Ziel-Wochentag, Richtung und Phase sind im Reiter **Regelwerk**
 frei änderbar; Zirkelbezüge werden erkannt und gemeldet.
 
-### Rechenweise „Arbeitstage“ (Standard)
+### Rechenweise „Arbeitstage“ (Standard) – gelernt aus alten Plänen
 
 So wie oben beschrieben rechnet die Excel – und springt dabei bei Feiertagen
 oft eine ganze Woche: Fällt der Druck-Montag auf Ostermontag, liegt der Druck
-eine Woche früher, und die ganze Kette davor springt mit. Von Hand plant die
-Redaktion anders, und so rechnet die Seite jetzt:
+eine Woche früher, und die ganze Kette davor springt mit. Wie die Redaktion
+tatsächlich plant, ist aus den Produktionsplänen 2025 und 2026 und dem von
+Hand erstellten Redaktionsplan 2027 abgeleitet:
 
-1. **Normalraster**: Die Regel oben, aber ohne Feiertage. So liegen die
-   Termine in einem Monat ohne Feiertag (Konferenzen Fr/Mo/Mi, Seitenfreigabe
-   Montag, Imprimatur Donnerstag …).
-2. **Produktionskette in Arbeitstagen**: Jeder Schritt hält zu seinem Anker so
-   viele Arbeitstage Abstand wie im Normalraster. Ein Feiertag zieht die Schritte
-   davor um genau einen Arbeitstag vor. Beispiel April 2027: Karfreitag und
-   Ostermontag liegen vor dem E-Tag, also kommen Imprimatur (Di 23.03.) und
-   Seitenfreigabe (Do 18.03.) zwei Arbeitstage früher – nicht eine Woche.
-3. **Feste Wochentermine** (Spalte *Wochentermin*, voreingestellt für
-   Anmeldung Fachabteilungen, Kleine und Große Redaktionskonferenz): Sie bleiben
-   in ihrer Kalenderwoche und wandern nicht mit, wenn sich die Kette verschiebt.
-   Fällt der Tag auf einen Feiertag, gilt der Nachbartag in derselben Woche
-   (Kleine Konferenz Di statt Ostermontag, Anmeldung Do statt Karfreitag). In
-   der Weihnachtswoche und zwischen den Jahren gibt es keine Konferenz: dann die
-   Woche davor.
+1. **Normalraster**: die Regel oben ohne Feiertage – so liegen die Termine in
+   einem Monat ohne Feiertag. Ein von Hand gesetzter E-Tag ist dessen Grundlage.
+2. Wie Feiertage wirken, legt je Schritt die Spalte **Bindung** im Regelwerk fest:
+
+| Bindung | Verhalten | voreingestellt für |
+|---|---|---|
+| Kette | hält zu seinem Bezug die Arbeitstage des Normalrasters – ein Feiertag dazwischen zieht ihn um einen Arbeitstag vor | die Produktionskette |
+| Verschiebung | übernimmt die Verschiebung seines Bezugs in Arbeitstagen | Druckunterlagenschluss, Auflagenmeldung IHK/dpv (Bezug: Imprimatur) |
+| Wochentermin | bleibt in seiner Kalenderwoche; bei einem Feiertag der Nachbartag, in der Weihnachtswoche und zwischen den Jahren die Woche davor | Anmeldung Fachabteilungen, Kleine und Große Redaktionskonferenz, Anzeigenschluss, Beilagenanlieferung |
+| Fester Termin | bleibt auf seinem Tag; bei einem Feiertag der Arbeitstag davor | Druck, Postversand |
+
+Dazu: Die **Prooffreigabe** hängt in der Kette am Postversand (immer 5
+Arbeitstage davor), und der **Redaktionsschluss** fällt nicht auf einen
+Freitag. Wochentermine wandern nicht mit, wenn die Kette sich verschiebt – nur
+mit dem E-Tag und mit ihrem eigenen Block (etwa der Konferenzblock über
+Weihnachten).
+
+**Trefferquote** (Schritte 4–24; die Schritte 1–2 hatten 2025/26 noch andere
+Abstände):
+
+| Vergleich | Excel-Regel | gelernte Regeln |
+|---|---|---|
+| Produktionsplan 2026 | 176 von 210 | **210 von 210** |
+| Redaktionsplan 2027 (mit den drei grün markierten Terminen) | 61 von 80 | **78 von 80** |
+| Produktionsplan 2025 | 199 von 210 | 191 von 210 |
+
+2025 wurden Feiertage im Mai und Juni noch anders gelöst (Proof zusammengeschoben
+statt die Kette zu verschieben); 2026 und 2027 verschieben die Kette – dem folgt
+die Seite. Die beiden übrigen Abweichungen 2027 (Auflagenmeldung April,
+Seitenfreigabe Mai) sind Einzelentscheidungen; 2026 wurden dieselben Lagen nach
+der Regel gelöst. Ältere Pläne (2021–2024) hatten andere Wochentage für die
+Konferenzen und sind daher nur zum Vergleich herangezogen. Die alten Pläne
+selbst liegen nicht im Repository.
 
 In Monaten ohne Feiertag im Zeitraum ist das Ergebnis dasselbe wie in der
-Excel. Abgeglichen mit dem von Hand erstellten Redaktionsplan 2027: Mit den drei
-dort grün markierten Terminen als manuellen Terminen stimmen 75 von 80 Terminen
-überein. Über den Schalter **wie Excel** im Regelwerk rechnet die Seite wieder
+Excel. Über den Schalter **wie Excel** im Regelwerk rechnet die Seite wieder
 genau wie die Excel-Vorlage; die Prüfung meldet dann Verschiebungen wieder als
 Warnungen.
 
