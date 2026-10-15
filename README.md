@@ -131,6 +131,36 @@ falls er auf ein Wochenende oder einen Feiertag fällt.
 Anker, Versatz, Ziel-Wochentag, Richtung und Phase sind im Reiter **Regelwerk**
 frei änderbar; Zirkelbezüge werden erkannt und gemeldet.
 
+### Rechenweise „Arbeitstage“ (Standard)
+
+So wie oben beschrieben rechnet die Excel – und springt dabei bei Feiertagen
+oft eine ganze Woche: Fällt der Druck-Montag auf Ostermontag, liegt der Druck
+eine Woche früher, und die ganze Kette davor springt mit. Von Hand plant die
+Redaktion anders, und so rechnet die Seite jetzt:
+
+1. **Normalraster**: Die Regel oben, aber ohne Feiertage. So liegen die
+   Termine in einem Monat ohne Feiertag (Konferenzen Fr/Mo/Mi, Seitenfreigabe
+   Montag, Imprimatur Donnerstag …).
+2. **Produktionskette in Arbeitstagen**: Jeder Schritt hält zu seinem Anker so
+   viele Arbeitstage Abstand wie im Normalraster. Ein Feiertag zieht die Schritte
+   davor um genau einen Arbeitstag vor. Beispiel April 2027: Karfreitag und
+   Ostermontag liegen vor dem E-Tag, also kommen Imprimatur (Di 23.03.) und
+   Seitenfreigabe (Do 18.03.) zwei Arbeitstage früher – nicht eine Woche.
+3. **Feste Wochentermine** (Spalte *Wochentermin*, voreingestellt für
+   Anmeldung Fachabteilungen, Kleine und Große Redaktionskonferenz): Sie bleiben
+   in ihrer Kalenderwoche und wandern nicht mit, wenn sich die Kette verschiebt.
+   Fällt der Tag auf einen Feiertag, gilt der Nachbartag in derselben Woche
+   (Kleine Konferenz Di statt Ostermontag, Anmeldung Do statt Karfreitag). In
+   der Weihnachtswoche und zwischen den Jahren gibt es keine Konferenz: dann die
+   Woche davor.
+
+In Monaten ohne Feiertag im Zeitraum ist das Ergebnis dasselbe wie in der
+Excel. Abgeglichen mit dem von Hand erstellten Redaktionsplan 2027: Mit den drei
+dort grün markierten Terminen als manuellen Terminen stimmen 75 von 80 Terminen
+überein. Über den Schalter **wie Excel** im Regelwerk rechnet die Seite wieder
+genau wie die Excel-Vorlage; die Prüfung meldet dann Verschiebungen wieder als
+Warnungen.
+
 ## Pläne, Aufgaben und Freigabe
 
 Die Seite verwaltet **mehrere Pläne**. Jeder Plan hat eine Bezeichnung, ein
