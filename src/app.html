@@ -1007,6 +1007,32 @@ function inDerWoche(d0, dir, hol, bis, pause){
   }
   return d0;
 }
+/* Reihenfolgen, die in 53 Heften der Jahre 2021–2026 nie gebrochen wurden:
+   [früher, später, am selben Tag erlaubt]. Bricht der Plan eine davon, rückt
+   der frühere Schritt vor – so weit wie nötig, nie über einen von Hand
+   gesetzten Termin hinweg (den meldet die Prüfung). */
+var REIHENFOLGE = [[1,7,0], [1,10,0], [2,6,1], [3,4,0], [4,5,0], [5,6,0], [6,7,0], [6,10,0], [7,8,1], [7,9,1],
+  [8,11,0], [9,11,0], [10,11,1], [11,12,1], [11,13,1], [12,14,1], [12,16,0], [13,15,0], [13,16,0], [14,15,1],
+  [15,17,1], [16,17,1], [17,18,1], [18,19,1], [19,20,0], [19,21,0], [20,22,1], [21,22,1], [22,23,1], [23,24,0]];
+function reihenfolgeHalten(rows, hol){
+  var by = new Map(rows.map(function(r){ return [r.step.nr, r]; }));
+  for (var runde = 0; runde < 40; runde++){
+    var bewegt = false;
+    REIHENFOLGE.forEach(function(c){
+      var a = by.get(c[0]), b = by.get(c[1]);
+      if (!a || !b || a.manual) return;
+      if (c[2] ? +a.date <= +b.date : +a.date < +b.date) return;
+      var ziel = c[2] ? b.date : addDays(b.date, -1);
+      while (isFreeDay(ziel, hol) || (a.step.pause && weihnachtsPause(ziel))) ziel = addDays(ziel, -1);
+      if (+ziel >= +a.date) return;
+      a.date = ziel; a.shift = diffDays(a.basis, ziel); a.vor = c[1];
+      if (b.manual || b.mit) a.mit = {von: b.manual ? b.step.nr : b.mit.von, tage: 0};
+      bewegt = true;
+    });
+    if (!bewegt) break;
+  }
+  return rows;
+}
 function wochenAbstand(a, b){ return Math.round(diffDays(addDays(a, 1 - dow(a)), addDays(b, 1 - dow(b))) / 7); }
 function planArbeitstage(steps, etag, hol, fix){
   var leer = new Set();
@@ -1066,7 +1092,12 @@ function planArbeitstage(steps, etag, hol, fix){
     done.set(nr, r);
     return r;
   }
-  return steps.map(function(s){ return resolve(s.nr); });
+  var rows = reihenfolgeHalten(steps.map(function(s){ return resolve(s.nr); }), hol);
+  /* Wie weit ein mitgerückter Termin gewandert ist, gegenüber dem Plan ohne manuelle Termine */
+  if (autoBy) rows.forEach(function(r){
+    if (r.mit && !r.mit.tage){ var a = autoBy.get(r.step.nr); r.mit.tage = a ? arbeitstage(a.date, r.date, hol) : 0; if (!r.mit.tage) r.mit = null; }
+  });
+  return rows;
 }
 
 /* =========================================================================
@@ -2392,6 +2423,8 @@ function viewRules(){
         '<li>Konferenzen, Anzeigenschluss und Beilagenanlieferung bleiben in ihrer Woche, in der Weihnachtswoche und zwischen den Jahren eine Woche davor.</li>'+
         '<li>Druckunterlagenschluss und Auflagenmeldung übernehmen die Verschiebung von Ausdrucken und Imprimatur.</li>'+
         '<li>Der Redaktionsschluss fällt nicht auf einen Freitag.</li>'+
+        '<li>Reihenfolgen, die in 53 Heften 2021–2026 nie gebrochen wurden, hält der Plan immer ein – etwa: Anzeigenschluss nie nach dem Redaktionsschluss, '+
+        'Kleine vor Großer Konferenz. Bräche ein Termin sie, rückt er vor, notfalls auf denselben Tag.</li>'+
         '<li>Anzeigen-Schritte 1–3: März und April eine Woche mehr Vorlauf; im Januar/Februar-Heft Umfangsmeldung am Tag der Großen Konferenz, '+
         'Anmeldung Sonderformate eine Woche und Buchungsschluss Advertorial zwei Tage vor der Anmeldung der Fachabteilungen.</li></ul>')+
     ' Die Spalte rechts zeigt das Ergebnis für <b>'+(sample ? esc(sample.name) : "–")+'</b>.</div>';

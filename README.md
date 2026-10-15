@@ -156,6 +156,16 @@ Freitag. Die **Konferenzen** liegen nie in der Weihnachtswoche oder zwischen
 den Jahren, sondern dann eine Woche davor; der Anzeigenschluss darf dagegen
 zwischen den Jahren liegen (wie 2025 und 2026).
 
+**Reihenfolgen**: 30 Reihenfolgen, die in 53 Heften der Jahre 2021–2026 nie
+gebrochen wurden, hält der Plan immer ein (`REIHENFOLGE` in `src/app.html`) –
+etwa: Anzeigenschluss nie nach dem Redaktionsschluss (höchstens am selben Tag),
+Kleine vor Großer Konferenz, Ausdrucke nach dem Redaktionsschluss. Würde ein
+Termin eine davon brechen, rückt er so weit vor wie nötig – auf denselben Tag,
+wo die alten Pläne das kennen, sonst auf den Arbeitstag davor. Von Hand gesetzte
+Termine bleiben stehen; bricht einer davon eine Reihenfolge, meldet es die
+Prüfung. Beispiel April 2027: Redaktionsschluss von Hand auf Mi 10.03. – der
+Anzeigenschluss rückt mit auf Mi 10.03.
+
 **Anzeigen-Schritte 1–3** laufen je nach Monat des E-Tags anders (Spalte
 *Bindung*, Hinweis „… anders“):
 
