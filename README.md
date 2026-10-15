@@ -156,6 +156,12 @@ Freitag. Die **Konferenzen** liegen nie in der Weihnachtswoche oder zwischen
 den Jahren, sondern dann eine Woche davor; der Anzeigenschluss darf dagegen
 zwischen den Jahren liegen (wie 2025 und 2026).
 
+**Mai-Heft**: Die Layout-Imprimatur liegt einen Arbeitstag früher, mittwochs
+statt donnerstags – so in allen Plänen 2021–2027, auch ohne Feiertag im
+Zeitraum. Seitenfreigabe, Redaktionsschluss (dann Do statt Fr) und
+Auflagenmeldung ziehen mit. Mai 2027 ergibt so ohne manuelle Termine:
+Imprimatur Mi 21.04., Redaktionsschluss Do 08.04., Auflagenmeldung Di 13.04.
+
 **Reihenfolgen**: 30 Reihenfolgen, die in 53 Heften der Jahre 2021–2026 nie
 gebrochen wurden, hält der Plan immer ein (`REIHENFOLGE` in `src/app.html`) –
 etwa: Anzeigenschluss nie nach dem Redaktionsschluss (höchstens am selben Tag),
@@ -183,6 +189,7 @@ Weihnachten).
 |---|---|---|
 | Produktionsplan 2026, alle 24 Schritte | 195 von 240 | **239 von 240** |
 | Redaktionsplan 2027 (mit den drei grün markierten Terminen) | 61 von 80 | **78 von 80** |
+| Redaktionsplan 2027 ganz ohne manuelle Termine | 57 von 80 | **77 von 80** |
 | Produktionsplan 2025, alle 24 Schritte | 216 von 240 | 216 von 240 |
 
 Die eine Abweichung 2026 ist die Umfangsmeldung im Dezember-Heft, die 2025 und
