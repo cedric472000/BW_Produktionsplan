@@ -276,8 +276,8 @@ tr.phaserow th.rowhead{padding:0}
 .ruleshead{padding:12px 15px;border-bottom:1px solid var(--line);background:var(--surface-2);font-size:12.5px;color:var(--ink-2)}
 .ruleshead b{color:var(--ink)}
 .ruleshead .weise{display:inline-flex;gap:4px;margin:0 10px 6px 0;vertical-align:middle}
-.rules td.wo{text-align:center}
-.rules td.wo input{accent-color:var(--accent);margin:0}
+.rules .bz{display:block;font-size:10.5px;color:var(--ink-3);font-family:var(--mono);margin-top:1px}
+.ruleshead .gelernt{margin:6px 0 4px;padding-left:18px;display:flex;flex-direction:column;gap:2px}
 
 /* ---------- export ---------- */
 .exportbar{display:flex;gap:8px;padding:12px 15px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center;background:var(--surface-2)}
@@ -808,8 +808,13 @@ function statesTitle(h){
    anchor : Nr. des Schritts, von dem aus gerechnet wird (0 = E-Tag/Wurzel)
    offset : Kalendertage gegenüber dem Anker
    dir    : -1 = bei Konflikt rückwärts suchen, 1 = vorwärts
-   woche  : fester Wochentermin (Konferenzen): bleibt in seiner Kalenderwoche
-            und wandert nicht mit, wenn sich die Produktionskette verschiebt
+   Rechenweise „Arbeitstage“ (gelernt aus den Plänen 2025–2027):
+   bindung: "kette"        hält zum Bezug die Arbeitstage des Normalrasters (Standard)
+            "verschiebung" übernimmt die Verschiebung des Bezugs in Arbeitstagen
+            "woche"        fester Wochentermin: bleibt in seiner Woche, Feiertag → Nachbartag
+            "fest"         fester Termin: bleibt, Feiertag → Arbeitstag davor
+   bezug  : Schritt, an dem die Kette hängt, wenn nicht der Anker
+   meiden : Wochentag, auf den der Termin nicht fallen soll (dann Arbeitstag davor)
    ------------------------------------------------------------------------- */
 var PHASES = [
   {key:"a", label:"Anzeigen & Material", css:"var(--ph-1)"},
@@ -821,26 +826,26 @@ var DEFAULT_STEPS = [
   {nr:1,  label:"Umfangsmeldung für Papierbestellung",                                       wd:0, anchor:2,  offset:7,  dir:-1, phase:"a"},
   {nr:2,  label:"Anmeldung Sonderformate, Beihefter, TOC an Herstellung und Redaktion",      wd:0, anchor:3,  offset:-3, dir:-1, phase:"a"},
   {nr:3,  label:"Buchungsschluss und Anlieferung Material Advertorial",                      wd:0, anchor:4,  offset:-4, dir:-1, phase:"a"},
-  {nr:4,  label:"Anmeldung Fachabteilungen",                                                 wd:5, anchor:5,  offset:-3, dir:-1, phase:"b", woche:true},
-  {nr:5,  label:"Kleine Redaktionskonferenz",                                                wd:1, anchor:6,  offset:-2, dir:-1, phase:"b", woche:true},
-  {nr:6,  label:"Große Redaktionskonferenz",                                                 wd:3, anchor:7,  offset:-8, dir:-1, phase:"b", woche:true},
-  {nr:7,  label:"Anzeigenschluss und Inhaltsprüfung Beihefter und Beilagen",                 wd:0, anchor:8,  offset:-4, dir:1,  phase:"b"},
-  {nr:8,  label:"Redaktionsschluss",                                                         wd:0, anchor:12, offset:-7, dir:-1, phase:"b"},
-  {nr:9,  label:"Druckunterlagenschluss und Start Bildbearbeitung",                          wd:3, anchor:11, offset:-5, dir:-1, phase:"c"},
-  {nr:10, label:"Auflagenmeldung von der IHK und dpv bis 10.00 Uhr",                         wd:3, anchor:17, offset:-8, dir:-1, phase:"c"},
+  {nr:4,  label:"Anmeldung Fachabteilungen",                                                 wd:5, anchor:5,  offset:-3, dir:-1, phase:"b", bindung:"woche"},
+  {nr:5,  label:"Kleine Redaktionskonferenz",                                                wd:1, anchor:6,  offset:-2, dir:-1, phase:"b", bindung:"woche"},
+  {nr:6,  label:"Große Redaktionskonferenz",                                                 wd:3, anchor:7,  offset:-8, dir:-1, phase:"b", bindung:"woche"},
+  {nr:7,  label:"Anzeigenschluss und Inhaltsprüfung Beihefter und Beilagen",                 wd:0, anchor:8,  offset:-4, dir:1,  phase:"b", bindung:"woche"},
+  {nr:8,  label:"Redaktionsschluss",                                                         wd:0, anchor:12, offset:-7, dir:-1, phase:"b", meiden:5},
+  {nr:9,  label:"Druckunterlagenschluss und Start Bildbearbeitung",                          wd:3, anchor:11, offset:-5, dir:-1, phase:"c", bindung:"verschiebung"},
+  {nr:10, label:"Auflagenmeldung von der IHK und dpv bis 10.00 Uhr",                         wd:3, anchor:17, offset:-8, dir:-1, phase:"c", bindung:"verschiebung", bezug:15},
   {nr:11, label:"Ausdrucke der Anzeigen an die IHK",                                         wd:1, anchor:12, offset:0,  dir:-1, phase:"c"},
   {nr:12, label:"Start der Seitenfreigabe",                                                  wd:0, anchor:13, offset:-1, dir:-1, phase:"c"},
   {nr:13, label:"EPSe bereitstellen für die Redaktion",                                      wd:2, anchor:15, offset:-2, dir:-1, phase:"c"},
-  {nr:14, label:"Beilagenanlieferung eintreffend Druckerei bis 15.00 Uhr",                   wd:0, anchor:21, offset:-5, dir:-1, phase:"c"},
+  {nr:14, label:"Beilagenanlieferung eintreffend Druckerei bis 15.00 Uhr",                   wd:0, anchor:21, offset:-5, dir:-1, phase:"c", bindung:"woche"},
   {nr:15, label:"Layout-Imprimatur, Endabstimmung mit IHK bis 18.00 Uhr, Ende Bildbearbeitung", wd:4, anchor:16, offset:1, dir:-1, phase:"c"},
   {nr:16, label:"Seiten von Redaktion an Herstellung",                                       wd:3, anchor:18, offset:-1, dir:-1, phase:"c"},
   {nr:17, label:"Auflagenmeldung an Druckerei bis 14.00 Uhr",                                wd:0, anchor:18, offset:0,  dir:-1, phase:"c"},
   {nr:18, label:"Proofabstimmung mit der Redaktion",                                         wd:4, anchor:19, offset:-1, dir:-1, phase:"c"},
-  {nr:19, label:"Prooffreigabe, Daten an Druckerei bis 17.00 Uhr, Druckfreigabe",            wd:5, anchor:21, offset:-3, dir:-1, phase:"d"},
+  {nr:19, label:"Prooffreigabe, Daten an Druckerei bis 17.00 Uhr, Druckfreigabe",            wd:5, anchor:21, offset:-3, dir:-1, phase:"d", bezug:23},
   {nr:20, label:"E-Paper erstellen (100 dpi, Einzelseiten, Export „nur epaper“)",            wd:0, anchor:21, offset:0,  dir:-1, phase:"d"},
-  {nr:21, label:"Druck",                                                                     wd:1, anchor:24, offset:-9, dir:-1, phase:"d"},
+  {nr:21, label:"Druck",                                                                     wd:1, anchor:24, offset:-9, dir:-1, phase:"d", bindung:"fest"},
   {nr:22, label:"Belege eintreffend (lt. Anschriftenliste)",                                 wd:0, anchor:23, offset:0,  dir:-1, phase:"d"},
-  {nr:23, label:"Postversand",                                                               wd:5, anchor:24, offset:-5, dir:-1, phase:"d"},
+  {nr:23, label:"Postversand",                                                               wd:5, anchor:24, offset:-5, dir:-1, phase:"d", bindung:"fest"},
   {nr:24, label:"E-Tag Berliner Wirtschaft",                                                 wd:3, anchor:0,  offset:0,  dir:-1, phase:"d"}
 ];
 
@@ -957,17 +962,19 @@ function planExcel(steps, etag, hol, fix){
   return steps.map(function(s){ return resolve(s.nr); });
 }
 
-/* Rechenweise „Arbeitstage“ (Standard)
+/* Rechenweise „Arbeitstage“ (Standard) – gelernt aus den Plänen 2025, 2026
+   und dem Redaktionsplan 2027
    1. Normalraster: die Regel der Excel ohne Feiertage – so liegen die Termine
       in einem Monat ohne Feiertag, mit allen Ziel-Wochentagen.
-   2. Produktionskette: Jeder Schritt hält zu seinem Anker so viele Arbeitstage
-      Abstand wie im Normalraster. Ein Feiertag verkürzt die Zeit also nicht,
-      sondern zieht die Schritte davor um genau einen Arbeitstag vor – statt
-      wie in der Excel auf den Ziel-Wochentag eine Woche früher zu springen.
-   3. Feste Wochentermine (Konferenzen): bleiben in ihrer Kalenderwoche. Fällt
-      der Tag auf einen Feiertag, gilt der Nachbartag in derselben Woche. In
-      der Weihnachtswoche und zwischen den Jahren gibt es keine Konferenz –
-      dann die Woche davor.
+   2. Kette: Ein Schritt hält zu seinem Bezug die Arbeitstage des Normalrasters.
+      Ein Feiertag dazwischen zieht ihn um genau einen Arbeitstag vor, statt
+      wie die Excel auf den Ziel-Wochentag eine Woche früher zu springen.
+      „Verschiebung“: übernimmt nur die Verschiebung seines Bezugs.
+   3. Feste Wochentermine (Konferenzen, Anzeigenschluss, Beilagen) bleiben in
+      ihrer Woche – bei einem Feiertag am Nachbartag, in der Weihnachtswoche
+      und zwischen den Jahren in der Woche davor.
+   4. Feste Termine (Druck, Postversand) bleiben; fällt der Tag auf einen
+      Feiertag, gilt der Arbeitstag davor.
    Ohne Feiertage im Zeitraum ist das Ergebnis dasselbe wie in der Excel. */
 function weihnachtsPause(d){
   var y = d.getUTCFullYear(), m = d.getUTCMonth();
@@ -976,25 +983,37 @@ function weihnachtsPause(d){
   var hl = D(y, 12, 24), ab = addDays(hl, 1 - dow(hl));      /* Montag der Woche mit Heiligabend */
   return +d >= +ab;
 }
-function inDerWoche(d0, dir, hol){
+/* Ausweichtag in derselben Woche. `bis`: muss das Ausweichen wählen, dann
+   lieber einen Tag, der nicht hinter dem Bezugsschritt liegt. */
+function inDerWoche(d0, dir, hol, bis){
   var d = d0;
   for (var w = 0; w < 8; w++){
     var mo = addDays(d, 1 - dow(d)), fr = addDays(mo, 4);
     if (!isFreeDay(d, hol) && !weihnachtsPause(d)) return d;
-    for (var k = 1; k < 5; k++){
-      var kand = dir === 1 ? [k, -k] : [-k, k];
-      for (var i = 0; i < 2; i++){
-        var x = addDays(d, kand[i]);
-        if (+x >= +mo && +x <= +fr && !isFreeDay(x, hol) && !weihnachtsPause(x)) return x;
+    for (var pass = bis ? 0 : 1; pass < 2; pass++){
+      for (var k = 1; k < 5; k++){
+        var kand = dir === 1 ? [k, -k] : [-k, k];
+        for (var i = 0; i < 2; i++){
+          var x = addDays(d, kand[i]);
+          if (pass === 0 && +x > +bis) continue;
+          if (+x >= +mo && +x <= +fr && !isFreeDay(x, hol) && !weihnachtsPause(x)) return x;
+        }
       }
     }
     d = addDays(d, -7);
   }
   return d0;
 }
+function wochenAbstand(a, b){ return Math.round(diffDays(addDays(a, 1 - dow(a)), addDays(b, 1 - dow(b))) / 7); }
 function planArbeitstage(steps, etag, hol, fix){
   var leer = new Set();
-  var raster = new Map(planExcel(steps, etag, leer, null).map(function(r){ return [r.step.nr, r]; }));
+  /* Ein von Hand gesetzter E-Tag ist die Grundlage des Normalrasters */
+  var wurzel = steps.filter(function(s){ return s.anchor === 0; })[0], etagR = etag, stepsR = steps;
+  if (wurzel && fix && fix[wurzel.nr]){
+    etagR = parseISO(fix[wurzel.nr]);
+    stepsR = steps.map(function(s){ return s === wurzel ? Object.assign({}, s, {wd:0}) : s; });
+  }
+  var raster = new Map(planExcel(stepsR, etagR, leer, null).map(function(r){ return [r.step.nr, r]; }));
   var byNr = new Map(steps.map(function(s){ return [s.nr, s]; }));
   var done = new Map(), busy = new Set();
   var auto = fix && Object.keys(fix).length ? planArbeitstage(steps, etag, hol, null) : null;
@@ -1005,20 +1024,33 @@ function planArbeitstage(steps, etag, hol, fix){
     var s = byNr.get(nr);
     if (!s) throw new Error("Schritt " + nr + " ist als Anker angegeben, existiert aber nicht.");
     busy.add(nr);
+    var bez = s.bezug && byNr.has(s.bezug) && s.bezug !== nr ? s.bezug : s.anchor;
     var manual = fix && fix[s.nr] ? parseISO(fix[s.nr]) : null;
-    var anker = s.anchor === 0 ? null : resolve(s.anchor);
-    var normal = raster.get(nr).date, date;
+    var anker = bez === 0 ? null : resolve(bez);
+    var normal = raster.get(nr).date, bind = s.bindung || "kette", date;
     if (manual) date = manual;
     else if (!anker) date = planTermin(etag, s.wd, hol, s.dir);
-    else if (s.woche && anker.step.woche){
-      /* innerhalb des Konferenzblocks: Versatz und Wochentag wie gehabt, Ausweichen in der Woche */
-      date = inDerWoche(planTermin(addDays(anker.date, s.offset), s.wd, leer, s.dir), s.dir, hol);
+    else if (bind === "woche" || bind === "fest"){
+      /* bleibt im Raster. Wochenweise mit verlegt wird er nur vom E-Tag, von
+         einem Wochentermin (Konferenzblock, Weihnachten) und von einem festen
+         Termin, den jemand von Hand verschoben hat – nicht von der Kette. */
+      var ab = anker.step.bindung;
+      var verlegt = anker.step.anchor === 0 || ab === "woche" || (ab === "fest" && (anker.manual || anker.mit));
+      var wochen = verlegt ? wochenAbstand(raster.get(bez).date, anker.date) : 0;
+      var ziel = addDays(normal, 7 * wochen);
+      var vorAnker = +normal <= +raster.get(bez).date;
+      date = bind === "woche" ? inDerWoche(ziel, s.dir, hol, vorAnker ? anker.date : null)
+                              : (isFreeDay(ziel, hol) ? planTermin(ziel, 0, hol, -1) : ziel);
     }
-    else if (s.woche) date = inDerWoche(normal, s.dir, hol);
+    else if (bind === "verschiebung"){
+      var k = arbeitstage(raster.get(bez).date, anker.date, hol);
+      date = k ? workday(normal, k, hol) : (isFreeDay(normal, hol) ? planTermin(normal, 0, hol, s.dir) : normal);
+    }
     else {
-      var g = arbeitstage(raster.get(s.anchor).date, normal, leer);
+      var g = arbeitstage(raster.get(bez).date, normal, leer);
       date = g ? workday(anker.date, g, hol) : (isFreeDay(anker.date, hol) ? planTermin(anker.date, 0, hol, s.dir) : anker.date);
     }
+    if (!manual && s.meiden && dow(date) === s.meiden && bind !== "woche" && bind !== "fest") date = workday(date, -1, hol);
     busy.delete(nr);
     var a = autoBy ? autoBy.get(nr) : null, mit = null;
     if (!manual && a && anker && (anker.manual || anker.mit) && +a.date !== +date)
@@ -1089,9 +1121,15 @@ function normState(raw, year){
   if (!Array.isArray(d.holExtra)) d.holExtra = [];
   if (!Array.isArray(d.issues) || !d.issues.length) d.issues = suggestIssues(d.year);
   if (!Array.isArray(d.steps) || !d.steps.length) d.steps = DEFAULT_STEPS.map(function(x){ return Object.assign({}, x); });
-  /* Pläne von vor den festen Wochenterminen: Kennzeichen aus den Stammdaten */
+  /* Pläne von vor den gelernten Regeln: Bindung, Bezug und Meiden aus den Stammdaten */
   d.steps.forEach(function(st){
-    if (st.woche === undefined){ var v = DEFAULT_STEPS.filter(function(x){ return x.nr === st.nr; })[0]; st.woche = !!(v && v.woche); }
+    if (st.bindung === undefined){
+      var v = DEFAULT_STEPS.filter(function(x){ return x.nr === st.nr; })[0] || {};
+      st.bindung = v.bindung || "kette";
+      if (v.bezug) st.bezug = v.bezug;
+      if (v.meiden) st.meiden = v.meiden;
+    }
+    delete st.woche;
   });
   if (d.rechenweise !== "excel") d.rechenweise = "arbeitstage";
   return d;
@@ -1750,6 +1788,12 @@ function reihenfolgeFalsch(is, r, a){
   }
   return r.step.offset < 0 && r.date > a.date ? 1 : 0;
 }
+var BINDUNG = {
+  kette:        {n:"Kette",          t:"Hält zum Bezug die Arbeitstage des Normalrasters – Feiertage dazwischen ziehen ihn vor"},
+  verschiebung: {n:"Verschiebung",   t:"Übernimmt die Verschiebung seines Bezugs in Arbeitstagen"},
+  woche:        {n:"Wochentermin",   t:"Bleibt in seiner Kalenderwoche, bei einem Feiertag am Nachbartag"},
+  fest:         {n:"Fester Termin",  t:"Bleibt auf seinem Tag, bei einem Feiertag der Arbeitstag davor"}
+};
 function arbeitstageText(k){
   var n = Math.abs(k);
   return n + " Arbeitstag" + (n === 1 ? "" : "e") + (k < 0 ? " früher" : " später");
@@ -2312,8 +2356,11 @@ function viewRules(){
         '<option value="1"'+(s.dir === 1 ? " selected" : "")+'>vorwärts</option></select></td>'+
       '<td><select data-r="phase" aria-label="Phase"'+(darfPlanAendern() ? "" : " disabled")+'>'+PHASES.map(function(p){
         return '<option value="'+p.key+'"'+(s.phase === p.key ? " selected" : "")+'>'+esc(p.label)+'</option>'; }).join("")+'</select></td>'+
-      '<td class="wo"><input type="checkbox" data-r="woche" aria-label="Fester Wochentermin"'+(s.woche ? " checked" : "")+
-        (darfPlanAendern() && state.rechenweise !== "excel" ? "" : " disabled")+'></td>'+
+      '<td><select data-r="bindung" aria-label="Bindung"'+(darfPlanAendern() && state.rechenweise !== "excel" ? "" : " disabled")+
+        ' title="'+esc(BINDUNG[s.bindung || "kette"].t)+'">'+Object.keys(BINDUNG).map(function(k){
+          return '<option value="'+k+'"'+((s.bindung || "kette") === k ? " selected" : "")+'>'+BINDUNG[k].n+'</option>'; }).join("")+'</select>'+
+        (s.bezug || s.meiden ? '<span class="bz">'+(s.bezug ? "an " + s.bezug : "")+(s.bezug && s.meiden ? " · " : "")+
+          (s.meiden ? "nicht " + WD_SHORT[s.meiden-1] : "")+'</span>' : "")+'</td>'+
       '<td class="res">'+(r ? wd(r.date)+" "+fmtShort(r.date) : "–")+'</td>'+
     '</tr>';
   }).join("");
@@ -2325,13 +2372,16 @@ function viewRules(){
     (excel
       ? 'Jeder Schritt rechnet <b>Ankertermin + Versatz</b> und zieht das Ergebnis auf den nächsten zulässigen Tag: bei festem '+
         'Ziel-Wochentag auf diesen Wochentag – fällt der auf einen Feiertag, eine Woche früher.'
-      : 'Die Regel legt das <b>Normalraster</b> fest: so liegen die Termine in einem Monat ohne Feiertag. Feiertage verschieben '+
-        'dann nicht um ganze Wochen, sondern ziehen die Schritte davor um genau die fehlenden <b>Arbeitstage</b> vor. '+
-        '<b>Feste Wochentermine</b> (Konferenzen) bleiben in ihrer Woche – bei einem Feiertag am Nachbartag, in der '+
-        'Weihnachtswoche und zwischen den Jahren in der Woche davor.')+
+      : 'Die Regel legt das <b>Normalraster</b> fest: so liegen die Termine in einem Monat ohne Feiertag. Wie Feiertage wirken, '+
+        'steht in der Spalte <b>Bindung</b> – gelernt aus den Plänen 2025, 2026 und dem Redaktionsplan 2027:'+
+        '<ul class="gelernt"><li>Druck bleibt montags, Postversand freitags – fällt der Tag auf einen Feiertag, der Arbeitstag davor.</li>'+
+        '<li>Die Prooffreigabe liegt immer 5 Arbeitstage vor dem Postversand; die Produktionskette davor hält ihre Arbeitstage.</li>'+
+        '<li>Konferenzen, Anzeigenschluss und Beilagenanlieferung bleiben in ihrer Woche, in der Weihnachtswoche und zwischen den Jahren eine Woche davor.</li>'+
+        '<li>Druckunterlagenschluss und Auflagenmeldung übernehmen die Verschiebung von Ausdrucken und Imprimatur.</li>'+
+        '<li>Der Redaktionsschluss fällt nicht auf einen Freitag.</li></ul>')+
     ' Die Spalte rechts zeigt das Ergebnis für <b>'+(sample ? esc(sample.name) : "–")+'</b>.</div>';
   var table = '<div class="tablewrap"><table class="rules"><thead><tr>'+
-    ["#","Produktionsschritt","Ziel-Wochentag","Anker","Versatz (Tage)","Richtung","Phase","Wochentermin","Ergebnis"]
+    ["#","Produktionsschritt","Ziel-Wochentag","Anker","Versatz (Tage)","Richtung","Phase","Bindung","Ergebnis"]
       .map(function(h){ return "<th>"+h+"</th>"; }).join("")+
     '</tr></thead><tbody>'+rows+'</tbody></table></div>';
   return card("Regelwerk · " + model.steps.length + " Schritte", head + table,
@@ -3454,7 +3504,7 @@ el("panel").addEventListener("change", function(e){
   if (!s) return;
   if (f === "label") s.label = e.target.value;
   else if (f === "phase") s.phase = e.target.value;
-  else if (f === "woche") s.woche = e.target.checked;
+  else if (f === "bindung") s.bindung = BINDUNG[e.target.value] ? e.target.value : "kette";
   else s[f] = +e.target.value;
   render(false);
 });
