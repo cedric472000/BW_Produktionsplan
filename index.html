@@ -833,6 +833,7 @@ function statesTitle(h){
    meiden : Wochentag, auf den der Termin nicht fallen soll (dann Arbeitstag davor)
    pause  : nicht in der Weihnachtswoche und nicht zwischen den Jahren (Konferenzen)
    je     : abweichende Regel je Monat des E-Tags, z. B. {"3":{offset:-10}}
+   vorziehen: mindestens so viele Arbeitstage vor dem Normalraster
    ------------------------------------------------------------------------- */
 var PHASES = [
   {key:"a", label:"Anzeigen & Material", css:"var(--ph-1)"},
@@ -855,7 +856,7 @@ var DEFAULT_STEPS = [
   {nr:12, label:"Start der Seitenfreigabe",                                                  wd:0, anchor:13, offset:-1, dir:-1, phase:"c"},
   {nr:13, label:"EPSe bereitstellen für die Redaktion",                                      wd:2, anchor:15, offset:-2, dir:-1, phase:"c"},
   {nr:14, label:"Beilagenanlieferung eintreffend Druckerei bis 15.00 Uhr",                   wd:0, anchor:21, offset:-5, dir:-1, phase:"c", bindung:"woche"},
-  {nr:15, label:"Layout-Imprimatur, Endabstimmung mit IHK bis 18.00 Uhr, Ende Bildbearbeitung", wd:4, anchor:16, offset:1, dir:-1, phase:"c"},
+  {nr:15, label:"Layout-Imprimatur, Endabstimmung mit IHK bis 18.00 Uhr, Ende Bildbearbeitung", wd:4, anchor:16, offset:1, dir:-1, phase:"c", je:{"5":{vorziehen:1}}},
   {nr:16, label:"Seiten von Redaktion an Herstellung",                                       wd:3, anchor:18, offset:-1, dir:-1, phase:"c"},
   {nr:17, label:"Auflagenmeldung an Druckerei bis 14.00 Uhr",                                wd:0, anchor:18, offset:0,  dir:-1, phase:"c"},
   {nr:18, label:"Proofabstimmung mit der Redaktion",                                         wd:4, anchor:19, offset:-1, dir:-1, phase:"c"},
@@ -1098,6 +1099,7 @@ function planArbeitstage(steps, etag, hol, fix){
       var g = arbeitstage(raster.get(bez).date, normal, leer);
       date = g ? workday(anker.date, g, hol) : (isFreeDay(anker.date, hol) ? planTermin(anker.date, 0, hol, s.dir) : anker.date);
     }
+    if (!manual && s.vorziehen){ var grenze = workday(normal, -s.vorziehen, hol); if (+date > +grenze) date = grenze; }
     if (!manual && s.meiden && dow(date) === s.meiden && bind !== "woche" && bind !== "fest") date = workday(date, -1, hol);
     busy.delete(nr);
     var a = autoBy ? autoBy.get(nr) : null, mit = null;
@@ -1119,7 +1121,7 @@ function planArbeitstage(steps, etag, hol, fix){
 /* =========================================================================
    Zustand
    ========================================================================= */
-var REGELSTAND = 2;                            /* gelernte Regeln: 2 = Pläne 2025/26 */
+var REGELSTAND = 3;                            /* gelernte Regeln: 3 = Pläne 2021–2027 */
 var STORE_ALT = "bw-produktionsplan-v1";      /* Einzelplan früherer Fassungen */
 var STORE     = "bw-produktionsplan-v2";      /* lokale Ablage aller Pläne        */
 var LAST_KEY  = "bw-produktionsplan-zuletzt"; /* zuletzt geöffneter Plan          */
@@ -2439,6 +2441,7 @@ function viewRules(){
         '<li>Konferenzen, Anzeigenschluss und Beilagenanlieferung bleiben in ihrer Woche, in der Weihnachtswoche und zwischen den Jahren eine Woche davor.</li>'+
         '<li>Druckunterlagenschluss und Auflagenmeldung übernehmen die Verschiebung von Ausdrucken und Imprimatur.</li>'+
         '<li>Der Redaktionsschluss fällt nicht auf einen Freitag.</li>'+
+        '<li>Im Mai-Heft liegt die Layout-Imprimatur einen Arbeitstag früher (mittwochs) – so in allen Plänen 2021–2027; Seitenfreigabe, Redaktionsschluss und Auflagenmeldung ziehen mit.</li>'+
         '<li>Reihenfolgen, die in 53 Heften 2021–2026 nie gebrochen wurden, hält der Plan immer ein – etwa: Anzeigenschluss nie nach dem Redaktionsschluss, '+
         'Kleine vor Großer Konferenz. Bräche ein Termin sie, rückt er vor, notfalls auf denselben Tag.</li>'+
         '<li>Anzeigen-Schritte 1–3: März und April eine Woche mehr Vorlauf; im Januar/Februar-Heft Umfangsmeldung am Tag der Großen Konferenz, '+
