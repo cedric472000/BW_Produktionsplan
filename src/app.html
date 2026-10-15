@@ -491,6 +491,12 @@ td.cell.manual::before{content:"";position:absolute;top:0;left:0;border-top:7px 
 td.cell.manual.shifted{background:var(--accent-soft)}
 td.cell.manual.shifted::after{display:none}
 tr.milestone td.cell.manual{background:var(--accent-soft) !important;color:var(--accent)}
+td.cell.mit{color:var(--accent)}
+td.cell.mit::before{content:"";position:absolute;top:0;left:0;border-top:5px solid var(--accent);border-right:5px solid transparent;opacity:.45}
+.tl.mit .d{color:var(--accent)}
+.tl .mitnote{display:block;font-size:11px;color:var(--ink-3);margin-top:2px}
+.dlg .folge{font-size:11.5px;color:var(--accent);line-height:1.45}
+.dlg .folge:empty{display:none}
 .tl.click{cursor:pointer}
 .tl.click:hover{background:var(--accent-soft)}
 .tl.manual .d{color:var(--accent);font-weight:600}
@@ -893,13 +899,26 @@ function planTermin(basis, target, hol, dir){
   }
   return basis;
 }
+/* Abstand in Arbeitstagen von a nach b (negativ, wenn b vor a liegt) */
+function arbeitstage(a, b, hol){
+  var n = 0, x = a, step = b > a ? 1 : -1, guard = 0;
+  while (+x !== +b && guard++ < 3000){
+    if (step > 0){ x = addDays(x, 1); if (!isFreeDay(x, hol)) n++; }
+    else { if (!isFreeDay(x, hol)) n--; x = addDays(x, -1); }
+  }
+  return n;
+}
 /* Kompletten Heftplan rückwärts vom E-Tag rechnen.
    `fix` enthält manuell gesetzte Termine je Schritt-Nr. Ein fester Termin
-   wird unverändert übernommen; alle Schritte, die ihn als Anker haben,
-   rechnen von dort aus weiter. */
+   wird unverändert übernommen. Was auf ihm aufbaut, rechnet nicht noch einmal
+   nach der Regel (Ziel-Wochentage würden kleine Änderungen zu Wochensprüngen
+   machen), sondern wandert mit: im selben Abstand in Arbeitstagen wie im
+   automatischen Plan. Ohne manuelle Termine ist das Ergebnis das der Excel. */
 function computePlan(steps, etag, hol, fix){
   var byNr = new Map(steps.map(function(s){ return [s.nr, s]; }));
   var done = new Map(), busy = new Set();
+  var auto = fix && Object.keys(fix).length ? computePlan(steps, etag, hol, null) : null;
+  var autoBy = auto ? new Map(auto.map(function(r){ return [r.step.nr, r]; })) : null;
   function resolve(nr){
     if (done.has(nr)) return done.get(nr);
     if (busy.has(nr)) throw new Error("Zirkelbezug: Schritt " + nr + " hängt von sich selbst ab.");
@@ -907,15 +926,23 @@ function computePlan(steps, etag, hol, fix){
     if (!s) throw new Error("Schritt " + nr + " ist als Anker angegeben, existiert aber nicht.");
     busy.add(nr);
     var manual = fix && fix[s.nr] ? parseISO(fix[s.nr]) : null;
-    var basis, date;
+    var basis, date, mit = null;
+    var anker = s.anchor === 0 ? null : resolve(s.anchor);
     if (manual){
       basis = manual; date = manual;
+    } else if (anker && autoBy && (anker.manual || anker.mit)){
+      /* Anker wurde verschoben: Abstand halten statt Regel neu anwenden */
+      var au = autoBy.get(s.nr), aa = autoBy.get(s.anchor);
+      var g = arbeitstage(aa.date, au.date, hol);
+      date = g ? workday(anker.date, g, hol) : planTermin(anker.date, 0, hol, s.dir);
+      basis = date;
+      mit = {von: anker.manual ? anker.step.nr : anker.mit.von, tage: arbeitstage(au.date, date, hol)};
     } else {
-      basis = s.anchor === 0 ? etag : addDays(resolve(s.anchor).date, s.offset);
+      basis = anker ? addDays(anker.date, s.offset) : etag;
       date  = planTermin(basis, s.wd, hol, s.dir);
     }
     busy.delete(nr);
-    var r = {step:s, basis:basis, date:date, shift:diffDays(basis, date), manual:!!manual};
+    var r = {step:s, basis:basis, date:date, shift:diffDays(basis, date), manual:!!manual, mit:mit};
     done.set(nr, r);
     return r;
   }
@@ -1552,11 +1579,18 @@ function buildModel(){
       if (r.manual){
         var a = is.autoByNr.get(r.step.nr);
         var delta = a ? diffDays(a.date, r.date) : 0;
+        var mitList = is.rows.filter(function(x){ return x.mit && x.mit.von === r.step.nr && x.mit.tage; });
+        var wdWeg = mitList.filter(function(x){ return x.step.wd && dow(x.date) !== x.step.wd; });
         findings.push({sev: isFreeDay(r.date, hol.set) ? "warn" : "info", issue:is.name,
           t:"Manueller Termin für Schritt " + r.step.nr,
           m:"„"+r.step.label+"“ steht fest auf <b>"+wd(r.date)+" "+fmt(r.date)+"</b>"+
             (a ? ", automatisch wäre <b>"+fmt(a.date)+"</b> ("+(delta>0?"+":"")+delta+" Tage)" : "")+"."+
-            (isFreeDay(r.date, hol.set) ? " Der Termin liegt auf einem Wochenende oder Feiertag." : "")});
+            (isFreeDay(r.date, hol.set) ? " Der Termin liegt auf einem Wochenende oder Feiertag." : "")+
+            (mitList.length ? " Mit im gleichen Abstand gewandert: Schritt "+mitList.map(function(x){ return x.step.nr; }).join(", ")+
+              " ("+arbeitstageText(mitList[0].mit.tage)+")." : "")+
+            (wdWeg.length ? " Dadurch nicht mehr auf ihrem Wochentag: "+wdWeg.map(function(x){
+              return x.step.nr+" „"+esc(x.step.label)+"“ ("+WD_SHORT[dow(x.date)-1]+" statt "+WD_SHORT[x.step.wd-1]+")"; }).join(", ")+
+              " – falls nötig von Hand setzen." : "")});
       }
       if (!r.manual && Math.abs(r.shift) >= 3){
         findings.push({sev:"warn", issue:is.name,
@@ -1571,10 +1605,12 @@ function buildModel(){
       }
       if (r.step.anchor !== 0){
         var a = is.byNr.get(r.step.anchor);
-        if (a && r.step.offset < 0 && r.date > a.date){
+        var falsch = a ? reihenfolgeFalsch(is, r, a) : 0;
+        if (falsch){
           findings.push({sev:"warn", issue:is.name,
-            t:"Schritt "+r.step.nr+" liegt hinter seinem Anker",
-            m:"„"+r.step.label+"“ (<b>"+fmt(r.date)+"</b>) fällt nach Schritt "+a.step.nr+" „"+a.step.label+"“ (<b>"+fmt(a.date)+"</b>), obwohl der Versatz negativ ist."});
+            t:"Reihenfolge: Schritt "+r.step.nr+" liegt "+(falsch > 0 ? "nach" : "vor")+" Schritt "+a.step.nr,
+            m:"„"+r.step.label+"“ (<b>"+fmt(r.date)+"</b>) fällt "+(falsch > 0 ? "nach" : "vor")+" „"+a.step.label+"“ (<b>"+fmt(a.date)+"</b>). "+
+              "Spätere Schritte bleiben am Erscheinungstag fest – den Folgeschritt bei Bedarf ebenfalls verschieben, dann wandert alles mit, was auf ihm aufbaut."});
         }
       }
     });
@@ -1600,6 +1636,29 @@ function buildModel(){
   var rank = {crit:0, warn:1, info:2};
   findings.sort(function(a,b){ return rank[a.sev] - rank[b.sev]; });
   return {issues:issues, steps:steps, hol:hol, findings:findings, broken:false};
+}
+
+/* Stimmt die Reihenfolge zwischen Schritt und Anker noch? 1 = liegt jetzt
+   danach, -1 = davor, 0 = in Ordnung. Mit manuellen Terminen gilt die
+   Reihenfolge des automatischen Plans, sonst das Vorzeichen des Versatzes. */
+function reihenfolgeFalsch(is, r, a){
+  var au = is.autoByNr.get(r.step.nr), aa = is.autoByNr.get(a.step.nr);
+  if (is.hasFix && au && aa){
+    if (+au.date <= +aa.date && r.date > a.date) return 1;
+    if (+au.date > +aa.date && r.date < a.date) return -1;
+    return 0;
+  }
+  return r.step.offset < 0 && r.date > a.date ? 1 : 0;
+}
+function arbeitstageText(k){
+  var n = Math.abs(k);
+  return n + " Arbeitstag" + (n === 1 ? "" : "e") + (k < 0 ? " früher" : " später");
+}
+/* Wirksame manuelle Termine einer Ausgabe je Schritt-Nr. */
+function fixFuer(issueId){
+  var ov = wirksameUeberschreibungen(), f = {};
+  state.steps.forEach(function(st){ var v = ov[issueId + ":" + st.nr]; if (v) f[st.nr] = v; });
+  return f;
 }
 
 /* =========================================================================
@@ -1887,7 +1946,9 @@ function openPop(issueId, stepNr){
     if (auto && iso(auto.date) === feld) delete state.overrides[key];
     else state.overrides[key] = feld;
     render();
-    toast("Termin gesetzt – abhängige Schritte neu gerechnet");
+    var y = model.issues.filter(function(i){ return i.id === issueId; })[0];
+    var n = y ? y.rows.filter(function(q){ return q.mit && q.mit.von === stepNr && q.mit.tage; }).length : 0;
+    toast(n ? "Termin gesetzt – " + n + (n === 1 ? " Schritt wandert" : " Schritte wandern") + " im gleichen Abstand mit" : "Termin gesetzt");
   };
   Dialog.zeige(
     '<span class="who">'+esc(x.name)+'</span>'+
@@ -1895,16 +1956,27 @@ function openPop(issueId, stepNr){
     '<input type="date" id="dlgDatum" value="'+feld+'" aria-label="Termin">'+
     '<div class="auto">Automatisch: <b>'+(auto ? wd(auto.date)+" "+fmt(auto.date) : "–")+'</b>'+
       (r.step.wd ? ' · Ziel-Wochentag '+WD_LONG[r.step.wd-1] : ' · flexibler Arbeitstag')+'</div>'+
+    '<div class="folge" id="dlgFolge"></div>'+
     '<div class="warnline" id="dlgWarn"></div>',
     aktionen,
     function(d){
-      var i = d.querySelector("#dlgDatum"), w = d.querySelector("#dlgWarn");
+      var i = d.querySelector("#dlgDatum"), w = d.querySelector("#dlgWarn"), fo = d.querySelector("#dlgFolge");
       function pruefe(){
         feld = i.value;
-        if (!feld){ w.textContent = ""; return; }
+        if (!feld){ w.textContent = ""; fo.textContent = ""; return; }
         var dt = parseISO(feld), msg = [];
         if (isFreeDay(dt, model.hol.set)) msg.push("Wochenende oder Feiertag");
         if (r.step.wd && dow(dt) !== r.step.wd) msg.push("nicht " + WD_LONG[r.step.wd-1]);
+        /* So sähe die Ausgabe mit diesem Termin aus */
+        var f = fixFuer(x.id); f[stepNr] = feld;
+        var neu = computePlan(model.steps, x.corrected, model.hol.set, f);
+        var probe = {hasFix:true, autoByNr:x.autoByNr}, by = new Map(neu.map(function(q){ return [q.step.nr, q]; }));
+        var mit = neu.filter(function(q){ return q.mit && q.mit.von === stepNr && q.mit.tage; });
+        fo.textContent = mit.length
+          ? "Wandert mit: " + mit.length + (mit.length === 1 ? " Schritt" : " Schritte") + ", die darauf aufbauen – " + arbeitstageText(mit[0].mit.tage) + "."
+          : "";
+        var anker = r.step.anchor ? by.get(r.step.anchor) : null, falsch = anker ? reihenfolgeFalsch(probe, by.get(stepNr), anker) : 0;
+        if (falsch) msg.push((falsch > 0 ? "liegt nach " : "liegt vor ") + "Schritt " + anker.step.nr + " „" + anker.step.label + "“ (" + wd(anker.date) + " " + fmt(anker.date) + ")");
         w.textContent = msg.length ? "Hinweis: " + msg.join(", ") + "." : "";
       }
       i.addEventListener("input", pruefe);
@@ -1952,12 +2024,17 @@ function renderPanel(){
 
 /* ---------- Ansicht: Terminplan ------------------------------------------ */
 function cellHTML(r, issue){
-  var cls = "cell" + (darfPlanAendern() ? " click" : "") + (r.manual ? " manual" : "") + (!r.manual && Math.abs(r.shift) >= 1 ? " shifted" : "");
+  var mit = r.mit && r.mit.tage ? r.mit : null;
+  var cls = "cell" + (darfPlanAendern() ? " click" : "") + (r.manual ? " manual" : "") + (mit ? " mit" : "") +
+            (!r.manual && Math.abs(r.shift) >= 1 ? " shifted" : "");
   var auto = issue ? issue.autoByNr.get(r.step.nr) : null;
   var title;
   if (r.manual){
     title = "Manuell gesetzt auf " + WD_LONG[dow(r.date)-1] + ", " + fmt(r.date) +
             (auto ? "\nAutomatisch wäre " + fmt(auto.date) : "") + "\nZum Ändern anklicken";
+  } else if (mit){
+    title = "Wandert mit Schritt " + mit.von + " – " + arbeitstageText(mit.tage) +
+            (auto ? "\nAutomatisch wäre " + fmt(auto.date) : "") + "\nZum manuellen Setzen anklicken";
   } else if (r.shift){
     title = "Rechenbasis " + fmt(r.basis) + " → " + fmt(r.date) + " (" + WD_LONG[dow(r.date)-1] + ", " +
             (r.shift > 0 ? "+" : "") + r.shift + " Tage)\nZum manuellen Setzen anklicken";
@@ -2030,10 +2107,13 @@ function viewIssue(){
     }
     var rel = diffDays(r.date, x.etag);
     var auto = x.autoByNr.get(r.step.nr);
+    var mit = r.mit && r.mit.tage ? r.mit : null, von = mit ? x.byNr.get(mit.von) : null;
     var extra = r.manual
       ? '<span class="manualnote">Manuell gesetzt'+(auto && +auto.date !== +r.date ? ' · automatisch '+fmt(auto.date) : "")+'</span>'
+      : mit ? '<span class="mitnote">Wandert mit Schritt '+mit.von+(von ? ' „'+esc(von.step.label)+'“' : "")+' · '+arbeitstageText(mit.tage)+
+              (auto ? ' · automatisch '+fmt(auto.date) : "")+'</span>'
       : (r.shift ? '<span class="shift">Basis '+fmt(r.basis)+' → verschoben auf '+WD_LONG[dow(r.date)-1]+' ('+(r.shift>0?"+":"")+r.shift+' Tage)</span>' : "");
-    out += '<div class="tl click'+(r.step.anchor === 0 ? " ms" : "")+(r.manual ? " manual" : "")+
+    out += '<div class="tl click'+(r.step.anchor === 0 ? " ms" : "")+(r.manual ? " manual" : "")+(mit ? " mit" : "")+
       '" style="--ph:'+ph.css+'" data-issue="'+esc(x.id)+'" data-step="'+r.step.nr+'" title="Zum Setzen eines eigenen Termins anklicken">'+
       '<span class="d"><span class="wd">'+wd(r.date)+'</span>'+fmt(r.date)+'</span>'+
       '<span class="kw">KW&nbsp;'+isoWeek(r.date)+'</span>'+

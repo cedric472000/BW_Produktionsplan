@@ -257,12 +257,28 @@ daneben.
 Dasselbe Fenster stellt auch Rückfragen und erfragt Namen. Es ersetzt
 `confirm()` und `prompt()`, die in eingebetteten Seiten blockiert sein können.
 
-Ein fester Termin wird unverändert übernommen. **Alle Schritte, die ihn als
-Anker haben, rechnen von dort aus weiter** – in der Rückwärtskette sind das die
-vorgelagerten Schritte. Zieht man etwa den Start der Seitenfreigabe im Mai-Heft
-eine Woche vor, wandern Redaktionsschluss, Anzeigenschluss, beide
-Redaktionskonferenzen und der Druckunterlagenschluss mit; alles nach dem
-Seitenfreigabe-Start bleibt am E-Tag verankert.
+Ein fester Termin wird unverändert übernommen. **Was auf ihm aufbaut, wandert
+mit – im selben Abstand in Arbeitstagen wie im automatischen Plan.** In der
+Rückwärtskette sind das die vorgelagerten Schritte. Die Regel mit ihren
+Ziel-Wochentagen wird dafür bewusst nicht noch einmal angewendet: Sie würde
+aus kleinen Änderungen Wochensprünge machen. Beispiel Mai 2027: Der Start der
+Seitenfreigabe zwei Arbeitstage früher (Do 15.04. statt Mo 19.04.) zieht
+Redaktionsschluss, Anzeigenschluss, Druckunterlagenschluss, beide
+Redaktionskonferenzen und die Anmeldungen um genau zwei Arbeitstage vor, über
+Ostern hinweg. Nach der Regel wäre die Große Redaktionskonferenz eine ganze
+Woche gesprungen.
+
+Was nach dem gesetzten Termin kommt, bleibt am Erscheinungstag und am Druck
+verankert. Gerät dadurch die Reihenfolge durcheinander, etwa weil die
+Seitenfreigabe jetzt nach „EPSe bereitstellen“ beginnt, warnen das Terminfenster
+und die *Prüfung*. Dann setzt man den Folgeschritt ebenfalls, und alles, was auf
+ihm aufbaut, wandert wieder mit. Das Terminfenster zeigt schon vor dem
+Übernehmen, wie viele Schritte mitwandern. Mitgewanderte Termine sind in hellem
+Blau mit kleiner Ecke markiert. Die Prüfung nennt sie und weist auf Schritte
+hin, die dadurch nicht mehr auf ihrem Wochentag liegen (z. B. eine
+Redaktionskonferenz am Donnerstag statt am Mittwoch); die lassen sich bei
+Bedarf von Hand setzen. Ohne manuelle Termine rechnet die Seite unverändert
+wie die Excel.
 
 Gesetzte Termine sind blau markiert, stehen gesammelt in der Karte *Manuelle
 Termine* und lassen sich einzeln oder gesamt auf Automatik zurückstellen. Der
